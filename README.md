@@ -1,14 +1,23 @@
 
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+<img width="1920" height="1080" alt="SONARA" src="https://github.com/user-attachments/assets/83c60720-73fa-438e-9183-7e8155a54078" />
+
+# Repositório Oficial - Sonara
+
+Este repositório serve para organização e versionamento do Projeto Sonara.
+
+## Sobre a Sonara
+
+A Sonara é uma plataforma voltada à conexão entre artistas musicais e casas de shows, atuando como uma ponte estratégica para facilitar a organização e a realização de eventos.
+Por meio da plataforma, artistas podem divulgar seu trabalho, encontrar oportunidades de apresentação e estabelecer parcerias, enquanto estabelecimentos têm acesso a talentos alinhados ao seu público e proposta.
+
+## Problema
+Artistas independentes enfrentam dificuldades para encontrar oportunidades de apresentação. Ao mesmo tempo, casas de shows e eventos têm desafios para atrair público e contratar artistas compatíveis com seu público-alvo.
 
 
-# Template para TCC - Repositório Oficial
+## Objetivo
+A aplicação tem como objetivo conectar artistas — principalmente do ramo musical — a pessoas e estabelecimentos que desejam contratá-los para eventos.
+Além disso, usuários comuns também poderão se cadastrar, permitindo que o sistema organize e interligue todo esse processo de forma simples e eficiente.
 
-Este repositório serve como modelo (template) para organização e versionamento do Trabalho de Conclusão de Curso. Utilize esta estrutura para manter seu projeto organizado e facilitar o acompanhamento do orientador.
-
-## Sobre este Template
-
-Este template foi desenvolvido para padronizar a organização dos TCCs das turmas de Desenvolvimento de Sistemas. 
 
 ### Disciplina: Trabalho de Conclusão de Curso
 Semestre: 2026/1
