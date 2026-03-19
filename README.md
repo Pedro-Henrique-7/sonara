@@ -60,11 +60,11 @@ Commits pequenos e frequentes.
 
 Exemplo: git commit -m `Adiciona introdução com contexto do problema`
 
-## Authors
+## Autores
 
-- [@Aluno1](https://www.github.com/octokatherine)
-- [@Aluno2](https://www.github.com/octokatherine)
-- [@Aluno3](https://www.github.com/octokatherine)
-- [@Aluno4](https://www.github.com/octokatherine)
-- [@Aluno5](https://www.github.com/octokatherine)
+- [@Davi Almeida](https://www.github.com/DaviAlmeida11)
+- [@Gabriel Cavalcante](https://www.github.com/Gabriel16619 )
+- [@Pedro Henrique Oliveira da Silva](https://www.github.com/Pedro-Henrique-7)
+- [@Sidney Aragão](https://www.github.com/Sidney010)
+- [@Yuri](https://www.github.com/yuri-stcrzwx17)
 
