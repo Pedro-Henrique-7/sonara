@@ -1,0 +1,145 @@
+/* RESET */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* BODY */
+body {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* FORM CONTAINER */
+.cadastro-form {
+  background-color: orangered;
+  color: white;
+  padding: 35px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* TITULOS */
+h3 {
+  margin: 25px 0 15px;
+  padding-bottom: 6px;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  grid-column: 1 / -1;
+}
+
+/* CAMPOS */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+/* LABEL */
+label {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+/* INPUTS */
+input,
+select {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.95rem;
+  transition: 0.2s ease;
+}
+
+/* FOCO MELHORADO */
+input:focus,
+select:focus {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* GRID ORGANIZAÇÃO */
+.grupo-duplo,
+.grupo-triplo,
+.grid-endereco {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+/* COLUNAS */
+.grupo-duplo {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grupo-triplo {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-endereco {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* ENDEREÇO */
+.cep {
+  grid-column: span 2;
+}
+.rua {
+  grid-column: span 3;
+}
+.numero {
+  grid-column: span 1;
+}
+.bairro {
+  grid-column: span 3;
+}
+.cidade {
+  grid-column: span 2;
+}
+.uf {
+  grid-column: span 1;
+}
+
+/* BOTÃO */
+.btn-cadastrar {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-top: 25px;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* HOVER */
+.btn-cadastrar:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+/* CLICK */
+.btn-cadastrar:active {
+  transform: translateY(0);
+}
