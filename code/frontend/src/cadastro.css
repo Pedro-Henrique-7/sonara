@@ -16,7 +16,7 @@ body {
 /* HEADER */
 header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 /* FORM CONTAINER */
@@ -26,7 +26,7 @@ header {
   padding: 35px;
   border-radius: 14px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1050px;
   margin: 0 auto;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
@@ -37,14 +37,13 @@ h3 {
   padding-bottom: 6px;
   font-size: 1.1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  grid-column: 1 / -1;
+  width: 100%;
 }
 
 /* CAMPOS */
 .campo {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
   width: 100%;
 }
 
@@ -59,38 +58,39 @@ label {
 /* INPUTS */
 input,
 select {
-  height: 42px;
+  width: 100%;
+  height: 45px;
   padding: 0 12px;
   border-radius: 8px;
   border: none;
   outline: none;
-  width: 100%;
   font-size: 0.95rem;
   transition: 0.2s ease;
 }
 
-/* FOCO MELHORADO */
+/* FOCO */
 input:focus,
 select:focus {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
-/* GRID ORGANIZAÇÃO */
+/* GRID BASE */
 .grupo-duplo,
 .grupo-triplo,
 .grid-endereco {
   display: grid;
-  gap: 15px;
+  gap: 20px;
   margin-bottom: 15px;
+  width: 100%;
 }
 
-/* COLUNAS */
+/* CORREÇÃO CRÍTICA */
 .grupo-duplo {
   grid-template-columns: repeat(2, 1fr);
 }
 
 .grupo-triplo {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* aqui tava errado */
 }
 
 .grid-endereco {
@@ -133,13 +133,23 @@ select:focus {
   transition: all 0.25s ease;
 }
 
-/* HOVER */
 .btn-cadastrar:hover {
   background-color: #333;
   transform: translateY(-2px);
 }
 
-/* CLICK */
 .btn-cadastrar:active {
   transform: translateY(0);
+}
+
+.campo-nacionalidade {
+  width: 270px;
+  margin-left: 350px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  align-items: end;
+}
+
+.campo-date {
+  background-color: aqua;
 }

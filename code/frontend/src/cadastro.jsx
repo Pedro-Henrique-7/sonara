@@ -29,7 +29,7 @@ function Cadastro() {
                 <input
                   type="email"
                   id="email"
-                  placeholder="Seu melhor email"
+                  placeholder="Seu email"
                   required
                 />
               </div>
@@ -78,7 +78,7 @@ function Cadastro() {
                 />
               </div>
 
-              <div className="campo">
+              <div className="campo-date">
                 <label htmlFor="nascimento">Data de Nascimento</label>
                 <input type="date" id="nascimento" required />
               </div>
@@ -94,7 +94,7 @@ function Cadastro() {
               </div>
             </div>
 
-            <div className="campo">
+            <div className="campo-nacionalidade">
               <label htmlFor="nacionalidade">Nacionalidade</label>
               <select id="nacionalidade" required>
                 <option value="">Selecione...</option>
