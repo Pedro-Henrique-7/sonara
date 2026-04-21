@@ -2,11 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./telaEscolha";
 import Cadastro from "./cadastro";
 import Login from "./login";
+import Shows from "./telaShows";
 import TelaRecuperarSenha from "./recuperar_senha";
-
-function Shows() {
-  return <h1>Tela Home (em construção)</h1>;
-}
 
 export default function RouterApp() {
   return (
