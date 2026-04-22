@@ -1,163 +1,158 @@
-/* Reset and base styles */
+/* Reset básico para ocupar toda a tela */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Arial", sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-:root {
-  --primary-bg: linear-gradient(180deg, #000 40%, #ff4d00);
-  --accent-color: #ff6a00;
-  --text-color: white;
-  --button-bg: white;
-  --button-text: #ff4d00;
-  --active-bg: red;
-  --card-shadow: rgba(0, 0, 0, 0.3);
-}
-
-body {
-  background: var(--primary-bg);
-  color: var(--text-color);
+body,
+html,
+#root {
+  width: 100%;
   min-height: 100vh;
 }
 
-.container {
-  height: 1600px;
-  width: 1800px;
-}
-
-/* HEADER */
+/* Header e Navegação */
 .header {
   width: 100%;
-  background: linear-gradient(to bottom, #000000, #0d0d0d);
-  color: #fff;
-  font-family: "Poppins", sans-serif;
+  padding: 20px 0;
 }
 
-/* TOPO */
+.content-limit {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
-/* NAV */
 .nav {
   display: flex;
-  gap: 25px;
+  gap: 100px;
   align-items: center;
 }
 
 .nav-item {
-  font-size: 14px;
-  color: #ccc;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 2vh;
+  font-weight: 500;
+  transition: color 0.3s, transform 0.3s ease;
 }
 
 .nav-item:hover {
-  color: #fff;
-  transform: scale(1.05);
+  transform: scale(1.1) translateY(-2px);
   background-color: #8b0000;
-  padding: 2px 8px;
+  padding: 8px 20px;
   border-radius: 20px;
 }
 
-/* USER */
 .user {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 40px;
+  margin-left: 150px;
 }
 
 .user-info {
-  display: flex;
-  flex-direction: column;
   text-align: right;
 }
 
 .user-name {
-  font-size: 13px;
-  font-weight: 500;
+  display: block;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .user-role {
-  font-size: 11px;
-  color: #aaa;
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
 }
 
-/* AVATAR */
 .avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 35px;
+  height: 35px;
   background-color: #ccc;
+  border-radius: 50%;
 }
 
-/* SEARCH BAR */
-.search-bar {
-  margin-top: 20px;
-  width: 100%;
-  max-width: 600px;
-  background: #f26522;
-  border-radius: 25px;
-  padding: 10px 15px;
+/* Container de Conteúdo */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
 }
 
-.search-placeholder {
-  color: #fff;
-  font-size: 14px;
-  opacity: 0.9;
+/* Barra de Busca */
+.search-wrapper {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 40px;
 }
 
-.search:hover {
-  box-shadow: 0 6px 12px var(--card-shadow);
+.search-bar {
+  background-color: #f4511e;
+  display: flex;
+  align-items: center;
+  padding: 8px 25px;
+  border-radius: 30px;
+  width: 100%;
 }
 
-.search input {
-  flex: 1;
-  border: none;
+.search-input {
   background: transparent;
-  color: var(--text-color);
+  border: none;
   outline: none;
-  font-size: 16px;
+  color: white;
+  font-size: 1rem;
+  width: 100%;
+  height: 30px;
 }
 
-.search input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.icon {
-  font-size: 20px;
-  color: var(--text-color);
+.search-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
-/* SLIDER */
+/* Título e Slider */
+.titulo {
+  width: 100%;
+  text-align: center;
+  font-weight: 300;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
 .slider {
   width: 100%;
-  height: 260px;
+  max-width: 800px;
+  height: 300px;
   overflow: hidden;
-  border-radius: 12px;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  margin-bottom: 100px;
 }
 
 .slider-track {
   display: flex;
-  width: 100%;
+  transition: transform 0.5s ease-in-out;
   height: 100%;
-  transition: transform 0.6s ease-in-out;
 }
 
 .slide {
   min-width: 100%;
   height: 100%;
-  position: relative;
 }
 
 .slide img {
@@ -166,47 +161,26 @@ body {
   object-fit: cover;
 }
 
-/* efeito escuro por cima igual da imagem */
-.slide::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.8)
-  );
-}
-
-/* GRID */
+/* Grid de Cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 25px;
-  margin-top: 40px;
+  width: 100%;
 }
 
 .card {
   position: relative;
-  border-radius: 15px;
+  aspect-ratio: 4/5;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 6px 12px var(--card-shadow);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px var(--card-shadow);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .card img {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 15px 15px 0 0;
 }
 
 .card button {
@@ -214,46 +188,16 @@ body {
   bottom: 15px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--button-bg);
-  color: var(--button-text);
+  background-color: rgba(255, 255, 255, 0.8);
   border: none;
-  padding: 8px 16px;
-  border-radius: 25px;
-  cursor: pointer;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: bold;
-  font-size: 14px;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .card button:hover {
-  background: var(--accent-color);
-  color: var(--text-color);
-  transform: translateX(-50%) scale(1.05);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .header nav {
-    gap: 15px;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .titulo {
-    font-size: 20px;
-  }
-
-  .slider img {
-    height: 200px;
-  }
+  background-color: white;
 }

@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import logo from "./img/sonara-logo.svg";
 import "./telaShows.css";
 import { Search } from "lucide-react";
+import show1 from "./img/show1.jfif";
+import show2 from "./img/show2.webp";
 
-const imagens = ["/img/show1.jpg", "/img/show2.jpg", "/img/show3.jpg"];
+const imagens = [show1, show2];
 
 export default function Shows() {
   const [index, setIndex] = useState(0);
@@ -17,56 +19,66 @@ export default function Shows() {
   }, []);
 
   return (
-    <div className="container">
-      {/* HEADER */}
+    <div className="main-wrapper">
       <header className="header">
-        <div className="header-top">
-          <nav className="nav">
-            <span className="nav-item">Home</span>
-            <span className="nav-item">Buscar</span>
-            <span className="nav-item">Meus Eventos</span>
-            <span className="nav-item">Plano</span>
-          </nav>
+        <div className="content-limit">
+          {" "}
+          <div className="header-top">
+            <nav className="nav">
+              <span className="nav-item">Home</span>
+              <span className="nav-item">Buscar</span>
+              <span className="nav-item">Meus Eventos</span>
+              <span className="nav-item">Plano</span>
+            </nav>
 
-          <div className="user">
-            <div className="user-info">
-              <span className="user-name">Yuri Silva</span>
-              <span className="user-role">Artista</span>
+            <div className="user">
+              <div className="user-info">
+                <span className="user-name">Yuri Silva</span>
+                <span className="user-role">Artista</span>
+              </div>
+              <div className="avatar"></div>
             </div>
-            <div className="avatar"></div>
           </div>
-        </div>
-
-        <div className="search-bar">
-          <span className="search-placeholder">Pesquisar</span>
-          <Search size={18} color="#fff" />
         </div>
       </header>
 
-      {/* SLIDER */}
-      <h3 className="titulo">Eventos Próximos</h3>
+      <div className="container">
+        <div className="search-wrapper">
+          {" "}
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Pesquisar"
+              className="search-input"
+            />
+            <Search size={18} color="#fff" className="search-icon" />
+          </div>
+        </div>
 
-      <div className="slider">
-        <div
-          className="slider-track"
-          style={{ transform: `translateX(-${index * 100}%)` }}
-        >
-          {imagens.map((img, i) => (
-            <div className="slide" key={i}>
-              <img src={img} alt={`evento-${i}`} />
+        <h3 className="titulo">Eventos Próximos</h3>
+
+        <div className="slider">
+          <div
+            className="slider-track"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {imagens.map((img, i) => (
+              <div className="slide" key={i}>
+                <img src={img} alt={`evento-${i}`} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* GRID */}
+        <div className="grid">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div className="card" key={i}>
+              <img src="/img/show1.jfif" alt="evento" />
+              <button>Ver Mais</button>
             </div>
           ))}
         </div>
-      </div>
-
-      {/* GRID */}
-      <div className="grid">
-        {Array.from({ length: 9 }).map((_, i) => (
-          <div className="card" key={i}>
-            <img src="/img/show-1.jpg" alt="evento" />
-            <button>Ver Mais</button>
-          </div>
-        ))}
       </div>
     </div>
   );
