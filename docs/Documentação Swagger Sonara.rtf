@@ -1,0 +1,443 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2821
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww51000\viewh28800\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs26 \cf0 openapi: 3.0.3\
+\
+info:\
+  title: Sonara (Documenta\'e7\'e3o de API)\
+  description: API completa para gest\'e3o de usu\'e1rios, eventos, artistas, avalia\'e7\'f5es e contrata\'e7\'f5es\
+  version: 1.0.0\
+\
+servers:\
+  - url: http://localhost:8080/v1/Sonara\
+\
+paths:\
+\
+  # ================= USU\'c1RIO =================\
+  /usuarios:\
+    get:\
+      tags: [Usu\'e1rio]\
+      summary: Lista usu\'e1rios\
+      responses:\
+        '200':\
+          description: OK\
+\
+    post:\
+      tags: [Usu\'e1rio]\
+      summary: Cria usu\'e1rio\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Usuario'\
+      responses:\
+        '201':\
+          description: Criado\
+\
+  /usuarios/\{id\}:\
+    get:\
+      tags: [Usu\'e1rio]\
+      summary: Busca usu\'e1rio\
+      parameters:\
+        - name: id\
+          in: path\
+          required: true\
+          schema: \{ type: integer \}\
+      responses:\
+        '200': \{ description: OK \}\
+\
+    put:\
+      tags: [Usu\'e1rio]\
+      summary: Atualiza usu\'e1rio\
+      parameters:\
+        - name: id\
+          in: path\
+          required: true\
+          schema: \{ type: integer \}\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Usuario'\
+      responses:\
+        '200': \{ description: Atualizado \}\
+\
+    delete:\
+      tags: [Usu\'e1rio]\
+      summary: Remove usu\'e1rio\
+      parameters:\
+        - name: id\
+          in: path\
+          required: true\
+          schema: \{ type: integer \}\
+      responses:\
+        '204': \{ description: Removido \}\
+\
+  # ================= ENDERE\'c7O =================\
+  /enderecos:\
+    post:\
+      tags: [Endere\'e7o]\
+      summary: Criar endere\'e7o\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Endereco'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  # ================= EVENTO =================\
+  /eventos:\
+    get:\
+      tags: [Evento]\
+      summary: Listar eventos\
+      responses:\
+        '200': \{ description: OK \}\
+\
+    post:\
+      tags: [Evento]\
+      summary: Criar evento\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Evento'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  /eventos/\{id\}:\
+    get:\
+      tags: [Evento]\
+      summary: Buscar evento\
+      parameters:\
+        - name: id\
+          in: path\
+          required: true\
+          schema: \{ type: integer \}\
+      responses:\
+        '200': \{ description: OK \}\
+\
+    delete:\
+      tags: [Evento]\
+      summary: Remover evento\
+      parameters:\
+        - name: id\
+          in: path\
+          required: true\
+          schema: \{ type: integer \}\
+      responses:\
+        '204': \{ description: Removido \}\
+\
+  # ================= ARTISTA =================\
+  /artistas:\
+    get:\
+      tags: [Artista]\
+      summary: Listar artistas\
+      responses:\
+        '200': \{ description: OK \}\
+\
+    post:\
+      tags: [Artista]\
+      summary: Criar artista\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Artista'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  # ================= G\'caNERO =================\
+  /generos:\
+    get:\
+      tags: [G\'eanero]\
+      summary: Listar g\'eaneros\
+      responses:\
+        '200': \{ description: OK \}\
+\
+    post:\
+      tags: [G\'eanero]\
+      summary: Criar g\'eanero\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Genero'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  # ================= ARTISTA-G\'caNERO =================\
+  /artistas/generos:\
+    post:\
+      tags: [Artista]\
+      summary: Vincular g\'eanero ao artista\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/ArtistaGenero'\
+      responses:\
+        '201': \{ description: Vinculado \}\
+\
+  # ================= EVENTO-ARTISTA =================\
+  /eventos/\{id\}/artistas:\
+    post:\
+      tags: [Contrata\'e7\'e3o]\
+      summary: Vincular artista ao evento\
+      parameters:\
+        - name: id\
+          in: path\
+          required: true\
+          schema: \{ type: integer \}\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/EventoArtista'\
+      responses:\
+        '201': \{ description: Vinculado \}\
+\
+  # ================= STATUS =================\
+  /status:\
+    get:\
+      tags: [Status]\
+      summary: Listar status\
+      responses:\
+        '200': \{ description: OK \}\
+\
+  # ================= STATUS DO ARTISTA NO EVENTO =================\
+  /eventos/artistas/status:\
+    post:\
+      tags: [Contrata\'e7\'e3o]\
+      summary: Atualizar status do artista no evento\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/EventoArtistaStatus'\
+      responses:\
+        '201': \{ description: Atualizado \}\
+\
+  # ================= AVALIA\'c7\'d5ES =================\
+  /avaliacoes/eventos:\
+    post:\
+      tags: [Avalia\'e7\'e3o]\
+      summary: Avaliar evento\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/AvaliacaoEvento'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  /avaliacoes/artistas:\
+    post:\
+      tags: [Avalia\'e7\'e3o]\
+      summary: Avaliar artista\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/AvaliacaoArtista'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  # ================= REDES SOCIAIS =================\
+  /redes-sociais:\
+    post:\
+      tags: [Social]\
+      summary: Vincular rede social ao usu\'e1rio\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/RedeSocial'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  /tipos-redes:\
+    get:\
+      tags: [Social]\
+      summary: Listar tipos de redes sociais\
+      responses:\
+        '200': \{ description: OK \}\
+\
+  # ================= ORGANIZADOR =================\
+  /organizadores:\
+    post:\
+      tags: [Organizador]\
+      summary: Criar organizador\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Organizador'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  # ================= EVENTO ORGANIZADOR =================\
+  /eventos/organizadores:\
+    post:\
+      tags: [Organizador]\
+      summary: Vincular organizador ao evento\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/EventoOrganizador'\
+      responses:\
+        '201': \{ description: Vinculado \}\
+\
+  # ================= FOTOS =================\
+  /fotos:\
+    post:\
+      tags: [Foto]\
+      summary: Upload de foto\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/Foto'\
+      responses:\
+        '201': \{ description: Criado \}\
+\
+  /eventos/fotos:\
+    post:\
+      tags: [Foto]\
+      summary: Vincular foto ao evento\
+      requestBody:\
+        content:\
+          application/json:\
+            schema:\
+              $ref: '#/components/schemas/EventoFoto'\
+      responses:\
+        '201': \{ description: Vinculado \}\
+\
+components:\
+  schemas:\
+\
+    Usuario:\
+      type: object\
+      properties:\
+        id: \{ type: integer, readOnly: true \}\
+        nome: \{ type: string \}\
+        email: \{ type: string \}\
+        senha: \{ type: string \}\
+        cpf: \{ type: string \}\
+        data_nasc: \{ type: string, format: date \}\
+        endereco_id: \{ type: integer \}\
+        foto_perfil: \{ type: string \}\
+\
+    Endereco:\
+      type: object\
+      properties:\
+        id: \{ type: integer \}\
+        cep: \{ type: string \}\
+        cidade: \{ type: string \}\
+        estado: \{ type: string \}\
+        logradouro: \{ type: string \}\
+        numero: \{ type: string \}\
+\
+    Evento:\
+      type: object\
+      properties:\
+        id: \{ type: integer \}\
+        nome: \{ type: string \}\
+        descricao: \{ type: string \}\
+        local: \{ type: string \}\
+        data: \{ type: string, format: date \}\
+        hora_inicio: \{ type: string \}\
+        hora_fim: \{ type: string \}\
+        endereco_id: \{ type: integer \}\
+\
+    Artista:\
+      type: object\
+      properties:\
+        id: \{ type: integer \}\
+        nome_artistico: \{ type: string \}\
+        usuario_id: \{ type: integer \}\
+        descricao: \{ type: string \}\
+\
+    Genero:\
+      type: object\
+      properties:\
+        id: \{ type: integer \}\
+        nome: \{ type: string \}\
+\
+    ArtistaGenero:\
+      type: object\
+      properties:\
+        artista_id: \{ type: integer \}\
+        genero_id: \{ type: integer \}\
+\
+    EventoArtista:\
+      type: object\
+      properties:\
+        artista_id: \{ type: integer \}\
+        cache_ofertado: \{ type: number \}\
+        cache_final: \{ type: number \}\
+\
+    EventoArtistaStatus:\
+      type: object\
+      properties:\
+        evento_artista_id: \{ type: integer \}\
+        status_id: \{ type: integer \}\
+        data_hora: \{ type: string \}\
+\
+    Status:\
+      type: object\
+      properties:\
+        id: \{ type: integer \}\
+        nome: \{ type: string \}\
+\
+    AvaliacaoEvento:\
+      type: object\
+      properties:\
+        usuario_id: \{ type: integer \}\
+        evento_id: \{ type: integer \}\
+        numero_estrelas: \{ type: integer \}\
+\
+    AvaliacaoArtista:\
+      type: object\
+      properties:\
+        usuario_id: \{ type: integer \}\
+        artista_id: \{ type: integer \}\
+        numero_estrelas: \{ type: integer \}\
+\
+    RedeSocial:\
+      type: object\
+      properties:\
+        usuario_id: \{ type: integer \}\
+        tipo_id: \{ type: integer \}\
+        link: \{ type: string \}\
+\
+    Organizador:\
+      type: object\
+      properties:\
+        usuario_id: \{ type: integer \}\
+\
+    EventoOrganizador:\
+      type: object\
+      properties:\
+        evento_id: \{ type: integer \}\
+        organizador_id: \{ type: integer \}\
+        acao_id: \{ type: integer \}\
+\
+    Foto:\
+      type: object\
+      properties:\
+        id: \{ type: integer \}\
+        foto: \{ type: string \}\
+\
+    EventoFoto:\
+      type: object\
+      properties:\
+        evento_id: \{ type: integer \}\
+        foto_id: \{ type: integer \}\
+}
