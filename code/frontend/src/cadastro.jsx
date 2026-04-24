@@ -1,10 +1,14 @@
+import { Navigate } from "react-router-dom";
 import "./cadastro.css";
+import logo from "./img/sonara-logo.svg";
+import { useState } from "react";
 
 function Cadastro() {
   return (
     <div className="container">
-      <header>
-        <h2>Cadastro</h2>
+      <header className="header">
+        <img src={logo} alt="Logo Sonara" />
+        <p>CADASTRO</p>
       </header>
 
       <main>
@@ -13,16 +17,35 @@ function Cadastro() {
           <section className="secao-dados">
             <h3>Dados Pessoais</h3>
 
-            <div className="campo">
-              <label htmlFor="nome">Nome Completo</label>
-              <input
-                type="text"
-                id="nome"
-                placeholder="Digite seu nome"
-                required
-              />
+            {/* LINHA 1 */}
+            <div className="grupo-duplo">
+              <div className="campo">
+                <label htmlFor="nome">Nome Completo</label>
+                <input
+                  type="text"
+                  id="nome"
+                  placeholder="Digite seu nome"
+                  required
+                />
+              </div>
+
+              <div className="campo">
+                <label htmlFor="cpf">CPF</label>
+                <input
+                  type="text"
+                  id="cpf"
+                  placeholder="000.000.000-00"
+                  required
+                />
+              </div>
+
+              <div className="campo">
+                <label htmlFor="nascimento">Data de Nascimento</label>
+                <input type="date" id="nascimento" required />
+              </div>
             </div>
 
+            {/* LINHA 2 */}
             <div className="grupo-duplo">
               <div className="campo">
                 <label htmlFor="email">Email</label>
@@ -43,8 +66,19 @@ function Cadastro() {
                   required
                 />
               </div>
+
+              <div className="campo">
+                <label htmlFor="tel">Telefone</label>
+                <input
+                  type="tel"
+                  id="tel"
+                  placeholder="(00) 00000-0000"
+                  required
+                />
+              </div>
             </div>
 
+            {/* LINHA 3 */}
             <div className="grupo-duplo">
               <div className="campo">
                 <label htmlFor="senha">Senha</label>
@@ -65,43 +99,16 @@ function Cadastro() {
                   required
                 />
               </div>
-            </div>
-
-            <div className="grupo-triplo">
-              <div className="campo">
-                <label htmlFor="cpf">CPF</label>
-                <input
-                  type="text"
-                  id="cpf"
-                  placeholder="000.000.000-00"
-                  required
-                />
-              </div>
-
-              <div className="campo-date">
-                <label htmlFor="nascimento">Data de Nascimento</label>
-                <input type="date" id="nascimento" required />
-              </div>
 
               <div className="campo">
-                <label htmlFor="tel">Telefone</label>
-                <input
-                  type="tel"
-                  id="tel"
-                  placeholder="(00) 00000-0000"
-                  required
-                />
+                <label htmlFor="nacionalidade">Nacionalidade</label>
+                <select id="nacionalidade" required>
+                  <option value="">Selecione...</option>
+                  <option value="brasileira">Brasileira</option>
+                  <option value="portuguesa">Portuguesa</option>
+                  <option value="angolana">Angolana</option>
+                </select>
               </div>
-            </div>
-
-            <div className="campo-nacionalidade">
-              <label htmlFor="nacionalidade">Nacionalidade</label>
-              <select id="nacionalidade" required>
-                <option value="">Selecione...</option>
-                <option value="brasileira">Brasileira</option>
-                <option value="portuguesa">Portuguesa</option>
-                <option value="angolana">Angolana</option>
-              </select>
             </div>
           </section>
 
@@ -153,9 +160,7 @@ function Cadastro() {
             </div>
           </section>
 
-          <button type="submit" className="btn-cadastrar">
-            Finalizar Cadastro
-          </button>
+          <button onClick={() => navigate("/login")}>Fazer Login</button>
         </form>
       </main>
     </div>

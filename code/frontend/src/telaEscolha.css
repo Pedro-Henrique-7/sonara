@@ -43,6 +43,13 @@ main {
   gap: 30px;
 }
 
+main h2 {
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--cor-letra);
+  width: 300px;
+}
+
 .botao {
   display: flex;
   align-items: center;

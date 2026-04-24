@@ -6,17 +6,43 @@
   font-family: sans-serif;
 }
 
+/* BASE */
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
 /* BODY */
 body {
   padding: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* HEADER */
 header {
-  text-align: center;
-  margin-bottom: 20px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15vh;
+}
+header p {
+  font-size: 45px;
+  font-weight: bold;
+  margin-bottom: 115px;
+}
+
+img {
+  height: 350px;
+  width: 350px;
+  position: absolute;
+}
+h2 {
+  font-size: 40px;
+  margin-bottom: 10px;
+  gap: 10px;
 }
 
 /* FORM CONTAINER */
@@ -27,7 +53,6 @@ header {
   border-radius: 14px;
   width: 100%;
   max-width: 1050px;
-  margin: 0 auto;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
@@ -37,14 +62,13 @@ h3 {
   padding-bottom: 6px;
   font-size: 1.1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  width: 100%;
 }
 
 /* CAMPOS */
 .campo {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  margin-bottom: 15px;
 }
 
 /* LABEL */
@@ -68,54 +92,56 @@ select {
   transition: 0.2s ease;
 }
 
+/* INPUT DATE */
+input[type="date"] {
+  appearance: none;
+}
+
 /* FOCO */
 input:focus,
 select:focus {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
-/* GRID BASE */
-.grupo-duplo,
-.grupo-triplo,
-.grid-endereco {
+/* GRID PADRÃO (3x3 ORGANIZADO) */
+.grupo-duplo {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 15px;
+}
+
+/* GARANTE QUE OS CAMPOS NÃO QUEBREM */
+.grupo-duplo .campo {
   width: 100%;
 }
 
-/* CORREÇÃO CRÍTICA */
-.grupo-duplo {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.grupo-triplo {
-  grid-template-columns: repeat(3, 1fr); /* aqui tava errado */
-}
-
-
+/* GRID ENDEREÇO (mantido igual) */
 .grid-endereco {
-  grid-template-columns: repeat(6, 1fr);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-/* ENDEREÇO */
-.cep {
-  grid-column: span 2;
+/* GRID ENDEREÇO PADRÃO IGUAL DADOS PESSOAIS */
+.grid-endereco {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
-.rua {
-  grid-column: span 3;
-}
-.numero {
-  grid-column: span 1;
-}
-.bairro {
-  grid-column: span 3;
-}
-.cidade {
-  grid-column: span 2;
-}
+
+.cep,
+.rua,
+.numero,
+.bairro,
+.cidade,
 .uf {
   grid-column: span 1;
+}
+
+/* NACIONALIDADE */
+.campo-nacionalidade {
+  max-width: 250px;
 }
 
 /* BOTÃO */
@@ -141,17 +167,4 @@ select:focus {
 
 .btn-cadastrar:active {
   transform: translateY(0);
-}
-
-.campo-nacionalidade {
-  width: 270px;
-  margin-left: 350px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  align-items: end;
-}
-
-.campo-date {
-  background-color: aqua;
-  
 }

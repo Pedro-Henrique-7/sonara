@@ -1,15 +1,14 @@
-*{
-    margin: 0;
-    padding: 0%;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0%;
+  box-sizing: border-box;
 }
 
-body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 header {
@@ -17,11 +16,8 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  
-
 }
-img{
+img {
   height: 350px;
   position: absolute;
 }
@@ -29,72 +25,64 @@ img{
 header p {
   font-size: 45px;
   font-weight: bold;
-
-
-  
+  margin-top: 13vh;
 }
-p{
-    font-size: 10px;
-     font-size: 20px;
-  font-weight: bold;
 
+p {
+  font-size: 10px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 main {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-  
-    
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.caixa{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-     gap: 10px;
-    background: linear-gradient( #a3240d, rgb(216, 57, 36), rgb(240, 81, 7));
-      padding: 50px;             
-      border-radius: 20px;       
-      width: 400px;          
-      margin: 70px auto;          
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+.caixa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(#a3240d, rgb(216, 57, 36), rgb(240, 81, 7));
+  padding: 50px;
+  border-radius: 20px;
+  width: 400px;
+  margin: 70px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-main label{
+main label {
   text-align: left;
   display: flex;
   align-items: flex-start;
-  
 }
 
 main p {
-    margin: 10px  ;
-    
+  margin: 10px;
 }
 main input {
-    height: 40px;
-    background-color: white;
-    color: black;
-    width: 270px;
-    border-radius: 8px;
-    border: 0px;
-}
- 
-button{
-display: flex;
-margin:  30px auto  ;
-align-items: center;
-justify-content: center;
-background-color: #FC7427;
-  box-shadow: 0 10px 6px rgba(0,0,0,0.1); 
- 
+  height: 40px;
+  background-color: white;
+  color: black;
+  width: 270px;
+  border-radius: 8px;
+  border: 0px;
 }
 
-main span{
+button {
+  display: flex;
+  margin: 30px auto;
+  align-items: center;
+  justify-content: center;
+  background-color: #fc7427;
+  box-shadow: 0 10px 6px rgba(0, 0, 0, 0.1);
+}
+
+main span {
   margin: 10px;
-
 }
-.senha{
+.senha {
   display: flex;
   align-items: center;
   justify-content: center;
