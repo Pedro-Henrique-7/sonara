@@ -5,8 +5,9 @@ import "./telaShows.css";
 import { Search } from "lucide-react";
 import show1 from "./img/show1.jfif";
 import show2 from "./img/show2.webp";
+import show3 from "./img/show3.png";
 
-const imagens = [show1, show2];
+const imagens = [show1, show2, show3];
 
 export default function Shows() {
   const [index, setIndex] = useState(0);
@@ -20,7 +21,7 @@ export default function Shows() {
 
   return (
     <div className="main-wrapper">
-      <header className="header">
+      <header>
         <div className="content-limit">
           {" "}
           <div className="header-top">
@@ -41,7 +42,6 @@ export default function Shows() {
           </div>
         </div>
       </header>
-
       <div className="container">
         <div className="search-wrapper">
           {" "}
@@ -70,11 +70,13 @@ export default function Shows() {
           </div>
         </div>
 
+        <h3 className="titulo">Eventos Para você</h3>
+
         {/* GRID */}
         <div className="grid">
-          {Array.from({ length: 9 }).map((_, i) => (
+          {Array.from({ length: 12 }).map((_, i) => (
             <div className="card" key={i}>
-              <img src="/img/show1.jfif" alt="evento" />
+              <img src="{show3}" alt="evento" />
               <button>Ver Mais</button>
             </div>
           ))}

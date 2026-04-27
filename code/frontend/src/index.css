@@ -6,8 +6,10 @@
 
 body {
   margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  box-sizing: border-box;
 
   background: linear-gradient(
     to bottom,
