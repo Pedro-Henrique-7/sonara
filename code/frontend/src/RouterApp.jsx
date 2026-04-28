@@ -4,6 +4,7 @@ import Cadastro from "./cadastro";
 import Login from "./login";
 import Shows from "./telaShows";
 import TelaRecuperarSenha from "./recuperar_senha";
+import SobreEvento from "./sobreEvento.jsx";
 
 export default function RouterApp() {
   return (
@@ -14,6 +15,7 @@ export default function RouterApp() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/shows" element={<Shows />} />
         <Route path="/recuperar_senha" element={<TelaRecuperarSenha />} />
+        <Route path="/sobreEvento" element={<SobreEvento />} />
       </Routes>
     </BrowserRouter>
   );

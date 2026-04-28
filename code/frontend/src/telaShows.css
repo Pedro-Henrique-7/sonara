@@ -1,4 +1,4 @@
-/* Reset básico para ocupar toda a tela */
+
 * {
   margin: 0;
   padding: 0;
@@ -13,10 +13,9 @@ html,
   min-height: 100vh;
 }
 
-/* Header e Navegação */
+/*Header para navegação*/
 header {
   width: 100%;
-
   margin-top: 0;
 }
 
@@ -32,6 +31,7 @@ header {
   align-items: center;
   padding: 1rem 0;
   width: 100%;
+  margin-left: 110px;
 }
 
 .nav {
@@ -61,8 +61,8 @@ header {
 .user {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-left: 50px;
+  gap: 1.5rem;
+  margin-left: 130px;
 }
 
 .user-info {
@@ -74,6 +74,7 @@ header {
   display: block;
   font-size: 1.5rem;
   font-weight: bold;
+  width: 200px;
 }
 
 .user-role {
@@ -83,11 +84,19 @@ header {
 }
 
 .avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   background-color: #ccc;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.avatar img{
+  width: 3rem;
+  height: 3rem;
+  background-color: #ccc;
+  border-radius: 50%;
+  flex-shrink: 0; 
 }
 
 /* Container de Conteúdo */
@@ -98,7 +107,7 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* garante que não ultrapasse a tela */
+  width: 100%;
 }
 
 /* Barra de Busca */
@@ -146,15 +155,18 @@ header {
   letter-spacing: 0.063rem;
 }
 
+/*Slider para troca de IMG*/
 .slider {
   width: 100%;
   max-width: 50rem;
-  /* altura relativa, mas com máximo para não esticar demais */
   height: clamp(200px, 40vh, 400px);
   min-height: 200px;
   overflow: hidden;
   border-radius: 0.5rem;
-  margin-bottom: 3rem; /* reduzido para não exagerar */
+  margin-bottom: 3rem; 
+  border-style:solid;
+  border-color:#f4511e; 
+
 }
 
 .slider-track {
@@ -166,12 +178,38 @@ header {
 .slide {
   min-width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+
+}
+
+.btn-slide {
+  position: absolute;
+  top: 17rem;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background-color: rgba(0, 0, 0, 0.61);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-slide button {
+border-style: solid;
+border-color: #882c10;
+border-radius: 1.25rem;
+font-size: 1rem;
+transition: transform 0.3s ease;
+}
+
+.btn-slide button:hover {
+  transform: scale(1.1);
 }
 
 /* Grid de Cards */
@@ -188,6 +226,9 @@ header {
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.3);
+  border-style: solid;
+  border-color: #882c10;
+  border-radius: 1.25rem;
 }
 
 .card img {
@@ -205,10 +246,10 @@ header {
   border: none;
   padding: 0.375rem 0.938rem;
   border-radius: 1.25rem;
-  font-size: 0.75rem;
-  font-weight: bold;
+  font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s;
+  top:17.5rem;
 }
 
 .card button:hover {

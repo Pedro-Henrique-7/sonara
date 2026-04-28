@@ -6,10 +6,13 @@ import { Search } from "lucide-react";
 import show1 from "./img/show1.jfif";
 import show2 from "./img/show2.webp";
 import show3 from "./img/show3.png";
+import show4 from "./img/show4.png";
+import fotoPerfil from "./img/fotoPerfil.jpg";
 
-const imagens = [show1, show2, show3];
+const imagens = [show1, show2, show4];
 
 export default function Shows() {
+  const navigate = useNavigate();
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -37,7 +40,9 @@ export default function Shows() {
                 <span className="user-name">Yuri Silva</span>
                 <span className="user-role">Artista</span>
               </div>
-              <div className="avatar"></div>
+              <div className="avatar">
+                <img src={fotoPerfil} alt="Perfil" />
+              </div>
             </div>
           </div>
         </div>
@@ -65,6 +70,10 @@ export default function Shows() {
             {imagens.map((img, i) => (
               <div className="slide" key={i}>
                 <img src={img} alt={`evento-${i}`} />
+
+                <div className="btn-slide">
+                  <button>Ver Mais</button>
+                </div>
               </div>
             ))}
           </div>
@@ -72,12 +81,12 @@ export default function Shows() {
 
         <h3 className="titulo">Eventos Para você</h3>
 
-        {/* GRID */}
         <div className="grid">
           {Array.from({ length: 12 }).map((_, i) => (
             <div className="card" key={i}>
-              <img src="{show3}" alt="evento" />
-              <button>Ver Mais</button>
+              {/* Removido as aspas de volta da variável */}
+              <img src={show3} alt="evento" />
+              <button onClick={() => navigate("/sobreEvento")}>Ver Mais</button>
             </div>
           ))}
         </div>
