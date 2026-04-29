@@ -3,28 +3,218 @@
   margin: 0;
   box-sizing: border-box;
 }
-main {
+
+.container-informacao {
+  width: 205%;
+  height: 105vh;
+  background: linear-gradient(to bottom, #ff00008a 36%, #fc4c13 100%);
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+}
+.container-principal {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
   padding: 40px;
+  align-items: flex-start;
 }
 
-.descricao-input {
-  background-color: aqua;
-  height: 200px;
-  width: 760px;
-}
-
+/* IMAGEM */
 .container-foto {
-  position: relative;
   width: 100%;
-  max-width: 500px;
 }
 
 .container-foto img {
-  width: 100%;
+  width: 606px;
   height: 250px;
+  border-radius: 20px;
   object-fit: cover;
-  border-radius: 15px;
+  margin-left: 50px;
+  margin-top: 30px;
+}
+
+/* TEXTO */
+.container-sobre {
+  width: 100%;
+}
+
+.descricao-evento {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-right: 20px;
+  margin-top: 10px;
+}
+
+.descricao-evento label {
+  font-weight: bold;
+  color: #fff;
+  font-size: 20px;
+}
+
+.descricao-evento section {
+  width: 100%;
+  height: 200px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  resize: none;
+  font-size: 14px;
+  background-color: #d9d9d9;
+  border-style: solid;
+  border-color: #fc4d139d;
+}
+
+.descricao-evento section p {
+  color: #000;
+}
+
+.nome-evento {
+  margin-top: 300px;
+  margin-left: 50px;
+  width: 300px;
+}
+
+.nome-evento p {
+  font-size: 24px;
+  color: #fff;
+}
+
+.nome-evento section {
+  background-color: #d9d9d9;
+  border-style: solid;
+  border-radius: 50px;
+  height: 55px;
+  width: 200%;
+}
+
+.nome-evento section p {
+  font-size: 20px;
+  color: #000000;
+}
+
+.linha-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  margin-left: 50px;
+}
+
+/* lado esquerdo (data + horas) */
+.info-evento {
+  display: flex;
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 25px;
+  margin-top: 10px;
+}
+
+.box {
+  margin-top: 5px;
+  background: #d9d9d9;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: black;
+  text-align: center;
+}
+
+/* lado direito (localização) */
+.localizacao {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  max-width: 600px;
+}
+
+.localizacao span {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.box-local {
+  margin-top: 5px;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid black;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.mapa-evento img {
+  height: 250px;
+}
+
+.mapa-evento label {
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.container-artista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.container-artista label {
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
+  margin-left: 50px;
+}
+
+.container-artista p {
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
+  margin-left: 50px;
+}
+
+.nome-evento {
+  margin-top: 300px;
+  margin-left: 50px;
+  width: 300px;
+}
+
+.nome-artista p {
+  font-size: 24px;
+  color: #fff;
+}
+
+.nome-artista section {
+  background-color: #d9d9d9;
+  border-style: solid;
+  border-radius: 50px;
+  height: 55px;
+  width: 50%;
+  margin-left: 48px;
+}
+
+.nome-artista section p {
+  font-size: 20px;
+  color: #000000;
+}
+
+.artista-foto p {
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
+  margin-left: 50px;
+  margin-top: 10px;
+}
+
+.artista-foto img {
+  width: 20%;
+  height: 170px;
+  display: flex;
+  margin-left: 3rem;
+  margin-top: 4px;
 }
