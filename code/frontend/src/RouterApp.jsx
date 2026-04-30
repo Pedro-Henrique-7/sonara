@@ -5,6 +5,7 @@ import Login from "./login";
 import Shows from "./telaShows";
 import TelaRecuperarSenha from "./recuperar_senha";
 import SobreEvento from "./sobreEvento.jsx";
+import InscricaoEvento from "./inscricaoEvento.jsx";
 
 export default function RouterApp() {
   return (
@@ -16,6 +17,7 @@ export default function RouterApp() {
         <Route path="/shows" element={<Shows />} />
         <Route path="/recuperar_senha" element={<TelaRecuperarSenha />} />
         <Route path="/sobreEvento" element={<SobreEvento />} />
+        <Route path="/inscricao" element={<InscricaoEvento />} />
       </Routes>
     </BrowserRouter>
   );

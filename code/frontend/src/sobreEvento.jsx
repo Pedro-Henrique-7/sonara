@@ -66,19 +66,7 @@ export default function SobreEvento() {
               </div>
             </div>
 
-            <div className="container-artista">
-              <div className="nome-artista">
-                <p>Nome do Artista: </p>
-                <section className="nome">
-                  <p>Sammuca da massa</p>
-                </section>
-              </div>
-
-              <section className="artista-foto">
-                <p> Foto do Artista: </p>
-                <img src={fotoShow} alt="Foto do Artista" />
-              </section>
-            </div>
+            <button onClick={() => navigate("/inscricao")}>Inscreva-se</button>
           </div>
 
           <div className="container-sobre">

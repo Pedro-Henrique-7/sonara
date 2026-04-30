@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container-foto {
+  height: 25.5rem;
+  width: 100%;
+}
+
+.container-img img {
+  height: 350px;
+  width: 700px;
+  margin-left: 80px;
+  margin-top: 50px;
+  bottom: 18rem;
+}
+
+.top-section {
+  background-color: aqua;
+  background-color: rgba(247, 78, 0, 0.37);
+  margin-left: 30px;
+  border-radius: 20px;
+}
+
+.form-inscricao-container {
+  margin-left: 30px;
+  margin-top: 30px;
+}
+
+.form-inscricao-container label {
+  font-weight: bold;
+  font-size: 15px;
+  color: #fff;
+}
+
+.form-inscricao-container section {
+  width: 300px;
+  height: 35px;
+  border-style: solid;
+  border-color: #fff;
+  background-color: rgb(255, 255, 255);
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+}
+
+.form-inscricao-container section p {
+  font-size: 20px;
+  color: #000000;
+  margin-left: 10px;
+  margin-top: 0.5px;
+  font-style: initial;
+}
+
+.form-inscricao-container .descricao-evento section {
+  width: 500px;
+  height: 100px;
+  border-style: solid;
+  border-color: #fff;
+  background-color: rgb(255, 255, 255);
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+}
+
+.form-inscricao-container .descricao-evento section p {
+  font-size: 20px;
+  color: #000000;
+  margin-left: 10px;
+  font-style: initial;
+}
+
+.row-campos {
+  display: flex;
+  gap: 20px;
+}
+
+.campo-data div {
+  background-color: aqua;
+  margin-left: none;
+  height: 50px;
+  width: 150px;
+  left: 10px;
+}
