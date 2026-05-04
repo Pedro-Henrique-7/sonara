@@ -31,7 +31,12 @@ export default function Shows() {
             <nav className="nav">
               <span className="nav-item">Home</span>
               <span className="nav-item">Buscar</span>
-              <span className="nav-item">Meus Eventos</span>
+              <span
+                className="nav-item"
+                onClick={() => navigate("/sobreEvento")}
+              >
+                Meus Eventos
+              </span>
               <span className="nav-item">Plano</span>
             </nav>
 
@@ -86,7 +91,7 @@ export default function Shows() {
             <div className="card" key={i}>
               {/* Removido as aspas de volta da variável */}
               <img src={show3} alt="evento" />
-              <button onClick={() => navigate("/sobreEvento")}>Ver Mais</button>
+              <button onClick={() => navigate("/inscricao")}>Ver Mais</button>
             </div>
           ))}
         </div>

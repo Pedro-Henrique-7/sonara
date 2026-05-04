@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./incricaoEvento.css";
 import fotoShow from "./img/fotoShow.png";
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"></link>;
 
 export default function SobreEvento() {
   const navigate = useNavigate();
@@ -15,7 +16,12 @@ export default function SobreEvento() {
                 Home
               </span>
               <span className="nav-item">Buscar</span>
-              <span className="nav-item">Meus Eventos</span>
+              <span
+                className="nav-item"
+                onClick={() => navigate("/sobreEvento")}
+              >
+                Meus Eventos
+              </span>
               <span className="nav-item">Plano</span>
             </nav>
 
@@ -82,27 +88,28 @@ export default function SobreEvento() {
         {/* Seção Inferior: Detalhes de Cache e Status */}
         <div className="bottom-section">
           <div className="info-cache-container">
-            <div className="campo-grupo">
-              <label>Cache Esperado</label>
-              <input type="text" className="input-field" />
+            <div className="cache-esperado">
+              <p>Cache Esperado: </p>
+              <section className="nome">
+                <p>R$200</p>
+              </section>
             </div>
 
-            <div className="campo-grupo">
-              <label>Cache Ofertado</label>
-              <input type="text" className="input-field" />
+            <div className="cache-esperado">
+              <p>Cache Ofertado: </p>
+              <section className="nome">
+                <p>R$250</p>
+              </section>
             </div>
 
-            <div className="campo-grupo">
-              <label>Status</label>
-              <input type="text" className="input-field" />
+            <div data-aos="zoom-in-up">
+              <button
+                className="btn-ver-eventos"
+                onClick={() => navigate("/meus-eventos")}
+              >
+                Ver meus Eventos
+              </button>
             </div>
-
-            <button
-              className="btn-ver-eventos"
-              onClick={() => navigate("/meus-eventos")}
-            >
-              Ver meus Eventos
-            </button>
           </div>
         </div>
       </main>
