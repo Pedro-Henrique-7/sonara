@@ -27,7 +27,7 @@ function Cadastro() {
     tel: "",
     senha: "",
     "confirm-senha": "",
-    idNacionalidade: "",
+    id_nacionalidade: "",
     id_genero: "",
     cep: "",
     logradouro: "",
@@ -137,7 +137,7 @@ function Cadastro() {
         email: form.email,
         telefone: form.tel,
         senha: form.senha,
-        nacionalidade_id: Number(form.idNacionalidade),
+        nacionalidade_id: Number(form.id_nacionalidade),
         genero_id: Number(form.id_genero),
         endereco_id: respostaEndereco.response.id,
       };
