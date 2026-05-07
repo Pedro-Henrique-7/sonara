@@ -34,7 +34,12 @@ export default function Shows() {
               <span className="nav-item" onClick={() => navigate("")}>
                 Meus Eventos
               </span>
-              <span className="nav-item">Plano</span>
+              <span
+                className="nav-item"
+                onClick={() => navigate("/planosArtista")}
+              >
+                Plano
+              </span>
             </nav>
 
             <div className="user">

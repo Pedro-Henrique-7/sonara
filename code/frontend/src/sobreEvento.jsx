@@ -19,7 +19,12 @@ export default function SobreEvento() {
               <span className="nav-item" onClick={() => navigate("")}>
                 Meus Eventos
               </span>
-              <span className="nav-item">Plano</span>
+              <span
+                className="nav-item"
+                onClick={() => navigate("/planosArtista")}
+              >
+                Plano
+              </span>
             </nav>
 
             <div className="user">
@@ -74,7 +79,9 @@ export default function SobreEvento() {
               </section>
             </div>
 
-            <button onClick={() => navigate("/inscricao")}>Inscreva-se</button>
+            <button onClick={() => navigate("/eventoInscricao")}>
+              Inscreva-se
+            </button>
           </div>
         </div>
       </main>
