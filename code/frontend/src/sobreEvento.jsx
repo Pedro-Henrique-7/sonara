@@ -10,10 +10,11 @@ export default function SobreEvento() {
     <div className="main-wrapper">
       <header>
         <div className="content-limit">
-          {" "}
           <div className="header-top">
             <nav className="nav">
-              <span className="nav-item">Home</span>
+              <span className="nav-item" onClick={() => navigate("/Shows")}>
+                Home
+              </span>
               <span className="nav-item">Buscar</span>
               <span className="nav-item" onClick={() => navigate("")}>
                 Meus Eventos
@@ -35,7 +36,7 @@ export default function SobreEvento() {
       </header>
 
       <main className="container-principal">
-        {/* ESQUERDA
+        {/* ESQUERDA */}
         <div className="left">
           <img src={fotoShow} alt="Evento" className="main-img" />
 
@@ -46,27 +47,31 @@ export default function SobreEvento() {
               <img key={i} src={fotoShow} alt="" />
             ))}
           </div>
-        </div> */}
+        </div>
 
         {/* DIREITA */}
         <div className="right">
           <div className="form-box">
-            <label>Nome do evento</label>
-            <input type="text" />
+            <section className="evento-nome">
+              <label>Nome do evento</label>
+              <p>Nome do Evento</p>
+            </section>
 
-            <label>Descrição:</label>
-            <textarea></textarea>
+            <section className="evento-descricao">
+              <label>Descrição:</label>
+              <p>Descrição do evento</p>
+            </section>
 
-            <div className="row">
-              <div>
+            <div className="evento-row">
+              <section className="evento-data">
                 <label>DATA</label>
-                <input type="text" placeholder="DD/MM/AAAA" />
-              </div>
+                <p>DD/MM/AAAA</p>
+              </section>
 
-              <div>
+              <section className="evento-hora">
                 <label>HORA</label>
-                <input type="text" placeholder="00:00" />
-              </div>
+                <p>00:00</p>
+              </section>
             </div>
 
             <button onClick={() => navigate("/inscricao")}>Inscreva-se</button>
