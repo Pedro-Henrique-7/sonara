@@ -11,13 +11,30 @@ const controllerUsuario = require('../controller/usuario/usuario')
 const router = express.Router()
 router.use((request, response, next ) => {
     response.header('Access-Control-Allow-Origin', '*')
-    response.header('Acess-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
 
     router.use(cors())
     next()
 })
 
-// ENDPOINTS DA TABELA Usuario
+// login antes de tudo 
+
+router.post('/login', cors(), bodyParserJson, async (req, res) => {
+    const contentType = req.headers['content-type']
+
+    if (!contentType || !contentType.toUpperCase().includes('APPLICATION/JSON')) {
+        return res.status(415).json({ message: 'Content-Type deve ser application/json' })
+    }
+
+    const { email, senha } = req.body
+
+    if (!email || !senha) {
+        return res.status(400).json({ message: 'Email e senha são obrigatórios' })
+    }
+
+    const result = await controllerUsuario.loginUsuario({ email, senha })
+    return res.status(result.status_code).json(result)
+})
 
 
 // retornar todos os Usuarios
@@ -28,7 +45,7 @@ router.get('/', cors(), async function (request, response){
     response.status(usuario.status_code)
     response.json(usuario)
 })
-module.exports = router 
+
 
 
 // pegar Usuario por id
@@ -76,3 +93,7 @@ router.delete('/:id', cors(), async function(request, response) {
     response.status(usuario.status_code)
     response.json(usuario)
 })
+
+
+
+module.exports = router 

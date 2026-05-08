@@ -72,11 +72,48 @@ const buscarUsuarioId = async function(id){
     }
 }
 
+const buscarUsuarioEmail = async function(email){
+    //Criando um objeto novo para as mensagens
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+
+        //Validação da chegada do ID
+        if(email != '' && email != null && email != undefined){
+            let resultusuarios = await usuarioDAO.getUsuarioByUsuarioEmail({ email })
+
+            if(resultusuarios){
+                if(resultusuarios.length > 0){
+                    MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.HEADER.response.usuarios = resultusuarios
+
+                    return MESSAGES.HEADER //200
+                }else{
+                    return MESSAGES.ERROR_NOT_FOUND //404
+                }
+            }else{
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+            }
+        }else{
+            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
+
+
+
+
+
 //Insere um  usuario
 const inserirUsuario = async function(usuario, contentType){
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
+    console.log(usuario)
     try {
         
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
@@ -84,11 +121,11 @@ const inserirUsuario = async function(usuario, contentType){
        
             let validar = await validarDadosUsuario(usuario)
 
-            if(!validar){
+            console.log(validar)
             
                 // let resultusuarios = await usuarioDAO.setInsertUsers(usuario)
 
-                if(!dadosValidos){
+            if(!validar){
 
                     let criptografiaDeSenha = crypto.hashPassword(usuario.senha)
 
@@ -98,43 +135,48 @@ const inserirUsuario = async function(usuario, contentType){
                         senha: criptografiaDeSenha,
                         cpf: usuario.cpf,
                         data_nascimento: usuario.data_nascimento,
-                        nacionalidade: usuario.nacionalidade,
-                        endereco: usuario.endereco
+                        nacionalidade_id: usuario.nacionalidade_id,
+                        endereco_id: usuario.endereco_id,
+                        genero_id: usuario.genero_id
 
                     }
+
+                    console.log(usuarioCriptografado)
 
                     let result = await usuarioDAO.setInsertUsers(usuarioCriptografado)
                 
 
-                if(result){
+                    if(result){
 
-                    let lastID = await usuarioDAO.getSelectLastID()
+                        let lastID = await usuarioDAO.getSelectLastID()
                
-                    if(lastID){
-                      
-                        usuario.id = lastID
-                        MESSAGES.HEADER.status          =   MESSAGES.SUCCESS_CREATED_ITEM.status
-                        MESSAGES.HEADER.status_code     =   MESSAGES.SUCCESS_CREATED_ITEM.status_code
-                        MESSAGES.HEADER.message         =   MESSAGES.SUCCESS_CREATED_ITEM.message
-                        MESSAGES.HEADER.response        =   usuario
+                        if(lastID){
+                            delete usuarioCriptografado.senha
+                            usuarioCriptografado.id_usuario = lastID
+                            MESSAGES.HEADER.status          =   MESSAGES.SUCCESS_CREATED_ITEM.status
+                            MESSAGES.HEADER.status_code     =   MESSAGES.SUCCESS_CREATED_ITEM.status_code
+                            MESSAGES.HEADER.message         =   MESSAGES.SUCCESS_CREATED_ITEM.message
+                            MESSAGES.HEADER.response        =   usuarioCriptografado
 
-                        return MESSAGES.HEADER //201
-                    }else{
+                            return MESSAGES.HEADER //201
+                        }else{
                         return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-                    }
+                        }
                     
-                }else{
+                    }else{
                     return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-                }
+                    }
+                
+            
             }else{
                 return validar //400
             }
-        }
+
         }else{
             return MESSAGES.ERROR_CONTENT_TYPE //415
         }
     } catch (error) {
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+        console.log(error)
     }
 }
 
@@ -144,7 +186,9 @@ const loginUsuario = async function(usuario){
 
         try {
 
-            const user = await usuarioDAO.getUsuarioByUsuarioNome(usuario.usuario);
+            const user = await usuarioDAO.getUsuarioByUsuarioEmail( usuario.email);
+
+            console.log(user)
 
             if (!user) {
 
@@ -154,14 +198,17 @@ const loginUsuario = async function(usuario){
 
             let senhaVerificada = crypto.verifyPassword(usuario.senha, user.senha)
 
+
             if(senhaVerificada){
 
-                delete user.senha
+                
                 MESSAGE.HEADER.status = MESSAGE.SUCCESS_REQUEST.status
                 MESSAGE.HEADER.status_code = MESSAGE.SUCCESS_REQUEST.status_code
                 MESSAGE.HEADER.response.usuario = user
 
                 return MESSAGE.HEADER //200
+            }else {
+            return MESSAGE.ERROR_REQUIRED_FIELDS // 400
             }
 
         } catch (error) {
@@ -261,48 +308,15 @@ const excluirUsuario = async function(id){
     }
 }
 
-// const validarDadosUsuario = async function(usuario){
-    
-    
-//     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
-//     if(usuario.nome == '' || usuario.nome == undefined || usuario.nome == null || usuario.nome.length > 100){
-//         MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Nome incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-    
-//     }else if(usuario.email == '' || usuario.email == undefined || usuario.email == null || usuario.email.length > 150) {
-//            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Email incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-
-//     }else if(usuario.senha == '' || usuario.senha == undefined || usuario.senha == null || usuario.senha.length > 100){
-//             MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Senha incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-
-//     } else if(usuario.cpf == '' || usuario.cpf == undefined || usuario.cpf == null ||  usuario.cpf.length > 14){
-//          MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [CPF incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-
-//     }else if(usuario.data_nascimento == '' || usuario.data_nascimento == undefined || usuario.data_nascimento == null || usuario.data_nascimento.length > 12){
-//          MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [DATA incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-//     }else if(usuario.nacionalidade == '' || usuario.nacionalidade == undefined || usuario.nacionalidade == null || usuario.nacionalidade == Number || usuario.nacionalidade.length > 80){
-//         MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [DATA incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-//     }else if(usuario.endereco == '' || usuario.endereco == undefined || usuario.endereco == null ||  usuario.endereco.length > 80){
-//          MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Endereco incorreto]' 
-//         return MESSAGES.ERROR_REQUIRED_FIELDS
-//     }else{
-//         return false
-//     }
-
-// }
 
 const validarDadosUsuario = function(usuario) {
     
     const gerarErro = (campo) => ({
-        DEFAULT_MESSAGES, 
+        status: DEFAULT_MESSAGES.ERROR_REQUIRED_FIELDS.status,
+        status_code: DEFAULT_MESSAGES.ERROR_REQUIRED_FIELDS.status_code,
         message: `${DEFAULT_MESSAGES.ERROR_REQUIRED_FIELDS.message} [Campo: ${campo}]`
-    });
+    })
 
     // Validações rápidas
     if (!usuario.nome || usuario.nome.length > 100) 
@@ -320,11 +334,14 @@ const validarDadosUsuario = function(usuario) {
     if (!usuario.data_nascimento || usuario.data_nascimento.length > 12) 
         return gerarErro('Data de Nascimento');
 
-    if (!usuario.nacionalidade || typeof usuario.nacionalidade !== 'string' || usuario.nacionalidade.length > 80) 
+    if (!usuario.nacionalidade_id || isNaN(usuario.nacionalidade_id))
         return gerarErro('Nacionalidade');
 
-    if (!usuario.endereco || usuario.endereco.length > 80) 
+    if (!usuario.endereco_id || isNaN(usuario.endereco_id))
         return gerarErro('Endereço');
+
+    if (!usuario.genero_id || isNaN(usuario.genero_id))
+        return gerarErro('Gênero');
 
     return false; // Retorna false se tudo estiver OK
 }
@@ -332,6 +349,7 @@ const validarDadosUsuario = function(usuario) {
 module.exports = {
     listarUsuarios,
     buscarUsuarioId,
+    buscarUsuarioEmail,
     inserirUsuario,
     atualizarUsuario,
     excluirUsuario,

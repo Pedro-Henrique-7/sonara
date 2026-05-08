@@ -80,10 +80,8 @@ const inserirEndereco = async function(endereco, contentType){
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
         if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
-
             //Chama a função de validar todos os dados do endereco
             let validar = await validarDadosEndereco(endereco)
-
             if(!validar){
             
                 //Processamento
@@ -93,7 +91,7 @@ const inserirEndereco = async function(endereco, contentType){
                 if(resultEnderecos){
                     //Chama a função para receber o ID gerado no BD
                     let lastID = await enderecoDAO.getSelectLastID()
-               
+            
                     if(lastID){
                         //Adiciona o ID no JSON com os dados do endereco
                         endereco.id = lastID
@@ -203,7 +201,7 @@ const excluirEndereco = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message = ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 
@@ -219,23 +217,23 @@ const validarDadosEndereco = async function(endereco){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if(endereco.cep == '' || endereco.cep == undefined || endereco.cep == null || endereco.cep.length > 11){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Nome incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message = ' [Cep incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
     
     }else if(endereco.cidade == '' || endereco.cidade == undefined || endereco.cidade == null || endereco.cidade.length > 170) {
-           MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Email incorreto]' 
+           MESSAGES.ERROR_REQUIRED_FIELDS.message = ' [Cidade incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     }else if(endereco.estado == '' || endereco.estado == undefined || endereco.estado == null || endereco.estado.length > 25){
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [Senha incorreto]' 
+            MESSAGES.ERROR_REQUIRED_FIELDS.message = ' [Estado incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
-    } else if(endereco.logradouro == '' || endereco.logradouro == undefined || endereco.logradouro == null ||  endereco.logradouro.length > 14){
-         MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [CPF incorreto]' 
+    } else if(endereco.logradouro == '' || endereco.logradouro == undefined || endereco.logradouro == null ||  endereco.logradouro.length > 255){
+         MESSAGES.ERROR_REQUIRED_FIELDS.message = ' [Logradouro incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     }else if(endereco.numero == '' || endereco.numero == undefined || endereco.numero == null || endereco.numero.length > 30){
-         MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [DATA incorreto]' 
+         MESSAGES.ERROR_REQUIRED_FIELDS.message = ' [Número incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
    
     }else{

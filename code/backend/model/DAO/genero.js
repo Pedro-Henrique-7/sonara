@@ -18,6 +18,7 @@ const getSelectAllGenders = async function(){
         let sql = `select * from tb_genero order by id_genero desc`
     
         let result = await knexDatabase.raw(sql)
+        console.log(result)
 
         if(Array.isArray(result[0]))
             return result[0]
@@ -25,7 +26,7 @@ const getSelectAllGenders = async function(){
             return false
 
     } catch (error) {
-       
+       console.log(error)
         return false
     }
 }
@@ -53,13 +54,13 @@ const getSelectByIdGender = async function(id){
 const getSelectLastID = async function(){
     try {
         
-        let sql = `select id from tb_genero order by id_genero desc limit 1`
+        let sql = `select id_genero from tb_genero order by id_genero desc limit 1`
 
        
         let result = await knexDatabase.raw(sql)
  
         if(Array.isArray(result))
-            return Number(result[0][0].id)
+            return Number(result[0][0].id_genero)
         else
             return false
 
@@ -72,9 +73,10 @@ const getSelectLastID = async function(){
 
 const setInsertGenders = async function(genero){
     try {
-        let sql = `insert into tb_genero (	nome)
+        let sql = `insert into tb_genero (nome)
                     values( "${genero.nome}" )`
 
+               
         let result = await knexDatabase.raw(sql)
 
         if(result)
@@ -94,7 +96,7 @@ const setUpdateGenders = async function(genero){
                         nome                = "${genero.nome}"
                         
                     
-                    where id_genero = ${genero.id}`
+                    where id_genero = ${genero.id_genero}`
 
         let result = await knexDatabase.raw(sql)
 
@@ -112,6 +114,7 @@ const setDeleteGenders = async function(id){
     try {
       
         let sql = `delete from tb_genero where id_genero=${id}`
+        
         
        
         let result = await knexDatabase.raw(sql)

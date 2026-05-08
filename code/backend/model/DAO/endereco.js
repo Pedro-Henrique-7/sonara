@@ -72,20 +72,26 @@ const getSelectLastID = async function(){
 
 const setInsertAddress = async function(endereco){
     try {
-  let sql = `insert into tb_endereco (
-    cep,
-    cidade,
-    estado,
-    logradouro,
-    numero
-) values (
-    "${endereco.cep}",
-    "${endereco.cidade}",
-    "${endereco.estado}",
-    "${endereco.logradouro}",
-    "${endereco.numero}"
-);`
 
+        let sql = `insert into tb_endereco (
+            cep,
+            cidade,
+            estado,
+            logradouro,
+            numero,
+            complemento,
+            bairro
+        ) values (
+            "${endereco.cep}",
+            "${endereco.cidade}",
+            "${endereco.estado}",
+            "${endereco.logradouro}",
+            "${endereco.numero}",
+            "${endereco.complemento}",
+            "${endereco.bairro}"
+        );`
+
+        
 
         let result = await knexDatabase.raw(sql)
 
@@ -95,20 +101,22 @@ const setInsertAddress = async function(endereco){
             return false
 
     } catch (error) {
-        return false
+        console.log(error)
     }
 }
 
 
 const setUpdateAddress = async function(endereco){
     try {
-      let sql = `update tb_endereco set 
+let sql = `update tb_endereco set 
     cep = "${endereco.cep}",
     cidade = "${endereco.cidade}",
     estado = "${endereco.estado}",
     logradouro = "${endereco.logradouro}",
-    numero = "${endereco.numero}"
-where id_endereco = ${endereco.id_endereco}`;
+    numero = "${endereco.numero}",
+    complemento = "${endereco.complemento}",
+    bairro = "${endereco.bairro}"
+where id_endereco = ${endereco.id_endereco};`
 
         let result = await knexDatabase.raw(sql)
 

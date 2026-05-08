@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const MESSAGE = require('../controller/modulo/conf_message.js')
 
 const bodyParserJson = bodyParser.json()
 
@@ -77,3 +76,4 @@ router.delete('/:id', cors(), async function(request, response) {
     response.status(genero.status_code)
     response.json(genero)
 })
+  

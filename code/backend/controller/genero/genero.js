@@ -19,6 +19,7 @@ const listarGeneros = async function(){
        
         let resultGeneros = await generoDAO.getSelectAllGenders()
         
+        
         if(resultGeneros){
             if(resultGeneros.length > 0){
             MESSAGES.HEADER.status      = MESSAGES.SUCCESS_REQUEST.status

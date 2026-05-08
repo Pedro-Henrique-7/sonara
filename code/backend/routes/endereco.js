@@ -24,6 +24,7 @@ router.use((request, response, next ) => {
 router.get('/', cors(), async function (request, response){
 
   let endereco  = await controllerEndereco.listarEnderecos()
+  console.log(endereco)
     
     response.status(endereco.status_code)
     response.json(endereco)
@@ -49,7 +50,6 @@ router.post('/', cors(), bodyParserJson, async function (request, response) {
 
     let dadosBody = request.body
     let contentType = request.headers['content-type']
-
     let endereco = await controllerEndereco.inserirEndereco(dadosBody, contentType)
 
     response.status(endereco.status_code)
