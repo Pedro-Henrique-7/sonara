@@ -1,0 +1,268 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #000000, #4b0d00, #ff3c00);
+  color: white;
+}
+
+/* ================= HEADER ================= */
+
+header {
+  width: 100%;
+  padding: 2rem 4rem;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  gap: 4rem;
+}
+
+.nav-item {
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-item:hover {
+  opacity: 0.7;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.user-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.user-role {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.avatar img {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ================= CONTAINER ================= */
+
+.container-principal {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.container-informacao {
+  width: 90%;
+  border: 2px solid #00aaff;
+  border-radius: 30px;
+  background: linear-gradient(to bottom, #a30000, #ff3c00);
+  padding: 3rem;
+
+  display: flex;
+  gap: 3rem;
+
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ================= LADO ESQUERDO ================= */
+
+.container-foto {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-foto img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  border-radius: 25px;
+  margin-bottom: 2rem;
+}
+
+/* ================= NOME EVENTO ================= */
+
+.nome-evento {
+  margin-bottom: 2rem;
+}
+
+.nome-evento p {
+  font-size: 1.3rem;
+  margin-bottom: 0.7rem;
+}
+
+.nome {
+  background-color: #7a2d00;
+  padding: 1rem;
+  border-radius: 20px;
+  font-size: 1.1rem;
+}
+
+/* ================= INFO ================= */
+
+.info-evento {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.campo span {
+  font-size: 1.1rem;
+}
+
+.box {
+  width: 140px;
+  padding: 1rem;
+  border-radius: 15px;
+  background-color: #7a2d00;
+  text-align: center;
+}
+
+/* ================= BOTÃO ================= */
+
+.container-foto button {
+  width: 100%;
+  height: 60px;
+  border: none;
+  border-radius: 18px;
+  background-color: #ff5a1f;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.container-foto button:hover {
+  background-color: #ff773d;
+  transform: translateY(-2px);
+}
+
+/* ================= LADO DIREITO ================= */
+
+.container-sobre {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ================= DESCRIÇÃO ================= */
+
+.descricao-evento label,
+.localizacao span,
+.mapa-evento label {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.descricao-box {
+  background-color: #8d3b00;
+  padding: 1.5rem;
+  border-radius: 25px;
+}
+
+.descricao-box p {
+  line-height: 1.7;
+  font-size: 1.1rem;
+}
+
+/* ================= LOCAL ================= */
+
+.box-local {
+  background-color: #8d3b00;
+  border-radius: 25px;
+  padding: 1.5rem;
+}
+
+.box-local p {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+/* ================= MAPA ================= */
+
+.mapa-evento img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
+/* ================= RESPONSIVO ================= */
+
+@media (max-width: 1100px) {
+  .container-informacao {
+    flex-direction: column;
+  }
+
+  .container-foto,
+  .container-sobre {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1.5rem;
+  }
+
+  .header-top {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .container-informacao {
+    padding: 1.5rem;
+  }
+
+  .container-foto img {
+    height: 250px;
+  }
+
+  .descricao-evento label,
+  .localizacao span,
+  .mapa-evento label {
+    font-size: 1.4rem;
+  }
+}

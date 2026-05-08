@@ -36,13 +36,17 @@ export default function PlanosArtista() {
     <>
       <header>
         <div className="content-limit">
+          {" "}
           <div className="header-top">
             <nav className="nav">
-              <span className="nav-item" onClick={() => navigate("/Shows")}>
+              <span className="nav-item" onClick={() => navigate("/shows")}>
                 Home
               </span>
               <span className="nav-item">Buscar</span>
-              <span className="nav-item" onClick={() => navigate("")}>
+              <span
+                className="nav-item"
+                onClick={() => navigate("/listaEventos")}
+              >
                 Meus Eventos
               </span>
               <span
@@ -55,7 +59,12 @@ export default function PlanosArtista() {
 
             <div className="user">
               <div className="user-info">
-                <span className="user-name">Yuri Silva</span>
+                <span
+                  className="user-name"
+                  onClick={() => navigate("/perfil-artista")}
+                >
+                  Yuri Silva
+                </span>
                 <span className="user-role">Artista</span>
               </div>
               <div className="avatar">
@@ -65,7 +74,6 @@ export default function PlanosArtista() {
           </div>
         </div>
       </header>
-
       <main className={`planos-main ${visible ? "planos-main--visible" : ""}`}>
         <h2 className="planos-titulo">Escolha seu Plano</h2>
 

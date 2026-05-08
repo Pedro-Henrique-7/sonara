@@ -76,7 +76,12 @@ export default function ListaEventos() {
 
             <div className="user">
               <div className="user-info">
-                <span className="user-name">Yuri Silva</span>
+                <span
+                  className="user-name"
+                  onClick={() => navigate("/perfil-artista")}
+                >
+                  Yuri Silva
+                </span>
                 <span className="user-role">Artista</span>
               </div>
               <div className="avatar">
@@ -100,7 +105,7 @@ export default function ListaEventos() {
               key={evento.id}
               className="evento-card"
               style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={() => navigate(`/meusEventos${evento.id}`)}
+              onClick={() => navigate("/meusEventos")}
             >
               {/* Imagem */}
               <div className="evento-card__img-wrapper">

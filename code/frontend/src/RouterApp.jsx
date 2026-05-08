@@ -9,6 +9,7 @@ import EventoInscricao from "./eventoInscricao.jsx";
 import PlanosArtista from "./planosArtista.jsx";
 import MeusEventos from "./telaMeusEventos";
 import EventosLista from "./meusEventosLista";
+import PerfilArtista from "./telaPerfilArtista";
 
 export default function RouterApp() {
   return (
@@ -24,6 +25,7 @@ export default function RouterApp() {
         <Route path="/planosArtista" element={<PlanosArtista />} />
         <Route path="/meusEventos" element={<MeusEventos />} />
         <Route path="/listaEventos" element={<EventosLista />} />
+        <Route path="/perfil-artista" element={<PerfilArtista />} />
       </Routes>
     </BrowserRouter>
   );

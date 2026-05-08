@@ -47,7 +47,12 @@ export default function Shows() {
 
             <div className="user">
               <div className="user-info">
-                <span className="user-name">Yuri Silva</span>
+                <span
+                  className="user-name"
+                  onClick={() => navigate("/perfil-artista")}
+                >
+                  Yuri Silva
+                </span>
                 <span className="user-role">Artista</span>
               </div>
               <div className="avatar">
