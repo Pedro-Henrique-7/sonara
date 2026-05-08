@@ -298,10 +298,10 @@ function Cadastro() {
             {/* LINHA 4 */}
             <div className="grupo-duplo">
               <div className="campo">
-                <label htmlFor="idNacionalidade">Nacionalidade</label>
+                <label htmlFor="id_nacionalidade">Nacionalidade</label>
                 <select
-                  id="idNacionalidade"
-                  value={form.idNacionalidade}
+                  id="id_nacionalidade"
+                  value={form.id_nacionalidade}
                   onChange={handleChange}
                   required
                 >
