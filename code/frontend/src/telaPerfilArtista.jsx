@@ -1,148 +1,215 @@
 import { useNavigate } from "react-router-dom";
-import "./sobreEvento.css";
-
-import fotoShow from "./img/fotoShow.png";
-import map from "./img/map.png";
+import { useState, useRef } from "react"; // <-- importa hooks
+import "./telaperfilArtista.css";
+// import fotoShow from "./img/fotoShow.png";
 import fotoPerfil from "./img/fotoPerfil.jpg";
+// import artistaImg from "./img/artista.jpg";
 
-export default function SobreEvento() {
+export default function PerfilArtista() {
   const navigate = useNavigate();
 
+  // Estado para armazenar a URL da foto de perfil (inicia com a imagem padrão)
+  const [fotoPerfilUrl, setFotoPerfilUrl] = useState(fotoPerfil);
+
+  // Referência para o input de arquivo oculto
+  const inputFileRef = useRef(null);
+
+  // Abrir seletor de arquivos ao clicar no lápis
+  const handleFotoClick = () => {
+    inputFileRef.current?.click();
+  };
+
+  // Processar o arquivo selecionado
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validação opcional: aceitar apenas imagens
+    if (!file.type.startsWith("image/")) {
+      alert("Por favor, selecione um arquivo de imagem válido.");
+      return;
+    }
+
+    // Criar URL local para preview
+    const imageUrl = URL.createObjectURL(file);
+    setFotoPerfilUrl(imageUrl);
+
+    // Opcional: limpar a URL criada quando o componente desmontar (boa prática)
+    // Mas como o usuário pode trocar várias vezes, a limpeza será feita na próxima troca
+    // ou podemos armazenar a URL anterior e revogar. Para simplificar, vamos apenas definir.
+  };
+
   return (
-    <div className="main-wrapper">
-      {/* HEADER */}
+    <div className="pa-wrapper">
+      {/* HEADER - igual ao seu código */}
       <header>
-        <div className="header-top">
-          <nav className="nav">
-            <span className="nav-item" onClick={() => navigate("/shows")}>
-              Home
-            </span>
-
-            <span className="nav-item">Buscar</span>
-
-            <span
-              className="nav-item"
-              onClick={() => navigate("/listaEventos")}
-            >
-              Meus Eventos
-            </span>
-
-            <span
-              className="nav-item"
-              onClick={() => navigate("/planosArtista")}
-            >
-              Plano
-            </span>
-          </nav>
-
-          <div className="user">
-            <div className="user-info">
+        <div className="content-limit">
+          <div className="header-top">
+            <nav className="nav">
+              <span className="nav-item">Home</span>
+              <span className="nav-item">Buscar</span>
               <span
-                className="user-name"
-                onClick={() => navigate("/perfil-artista")}
+                className="nav-item"
+                onClick={() => navigate("/listaEventos")}
               >
-                Yuri Silva
+                Meus Eventos
               </span>
+              <span
+                className="nav-item"
+                onClick={() => navigate("/planosArtista")}
+              >
+                Plano
+              </span>
+            </nav>
 
-              <span className="user-role">Artista</span>
-            </div>
-
-            <div className="avatar">
-              <img src={fotoPerfil} alt="Perfil" />
+            <div className="user">
+              <div className="user-info">
+                <span
+                  className="user-name"
+                  onClick={() => navigate("/perfil-artista")}
+                >
+                  Yuri Silva
+                </span>
+                <span className="user-role">Artista</span>
+              </div>
+              <div className="avatar">
+                <img src={fotoPerfil} alt="Perfil" />
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* MAIN */}
-      <main className="container-principal">
-        <div className="container-informacao">
-          {/* ESQUERDA */}
-          <div className="container-foto">
-            <img src={fotoShow} alt="Evento" className="img-evento" />
-
-            <div className="nome-evento">
-              <h2>Nome do Evento</h2>
-
-              <div className="nome">Sonara Festival 2026</div>
+      {/* CENTRAL CONTAINER */}
+      <div className="pa-central">
+        {/* LEFT COLUMN */}
+        <div className="pa-col-left">
+          {/* Artist Photo */}
+          <div className="pa-foto-wrapper">
+            <div className="pa-foto-circle">
+              {/* Substitui placeholder pela imagem real ou preview */}
+              {fotoPerfilUrl ? (
+                <img src={fotoPerfilUrl} alt="Artista" />
+              ) : (
+                <div className="pa-foto-placeholder" />
+              )}
             </div>
-
-            <div className="info-evento">
-              <div className="campo">
-                <span>Data</span>
-                <div className="box">28/02/2026</div>
-              </div>
-
-              <div className="campo">
-                <span>Início</span>
-                <div className="box">19:30</div>
-              </div>
-
-              <div className="campo">
-                <span>Fim</span>
-                <div className="box">21:30</div>
-              </div>
-            </div>
-
             <button
-              className="btn-inscricao"
-              onClick={() => navigate("/inscricao")}
+              className="pa-edit-btn"
+              title="Editar foto"
+              onClick={handleFotoClick}
             >
-              Inscreva-se
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
             </button>
+            {/* Input de arquivo invisível */}
+            <input
+              type="file"
+              ref={inputFileRef}
+              style={{ display: "none" }}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
           </div>
 
-          {/* DIREITA */}
-          <div className="container-sobre">
-            {/* DESCRIÇÃO */}
-            <div className="descricao-evento">
-              <h2>Descrição do Evento</h2>
-
-              <section className="descricao-box">
-                <p>
-                  Este evento reúne amantes de música ao vivo em uma experiência
-                  única, com apresentações de artistas renomados, estrutura
-                  moderna e ambiente envolvente.
-                </p>
-              </section>
+          {/* Planos - mantém igual */}
+          <div className="pa-plano-card">
+            <div className="pa-plano-header">
+              <span className="pa-plano-titulo">Plano Diamante</span>
+              <svg
+                className="pa-plano-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+              </svg>
             </div>
+            <p className="pa-plano-desc">
+              "O plano definitivo para artistas estabelecidos. Tenha acesso
+              ilimitado a todas as ferramentas da plataforma, analytics
+              avançados, posicionamento premium nas buscas e suporte dedicado
+              24/7. Maximize sua visibilidade e alcance novos patamares na sua
+              carreira."
+            </p>
+          </div>
 
-            {/* LOCALIZAÇÃO */}
-            <div className="localizacao">
-              <h2>Localização</h2>
+          <div className="pa-plano-card pa-plano-card--secondary">
+            <div className="pa-plano-header">
+              <span className="pa-plano-titulo">Plano Platina</span>
+              <svg
+                className="pa-plano-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+              </svg>
+            </div>
+            <p className="pa-plano-desc">
+              "Acesse recursos exclusivos para artistas em crescimento. Divulgue
+              seus eventos para um público maior, receba suporte prioritário e
+              tenha destaque nas buscas da plataforma. Ideal para quem está
+              começando a construir sua presença no cenário musical."
+            </p>
+          </div>
+        </div>
 
-              <div className="box-local">
-                <p>
-                  <strong>Rua:</strong> Loren Ipsum
-                </p>
-
-                <p>
-                  <strong>Número:</strong> 78
-                </p>
-
-                <p>
-                  <strong>Cidade:</strong> Loren Ipsum
-                </p>
-
-                <p>
-                  <strong>Bairro:</strong> Loren Ipsum
-                </p>
-
-                <p>
-                  <strong>UF:</strong> SP
-                </p>
+        {/* RIGHT COLUMN - mantém igual */}
+        <div className="pa-col-right">
+          <div className="pa-eventos-card">
+            <h3 className="pa-card-title">Meus Eventos</h3>
+            <div className="pa-eventos-content">
+              <div className="pa-eventos-grid">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="pa-evento-thumb">
+                    <div className="pa-thumb-placeholder" />
+                  </div>
+                ))}
               </div>
             </div>
+          </div>
 
-            {/* MAPA */}
-            <div className="mapa-evento">
-              <h2>Mapa do Evento</h2>
+          <div className="pa-dados-card">
+            <h3 className="pa-card-title">Dados de Artista</h3>
+            <div className="pa-dados-grid">
+              <input className="pa-input" type="text" placeholder="Nome" />
+              <input
+                className="pa-input"
+                type="text"
+                placeholder="nascimento"
+              />
+              <input className="pa-input" type="text" placeholder="email" />
+              <input className="pa-input" type="text" placeholder="Telefone" />
+              <input
+                className="pa-input"
+                type="text"
+                placeholder="nacionalidade"
+              />
 
-              <img src={map} alt="Mapa do evento" className="img-mapa" />
+              <input className="pa-input" type="text" placeholder="Genero" />
+              <input className="pa-input" type="text" placeholder="Rua" />
+              <input className="pa-input" type="text" placeholder="Bairro" />
+              <input className="pa-input" type="text" placeholder="Cidade" />
+              <input className="pa-input" type="text" placeholder="UF" />
+              <input className="pa-input" type="text" placeholder="CEP" />
+            </div>
+            <div className="pa-dados-actions">
+              <button className="pa-btn pa-btn-cancelar">Cancelar</button>
+              <button className="pa-btn pa-btn-salvar">Salvar</button>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
