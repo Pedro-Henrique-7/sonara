@@ -33,10 +33,6 @@ export default function PerfilArtista() {
     // Criar URL local para preview
     const imageUrl = URL.createObjectURL(file);
     setFotoPerfilUrl(imageUrl);
-
-    // Opcional: limpar a URL criada quando o componente desmontar (boa prática)
-    // Mas como o usuário pode trocar várias vezes, a limpeza será feita na próxima troca
-    // ou podemos armazenar a URL anterior e revogar. Para simplificar, vamos apenas definir.
   };
 
   return (
@@ -46,7 +42,9 @@ export default function PerfilArtista() {
         <div className="content-limit">
           <div className="header-top">
             <nav className="nav">
-              <span className="nav-item">Home</span>
+              <span className="nav-item" onClick={() => navigate("/shows")}>
+                Home
+              </span>
               <span className="nav-item">Buscar</span>
               <span
                 className="nav-item"
@@ -170,7 +168,7 @@ export default function PerfilArtista() {
             <h3 className="pa-card-title">Meus Eventos</h3>
             <div className="pa-eventos-content">
               <div className="pa-eventos-grid">
-                {[1, 2, 3, 4].map((i) => (
+                {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="pa-evento-thumb">
                     <div className="pa-thumb-placeholder" />
                   </div>
