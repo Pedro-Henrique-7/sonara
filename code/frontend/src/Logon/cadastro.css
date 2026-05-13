@@ -1,0 +1,170 @@
+/* RESET */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* BASE */
+html,
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* BODY */
+body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15vh;
+}
+header p {
+  font-size: 45px;
+  font-weight: bold;
+  margin-bottom: 115px;
+}
+
+img {
+  height: 350px;
+  width: 350px;
+  position: absolute;
+}
+h2 {
+  font-size: 40px;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+/* FORM CONTAINER */
+.cadastro-form {
+  background-color: orangered;
+  color: white;
+  padding: 35px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 1050px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* TITULOS */
+h3 {
+  margin: 25px 0 15px;
+  padding-bottom: 6px;
+  font-size: 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* CAMPOS */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+/* LABEL */
+label {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+/* INPUTS */
+input,
+select {
+  width: 100%;
+  height: 45px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  transition: 0.2s ease;
+}
+
+/* INPUT DATE */
+input[type="date"] {
+  appearance: none;
+}
+
+/* FOCO */
+input:focus,
+select:focus {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/* GRID PADRÃO (3x3 ORGANIZADO) */
+.grupo-duplo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+/* GARANTE QUE OS CAMPOS NÃO QUEBREM */
+.grupo-duplo .campo {
+  width: 100%;
+}
+
+/* GRID ENDEREÇO (mantido igual) */
+.grid-endereco {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* GRID ENDEREÇO PADRÃO IGUAL DADOS PESSOAIS */
+.grid-endereco {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.cep,
+.rua,
+.numero,
+.bairro,
+.cidade,
+.uf {
+  grid-column: span 1;
+}
+
+/* NACIONALIDADE */
+.campo-nacionalidade {
+  max-width: 250px;
+}
+
+/* BOTÃO */
+.btn-cadastrar {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-top: 25px;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-cadastrar:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+.btn-cadastrar:active {
+  transform: translateY(0);
+}

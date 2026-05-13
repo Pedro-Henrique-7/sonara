@@ -1,0 +1,138 @@
+/* =============================================
+   listaEventos.css
+   ============================================= */
+
+/* Main */
+.lista-eventos-main {
+  flex: 1;
+  padding: 40px 48px 64px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.lista-eventos-main--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Título */
+.lista-eventos-titulo {
+  font-family: "Georgia", serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 32px 0;
+  letter-spacing: 0.02em;
+}
+
+/* Grid 2 colunas */
+.lista-eventos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* Card individual */
+.evento-card {
+  background: linear-gradient(145deg, #c94020 0%, #a82e10 60%, #8a2008 100%);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: stretch;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+  animation: cardIn 0.45s ease both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.evento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Imagem */
+.evento-card__img-wrapper {
+  flex-shrink: 0;
+  width: 160px;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.evento-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.evento-card__img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2a0a00 0%, #1a0500 100%);
+  border-radius: 14px;
+}
+
+/* Info */
+.evento-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: flex-start;
+  background: rgba(30, 6, 0, 0.55);
+  border-radius: 12px;
+  padding: 14px 16px;
+  flex: 1;
+}
+
+.evento-card__nome {
+  font-family: "Georgia", serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.evento-card__datetime {
+  font-family: "Georgia", serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.03em;
+}
+
+.evento-card__descricao {
+  font-family: "Georgia", serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 900px) {
+  .lista-eventos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lista-eventos-main {
+    padding: 28px 20px 48px;
+  }
+
+  .evento-card__img-wrapper {
+    width: 120px;
+  }
+}

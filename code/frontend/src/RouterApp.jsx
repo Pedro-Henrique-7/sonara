@@ -1,25 +1,35 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import App from "./telaEscolha";
-import Cadastro from "./cadastro";
-import Login from "./login";
-import Shows from "./telaShows";
-import TelaRecuperarSenha from "./recuperar_senha";
-import SobreEvento from "./sobreEvento.jsx";
-import EventoInscricao from "./eventoInscricao.jsx";
-import PlanosArtista from "./planosArtista.jsx";
-import MeusEventos from "./telaMeusEventos";
-import EventosLista from "./meusEventosLista";
-import PerfilArtista from "./telaPerfilArtista";
+
+// LOGON
+import Cadastro from "./Logon/cadastro.jsx";
+import Login from "./Logon/login.jsx";
+import TelaEscolha from "./Logon/telaEscolha.jsx";
+import TelaRecuperarSenha from "./Logon/recuperar_senha.jsx";
+
+// ARTISTA
+import Shows from "./Artista/telaShows.jsx";
+import SobreEvento from "./Artista/sobreEvento.jsx";
+import EventoInscricao from "./Artista/eventoInscricao.jsx";
+import PlanosArtista from "./Artista/planosArtista.jsx";
+import MeusEventos from "./Artista/telaMeusEventos.jsx";
+import EventosLista from "./Artista/meusEventosLista.jsx";
+import PerfilArtista from "./Artista/telaPerfilArtista.jsx";
+
+// CASA DE SHOW
+import TelaInicial from "./Casa_Show/telaInicial.jsx";
 
 export default function RouterApp() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />} />
+        {/* LOGIN */}
+        <Route path="/" element={<TelaEscolha />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/shows" element={<Shows />} />
         <Route path="/recuperar_senha" element={<TelaRecuperarSenha />} />
+
+        {/* ARTISTA */}
+        <Route path="/shows" element={<Shows />} />
         <Route path="/sobreEvento" element={<SobreEvento />} />
         <Route path="/eventoInscricao" element={<EventoInscricao />} />
         <Route path="/planosArtista" element={<PlanosArtista />} />

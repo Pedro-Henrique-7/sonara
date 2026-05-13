@@ -1,0 +1,267 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: linear-gradient(to bottom, #000, #ff3c00);
+  color: white;
+}
+
+/* HEADER */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+}
+
+.nav {
+  display: flex;
+  gap: 60px;
+}
+
+.nav-item {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: #8b0000;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.user-role {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #ccc;
+  border-radius: 50%;
+}
+
+/* MAIN */
+.container-principal {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  padding: 40px 80px;
+  align-items: start;
+}
+
+/* LEFT */
+.left {
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.main-img {
+  width: 40%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+.stars {
+  margin: 15px 0;
+  color: gold;
+  font-size: 30px;
+  margin-top: 420px;
+}
+
+.thumbs {
+  display: flex;
+  gap: 10px;
+}
+
+.thumbs img {
+  width: 130px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: 0.2s;
+  border-style: solid;
+  border-width: 5px;
+  border-color: transparent;
+}
+
+.thumbs img:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  border-color: #ff7a3d;
+}
+
+/* RIGHT */
+.right {
+  position: relative;
+  z-index: 2;
+  margin-left: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* BOX PRINCIPAL */
+.form-box {
+  background: rgba(120, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  padding: 35px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 700px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* LABELS */
+.form-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffe5d9;
+}
+
+/* ESTILO BASE DOS CARDS */
+.form-box section {
+  background: #ff5a1f;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* TEXTO */
+.form-box section p {
+  font-size: 15px;
+  font-weight: 500;
+  color: white;
+}
+
+/* NOME */
+.evento-nome {
+  width: 100%;
+  min-height: 10px;
+  max-height: 50px;
+  margin-top: 30px;
+  align-items: flex-start;
+}
+
+.evento-nome label {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.evento-nome p {
+  line-height: 1.5;
+  margin-bottom: 55px;
+  font-size: 15px;
+}
+
+/* DESCRIÇÃO */
+.evento-descricao {
+  width: 100%;
+  min-height: 10px;
+  max-height: 50px;
+  margin-top: 30px;
+  align-items: flex-start;
+}
+
+.evento-descricao label {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.evento-descricao p {
+  line-height: 1.5;
+  margin-bottom: 55px;
+  font-size: 15px;
+}
+
+/* LINHA DATA/HORA */
+.evento-row {
+  display: flex;
+  gap: 2rem;
+  width: 50%;
+  margin-left: 0.5rem;
+}
+
+/* DATA */
+.evento-data {
+  flex: 1;
+  max-height: 50px;
+  margin-top: 50px;
+}
+
+.evento-data label {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.evento-data p {
+  line-height: 1.5;
+  margin-bottom: 55px;
+  font-size: 15px;
+}
+
+/* HORA */
+.evento-hora {
+  flex: 1;
+  max-height: 50px;
+  margin-top: 50px;
+}
+
+.evento-hora label {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.evento-hora p {
+  line-height: 1.5;
+  margin-bottom: 55px;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #ff5a1f;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #ff7a3d;
+}

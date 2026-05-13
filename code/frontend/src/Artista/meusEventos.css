@@ -1,0 +1,194 @@
+/* =============================================
+   meusEventos.css
+   ============================================= */
+
+/* Main */
+
+/* ── Linha superior ── */
+.meus-eventos-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Imagem */
+.evento-imagem-wrapper {
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  max-height: 50rem;
+  max-width: 50rem;
+}
+
+.evento-imagem {
+  width: 35%;
+  height: 37%;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+  margin-top: 1%;
+}
+
+.evento-imagem--placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+/* Card detalhes (direita) */
+.evento-detalhes-card {
+  background: linear-gradient(145deg, #3a0e00 0%, #2a0a00 100%);
+  border-radius: 16px;
+  padding: 28px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  height: 80%;
+  margin-top: 5%;
+}
+
+.evento-detalhes-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evento-detalhes-campo-data {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 40%;
+}
+
+.evento-detalhes-campo-hora {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 40%;
+}
+
+.evento-detalhes-label {
+  font-size: 0.9rem;
+  font-family: "Georgia", serif;
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.evento-detalhes-input {
+  background: linear-gradient(90deg, #b84010 0%, #9a3008 100%);
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-family: "Georgia", serif;
+  color: #fff;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+.evento-detalhes-input--small {
+  border-radius: 14px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.evento-detalhes-textarea {
+  background: linear-gradient(135deg, #b84010 0%, #8a2800 100%);
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  font-family: "Georgia", serif;
+  color: #fff;
+  line-height: 1.6;
+  min-height: 88px;
+}
+
+.evento-detalhes-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Card inferior: cache ── */
+.evento-cache-card {
+  background: linear-gradient(145deg, #b03010 0%, #8a1e00 60%, #6a1500 100%);
+  border-radius: 20px;
+  padding: 28px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 30%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  margin-left: 51.5rem;
+  margin-right: 80%;
+}
+
+.evento-cache-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evento-cache-label {
+  font-size: 0.9rem;
+  font-family: "Georgia", serif;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.evento-cache-input {
+  background: linear-gradient(90deg, #c85020 0%, #a83a10 100%);
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-family: "Georgia", serif;
+  color: #fff;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+/* Botão */
+.evento-cache-actions {
+  padding-top: 8px;
+}
+
+.evento-btn-ver {
+  background: linear-gradient(90deg, #c86020 0%, #a84010 100%);
+  border: none;
+  border-radius: 30px;
+  padding: 12px 36px;
+  font-size: 0.92rem;
+  font-family: "Georgia", serif;
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: filter 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.evento-btn-ver:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
+}
+
+.evento-btn-ver:active {
+  transform: scale(0.97);
+}
+
+/* ── Responsivo ── */
+@media (max-width: 768px) {
+  .meus-eventos-main {
+    padding: 24px 16px 48px;
+  }
+
+  .meus-eventos-top {
+    grid-template-columns: 1fr;
+  }
+
+  .evento-cache-card {
+    max-width: 100%;
+  }
+}
