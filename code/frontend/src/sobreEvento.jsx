@@ -3,9 +3,11 @@ import "./sobreEvento.css";
 import fotoShow from "./img/fotoShow.png";
 import fotoPerfil from "./img/fotoPerfil.jpg";
 
+
 export default function SobreEvento() {
   const navigate = useNavigate();
-
+const usuario = sessionStorage.getItem("usuario");
+const usuarioObj = usuario ? JSON.parse(usuario) : null;
   return (
     <div className="main-wrapper">
       <header>
@@ -29,7 +31,7 @@ export default function SobreEvento() {
 
             <div className="user">
               <div className="user-info">
-                <span className="user-name">Yuri Silva</span>
+                <span className="user-name">{usuarioObj?.nome}</span>
                 <span className="user-role">Artista</span>
               </div>
               <div className="avatar">

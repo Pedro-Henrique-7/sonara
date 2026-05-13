@@ -24,6 +24,9 @@ const planos = [
 ];
 
 export default function PlanosArtista() {
+
+  const usuario = sessionStorage.getItem("usuario");
+  const usuarioObj = usuario ? JSON.parse(usuario) : null;
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
@@ -63,7 +66,7 @@ export default function PlanosArtista() {
                   className="user-name"
                   onClick={() => navigate("/perfil-artista")}
                 >
-                  Yuri Silva
+                  {usuarioObj?.nome}
                 </span>
                 <span className="user-role">Artista</span>
               </div>

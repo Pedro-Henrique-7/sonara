@@ -4,9 +4,13 @@ import "./eventoInscricao.css";
 
 import fotoPerfil from "./img/fotoPerfil.jpg";
 
+
+
+
 export default function EventoInscricao() {
   const navigate = useNavigate();
-
+  const usuario = sessionStorage.getItem("usuario");
+  const usuarioObj = usuario ? JSON.parse(usuario) : null;
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState(fotoPerfil);
 
   const inputFileRef = useRef(null);
@@ -43,7 +47,7 @@ export default function EventoInscricao() {
                   className="user-name"
                   onClick={() => navigate("/perfil-artista")}
                 >
-                  Yuri Silva
+                  {usuarioObj?.nome}
                 </span>
                 <span className="user-role">Artista</span>
               </div>

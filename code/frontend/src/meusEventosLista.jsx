@@ -39,6 +39,10 @@ const eventosMock = [
   },
 ];
 
+const usuario = sessionStorage.getItem("usuario");
+const usuarioObj = usuario ? JSON.parse(usuario) : null;
+
+
 export default function ListaEventos() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -80,7 +84,7 @@ export default function ListaEventos() {
                   className="user-name"
                   onClick={() => navigate("/perfil-artista")}
                 >
-                  Yuri Silva
+                  {usuarioObj?.nome}
                 </span>
                 <span className="user-role">Artista</span>
               </div>

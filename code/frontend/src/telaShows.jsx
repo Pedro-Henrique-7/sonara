@@ -10,6 +10,8 @@ import show4 from "./img/show4.png";
 import fotoPerfil from "./img/fotoPerfil.jpg";
 
 const imagens = [show1, show2, show4];
+const usuario = sessionStorage.getItem("usuario");
+const usuarioObj = usuario ? JSON.parse(usuario) : null;
 
 export default function Shows() {
   const navigate = useNavigate();
@@ -51,7 +53,7 @@ export default function Shows() {
                   className="user-name"
                   onClick={() => navigate("/perfil-artista")}
                 >
-                  Yuri Silva
+                  {usuarioObj?.nome}
                 </span>
                 <span className="user-role">Artista</span>
               </div>

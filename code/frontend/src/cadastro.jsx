@@ -124,7 +124,7 @@ function Cadastro() {
 
       const respostaEndereco = await cadastrarEndereco(endereco);
       console.log("Resposta Endereço:", respostaEndereco);
-      if (respostaEndereco.erro || !respostaEndereco.response.id) {
+      if (respostaEndereco.erro || !respostaEndereco.response.id_endereco) {
         setErro(respostaEndereco.mensagem || "Erro ao cadastrar endereço.");
         return;
       }
@@ -133,13 +133,13 @@ function Cadastro() {
       const usuario = {
         nome: form.nome,
         cpf: form.cpf,
-        data_nascimento: form.nascimento,
+        data_nasc: form.nascimento,
         email: form.email,
         telefone: form.tel,
         senha: form.senha,
         nacionalidade_id: Number(form.id_nacionalidade),
         genero_id: Number(form.id_genero),
-        endereco_id: respostaEndereco.response.id,
+        endereco_id: respostaEndereco.response.id_endereco,
       };
 
 

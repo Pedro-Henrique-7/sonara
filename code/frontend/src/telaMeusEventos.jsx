@@ -20,6 +20,8 @@ export default function MeusEventos() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [evento] = useState(eventoMock);
+  const usuario = sessionStorage.getItem("usuario");
+  const usuarioObj = usuario ? JSON.parse(usuario) : null;
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 50);
@@ -51,7 +53,7 @@ export default function MeusEventos() {
 
             <div className="user">
               <div className="user-info">
-                <span className="user-name">Yuri Silva</span>
+                <span className="user-name">{usuarioObj?.nome}</span>
                 <span className="user-role">Artista</span>
               </div>
               <div className="avatar">
