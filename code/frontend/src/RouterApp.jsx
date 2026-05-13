@@ -1,19 +1,19 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // LOGON
-import Cadastro from "./Logon/cadastro.jsx";
-import Login from "./Logon/login.jsx";
-import TelaEscolha from "./Logon/telaEscolha.jsx";
-import TelaRecuperarSenha from "./Logon/recuperar_senha.jsx";
+import Cadastro from "./logon/cadastro.jsx";
+import Login from "./logon/login.jsx";
+import TelaEscolha from "./logon/telaEscolha.jsx";
+import TelaRecuperarSenha from "./logon/recuperar_senha.jsx";
 
 // ARTISTA
-import Shows from "./Artista/telaShows.jsx";
-import SobreEvento from "./Artista/sobreEvento.jsx";
-import EventoInscricao from "./Artista/eventoInscricao.jsx";
-import PlanosArtista from "./Artista/planosArtista.jsx";
-import MeusEventos from "./Artista/telaMeusEventos.jsx";
-import EventosLista from "./Artista/meusEventosLista.jsx";
-import PerfilArtista from "./Artista/telaPerfilArtista.jsx";
+import Shows from "./artista/telaShows.jsx";
+import SobreEvento from "./artista/sobreEvento.jsx";
+import EventoInscricao from "./artista/eventoInscricao.jsx";
+import PlanosArtista from "./artista/planosArtista.jsx";
+import MeusEventos from "./artista/telaMeusEventos.jsx";
+import EventosLista from "./artista/meusEventosLista.jsx";
+import PerfilArtista from "./artista/telaPerfilArtista.jsx";
 
 // CASA DE SHOW
 import TelaInicial from "./Casa_Show/telaInicial.jsx";

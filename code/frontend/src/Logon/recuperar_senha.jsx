@@ -9,12 +9,12 @@ export default function TelaRecuperarSenha() {
 
   return (
     <div className="app">
-      <header className="header">
+      <header className="header-senha">
         <img src={logo} alt="Logo Sonara" />
         <p>SONARA</p>
       </header>
 
-      <main className="main">
+      <main className="main-senha">
         <div className="mensagem">
           <h1>Recupere Sua Senha</h1>
           <p>Preencha os dados afim de Recuperar sua Senha</p>

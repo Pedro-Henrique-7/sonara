@@ -21,7 +21,7 @@ function Login() {
     try {
       const response = await loginUsuario(email, senha);
 
-      // ✅ response aqui é response.data (o Axios já desembrulha)
+      //  response aqui é response.data (o Axios já desembrulha)
       if (response.status_code === 200) {
         sessionStorage.setItem(
           "usuario",
@@ -43,8 +43,8 @@ function Login() {
 
   return (
     <div>
-      <header>
-        <img src={logo} alt="Logo Sonara" />
+      <header className="header-login">
+        <img className="logo" src={logo} alt="Logo Sonara" />
         <p>SONARA</p>
       </header>
 

@@ -165,9 +165,9 @@ function Cadastro() {
 
   return (
     <div className="container">
-      <header className="header">
+      <header className="header-cadastro">
         <img src={logo} alt="Logo Sonara" />
-        <p>CADASTRO</p>
+        <p className="nome-cadastro">CADASTRO</p>
       </header>
 
       <main>

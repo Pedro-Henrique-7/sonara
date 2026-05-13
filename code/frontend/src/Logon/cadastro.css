@@ -21,23 +21,22 @@ body {
   align-items: center;
 }
 
-header {
+.header-cadastro {
   height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 15vh;
 }
-header p {
-  font-size: 45px;
-  font-weight: bold;
-  margin-bottom: 115px;
+
+.header-cadastro p {
+  margin-top: 10vh;
 }
 
 img {
   height: 350px;
   width: 350px;
   position: absolute;
+  margin-top: 10vh;
 }
 h2 {
   font-size: 40px;
@@ -54,6 +53,7 @@ h2 {
   width: 100%;
   max-width: 1050px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  margin-top: 9.5vh;
 }
 
 /* TITULOS */

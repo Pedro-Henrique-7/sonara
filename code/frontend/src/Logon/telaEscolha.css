@@ -14,14 +14,15 @@ body {
   align-items: center;
 }
 
-header {
+.header-escolha {
   height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-header p {
+.header-escolha p {
   font-size: 45px;
+  margin-top: 10.5vh;
   font-weight: bold;
 }
 img {
@@ -29,15 +30,22 @@ img {
   position: absolute;
 }
 
-.mensagem {
+.mensagem-escolha {
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 20px;
   color: var(--cor-letra);
+  background: linear-gradient(to bottom, #d10000, #ff3d00);
+  margin-top: 20vh;
+  border-radius: 20px;
 }
 
-main {
+.mensagem-escolha p {
+  font-size: 20px;
+}
+
+main-escolha {
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -50,9 +58,14 @@ main h2 {
   width: 300px;
 }
 
-.botao {
+.botao-escolha {
   display: flex;
   align-items: center;
   flex-direction: column;
   gap: 30px;
+  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.botao-escolha:hover {
+  transition: cubic-bezier(0.55, 0.085, 0.68, 0.53);
 }
