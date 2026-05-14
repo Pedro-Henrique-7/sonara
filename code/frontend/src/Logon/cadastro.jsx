@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import "./cadastro.css";
 import logo from "../img/sonara-logo.svg";
 import { cadastrarUsuario } from "../services/usuarioService";
@@ -10,7 +10,7 @@ import {
 } from "../services/enderecoService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
-
+import { buscarGeneroMusical } from "../services/generoMusicalService";
 function Cadastro() {
   const navigate = useNavigate();
   const [erro, setErro] = useState("");
@@ -21,6 +21,8 @@ function Cadastro() {
   // Listas vindas do banco
   const [generos, setGeneros] = useState([]);
   const [nacionalidades, setNacionalidades] = useState([]);
+  const [tipoUsuario, setTipoUsuario] = useState([]);
+  const [generoMusical, setGeneroMusical] = useState([]);
 
   const [form, setForm] = useState({
     nome: "",
@@ -42,6 +44,10 @@ function Cadastro() {
     latitude: "",
     longitude: "",
     complemento: "",
+    tipo_usuario: "",
+    nome_artistico: "",
+    descricao: "",
+    id_genero_musical: "",
   });
 
   // Busca gêneros e nacionalidades ao montar o componente
@@ -53,6 +59,12 @@ function Cadastro() {
     buscarNacionalidades()
       .then((data) => setNacionalidades(data.response.nacionalidades ?? []))
       .catch(() => setErro("Erro ao carregar nacionalidades."));
+
+    buscarGeneroMusical().then((data) =>
+      setGeneroMusical(data.response.GeneroMusical ?? []).catch(() =>
+        setErro("Erro ao carregar Generos Musicais."),
+      ),
+    );
   }, []);
 
   function handleChange(e) {
@@ -105,7 +117,7 @@ function Cadastro() {
       setErro("As senhas não coincidem.");
       return;
     }
-    if (form.senha.length < 6) {
+    if (form.senha.length < 8) {
       setErro("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
@@ -125,11 +137,10 @@ function Cadastro() {
         longitude: form.longitude,
         complemento: form.complemento,
       };
-
       const respostaEndereco = await cadastrarEndereco(endereco);
-      console.log("Resposta Endereço:", respostaEndereco);
-      if (respostaEndereco.erro || !respostaEndereco.response.id_endereco) {
-        setErro(respostaEndereco.mensagem || "Erro ao cadastrar endereço.");
+
+      if (respostaEndereco.erro || !respostaEndereco.response?.id_endereco) {
+        setErro(respostaEndereco.mensagem);
         return;
       }
 
@@ -153,6 +164,12 @@ function Cadastro() {
         setErro(respostaUsuario.mensagem || "Erro ao cadastrar usuário.");
         return;
       }
+
+      const artista = {
+        nome_artistico: form.nome_artistico,
+        descricao: form.descricao,
+        id_genero_musical: form.id_genero_musical,
+      };
 
       setSucesso(true);
       setTimeout(() => navigate("/login"), 2000);
@@ -318,6 +335,38 @@ function Cadastro() {
                       value={nacionalidade.id_nacionalidade}
                     >
                       {nacionalidade.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="campo">
+                <label htmlFor="id_">Selecione uma Opção</label>
+                <select>
+                  <option value="">Selecione...</option>
+                  <option value="">Artista</option>
+                  <option value="">Organizador</option>
+                  <option value="">Usúsario</option>
+                </select>
+              </div>
+
+              <div className="campo">
+                <label htmlFor="id_genero_musical">Gênero Musical</label>
+
+                <select
+                  id="id_genero_musical"
+                  value={form.id_genero_musical}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Selecione...</option>
+
+                  {generoMusical.map((genero) => (
+                    <option
+                      key={genero.id_genero_musical}
+                      value={genero.id_genero_musical}
+                    >
+                      {genero.nome}
                     </option>
                   ))}
                 </select>

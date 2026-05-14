@@ -37,6 +37,7 @@ export default function PlanosArtista() {
 
   return (
     <>
+      <Header />
       <main className={`planos-main ${visible ? "planos-main--visible" : ""}`}>
         <h2 className="planos-titulo">Escolha seu Plano</h2>
 

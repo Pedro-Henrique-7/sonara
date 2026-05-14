@@ -31,6 +31,7 @@ export default function MeusEventos() {
 
   return (
     <div className="meus-eventos-page">
+      <Header />
       <main
         className={`meus-eventos-main ${
           visible ? "meus-eventos-main--visible" : ""

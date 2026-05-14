@@ -19,6 +19,7 @@ export default function TelaEscolha() {
             <button onClick={() => navigate("/shows")}>
               Continuar sem Login
             </button>
+            <button onClick={() => navigate("/casaShow")}>Casa de Show</button>
           </div>
         </div>
       </main>

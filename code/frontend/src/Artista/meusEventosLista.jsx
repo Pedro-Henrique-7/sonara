@@ -55,6 +55,7 @@ export default function ListaEventos() {
 
   return (
     <div className="lista-eventos-page">
+      <Header />
       <main
         className={`lista-eventos-main ${
           visible ? "lista-eventos-main--visible" : ""

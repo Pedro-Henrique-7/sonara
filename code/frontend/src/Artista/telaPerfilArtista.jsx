@@ -160,6 +160,7 @@ export default function PerfilArtista() {
 
   return (
     <div className="pa-wrapper">
+      <Header />
       <div className="pa-central">
         {/* LEFT COLUMN */}
         <div className="pa-col-left">

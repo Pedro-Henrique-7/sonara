@@ -10,6 +10,7 @@ export default function SobreEvento() {
   const usuarioObj = usuario ? JSON.parse(usuario) : null;
   return (
     <div className="main-wrapper">
+      <Header />
       <main className="container-principal">
         {/* ESQUERDA */}
         <div className="left">
