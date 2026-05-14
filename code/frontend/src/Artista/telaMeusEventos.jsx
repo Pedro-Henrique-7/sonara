@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./meusEventos.css";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import show2 from "../img/show2.webp";
+import Header from "./Header";
 // Dados mockados — substitua por chamada à API
 const eventoMock = {
   imagem: show2, // coloque a URL ou import da imagem do evento
@@ -30,40 +31,6 @@ export default function MeusEventos() {
 
   return (
     <div className="meus-eventos-page">
-      {/* ← Fragment resolvendo o erro de múltipla raiz */}
-      <header>
-        <div className="content-limit">
-          <div className="header-top">
-            <nav className="nav">
-              <span className="nav-item">Home</span>
-              <span className="nav-item">Buscar</span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/meusEventos")}
-              >
-                Meus Eventos
-              </span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/planosArtista")}
-              >
-                Plano
-              </span>
-            </nav>
-
-            <div className="user">
-              <div className="user-info">
-                <span className="user-name">{usuarioObj?.nome}</span>
-                <span className="user-role">Artista</span>
-              </div>
-              <div className="avatar">
-                <img src={fotoPerfil} alt="Perfil" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main
         className={`meus-eventos-main ${
           visible ? "meus-eventos-main--visible" : ""

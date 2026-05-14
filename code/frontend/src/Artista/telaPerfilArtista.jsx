@@ -6,6 +6,7 @@ import { atualizarUsuario } from "../services/usuarioService";
 import { deletarUsuario } from "../services/usuarioService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
+import Header from "./Header";
 
 export default function PerfilArtista() {
   const navigate = useNavigate();
@@ -159,46 +160,6 @@ export default function PerfilArtista() {
 
   return (
     <div className="pa-wrapper">
-      <header>
-        <div className="content-limit">
-          <div className="header-top">
-            <nav className="nav">
-              <span className="nav-item" onClick={() => navigate("/shows")}>
-                Home
-              </span>
-              <span className="nav-item">Buscar</span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/listaEventos")}
-              >
-                Meus Eventos
-              </span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/planosArtista")}
-              >
-                Plano
-              </span>
-            </nav>
-
-            <div className="user">
-              <div className="user-info">
-                <span
-                  className="user-name"
-                  onClick={() => navigate("/perfil-artista")}
-                >
-                  {form.nome || "Usuário"}
-                </span>
-                <span className="user-role">Artista</span>
-              </div>
-              <div className="avatar">
-                <img src={fotoPerfilUrl} alt="Perfil" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="pa-central">
         {/* LEFT COLUMN */}
         <div className="pa-col-left">

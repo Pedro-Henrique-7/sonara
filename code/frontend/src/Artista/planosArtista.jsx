@@ -5,6 +5,7 @@ import diamante from "../img/diamante.png";
 import platina from "../img/platina.png";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import "./planosArtista.css";
+import Header from "./Header";
 
 const planos = [
   {
@@ -36,46 +37,6 @@ export default function PlanosArtista() {
 
   return (
     <>
-      <header>
-        <div className="content-limit">
-          {" "}
-          <div className="header-top">
-            <nav className="nav">
-              <span className="nav-item" onClick={() => navigate("/shows")}>
-                Home
-              </span>
-              <span className="nav-item">Buscar</span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/listaEventos")}
-              >
-                Meus Eventos
-              </span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/planosArtista")}
-              >
-                Plano
-              </span>
-            </nav>
-
-            <div className="user">
-              <div className="user-info">
-                <span
-                  className="user-name"
-                  onClick={() => navigate("/perfil-artista")}
-                >
-                  {usuarioObj?.nome}
-                </span>
-                <span className="user-role">Artista</span>
-              </div>
-              <div className="avatar">
-                <img src={fotoPerfil} alt="Perfil" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
       <main className={`planos-main ${visible ? "planos-main--visible" : ""}`}>
         <h2 className="planos-titulo">Escolha seu Plano</h2>
 

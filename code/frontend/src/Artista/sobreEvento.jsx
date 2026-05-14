@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import "./sobreEvento.css";
 import fotoShow from "../img/fotoShow.png";
 import fotoPerfil from "../img/fotoPerfil.jpg";
+import Header from "./Header";
 
 export default function SobreEvento() {
   const navigate = useNavigate();
@@ -9,38 +10,6 @@ export default function SobreEvento() {
   const usuarioObj = usuario ? JSON.parse(usuario) : null;
   return (
     <div className="main-wrapper">
-      <header>
-        <div className="content-limit">
-          <div className="header-top">
-            <nav className="nav">
-              <span className="nav-item" onClick={() => navigate("/Shows")}>
-                Home
-              </span>
-              <span className="nav-item">Buscar</span>
-              <span className="nav-item" onClick={() => navigate("")}>
-                Meus Eventos
-              </span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/planosArtista")}
-              >
-                Plano
-              </span>
-            </nav>
-
-            <div className="user">
-              <div className="user-info">
-                <span className="user-name">{usuarioObj?.nome}</span>
-                <span className="user-role">Artista</span>
-              </div>
-              <div className="avatar">
-                <img src={fotoPerfil} alt="Perfil" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main className="container-principal">
         {/* ESQUERDA */}
         <div className="left">

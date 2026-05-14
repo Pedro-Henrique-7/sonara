@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./meusEventosLista.css";
 import fotoPerfil from "../img/fotoPerfil.jpg";
+import Header from "./Header";
 
 // Mock — substitua por chamada à API
 const eventosMock = [
@@ -54,47 +55,6 @@ export default function ListaEventos() {
 
   return (
     <div className="lista-eventos-page">
-      <header>
-        <div className="content-limit">
-          {" "}
-          <div className="header-top">
-            <nav className="nav">
-              <span className="nav-item" onClick={() => navigate("/shows")}>
-                Home
-              </span>
-              <span className="nav-item">Buscar</span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/listaEventos")}
-              >
-                Meus Eventos
-              </span>
-              <span
-                className="nav-item"
-                onClick={() => navigate("/planosArtista")}
-              >
-                Plano
-              </span>
-            </nav>
-
-            <div className="user">
-              <div className="user-info">
-                <span
-                  className="user-name"
-                  onClick={() => navigate("/perfil-artista")}
-                >
-                  {usuarioObj?.nome}
-                </span>
-                <span className="user-role">Artista</span>
-              </div>
-              <div className="avatar">
-                <img src={fotoPerfil} alt="Perfil" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main
         className={`lista-eventos-main ${
           visible ? "lista-eventos-main--visible" : ""

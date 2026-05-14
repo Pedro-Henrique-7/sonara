@@ -12,98 +12,6 @@ html,
   min-height: 100vh;
 }
 
-/*Header para navegação*/
-header {
-  width: 100%;
-  margin-top: 0;
-}
-
-.avatar p {
-  background-color: aquamarine;
-  margin-top: 40px;
-  width: 250px;
-}
-
-.content-limit {
-  width: 100%;
-  max-width: 1400px;
-  padding: 0 2rem;
-}
-
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  width: 100%;
-  margin-left: 110px;
-}
-
-.nav {
-  display: flex;
-  gap: 10rem;
-  align-items: center;
-  flex: 1;
-  justify-content: center;
-}
-
-.nav-item {
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 2rem;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  padding: 0.5rem 1rem;
-}
-
-.nav-item:hover {
-  background-color: #8b0000;
-  border-radius: 1.25rem;
-}
-
-.user {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  margin-left: 130px;
-}
-
-.user-info {
-  text-align: right;
-  color: white;
-}
-
-.user-name {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: bold;
-  width: 200px;
-}
-
-.user-role {
-  display: block;
-  font-size: 1rem;
-  opacity: 0.7;
-}
-
-.avatar {
-  width: 3rem;
-  height: 3rem;
-  background-color: #ccc;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.avatar img {
-  width: 3rem;
-  height: 3rem;
-  background-color: #ccc;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
 /* Container de Conteúdo */
 .container {
   max-width: 62.5rem;
@@ -160,7 +68,7 @@ header {
   letter-spacing: 0.063rem;
 }
 
-/*Slider para troca de IMG*/
+/* Slider */
 .slider {
   width: 100%;
   max-width: 50rem;
@@ -216,7 +124,7 @@ header {
   transform: scale(1.1);
 }
 
-/* Grid de Cards */
+/* Grid */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -231,6 +139,7 @@ header {
   border: 2px solid #882c10;
   border-radius: 1.25rem;
   box-shadow: 0 0.625rem 1.25rem rgba(0, 0, 0, 0.3);
+
   transition:
     transform 0.35s cubic-bezier(0.075, 0.82, 0.165, 1),
     box-shadow 0.35s ease;
@@ -238,11 +147,14 @@ header {
 
 .card:hover {
   transform: scale(1.05) translateY(-8px);
+
   box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.45),
     0 0 20px rgba(136, 44, 16, 0.5);
+
   cursor: pointer;
 }
+
 .card img {
   width: 100%;
   height: 100%;

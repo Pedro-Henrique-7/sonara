@@ -10,53 +10,6 @@ body {
   color: white;
 }
 
-/* HEADER */
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 80px;
-}
-
-.nav {
-  display: flex;
-  gap: 60px;
-}
-
-.nav-item {
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.nav-item:hover {
-  background: #8b0000;
-  padding: 8px 16px;
-  border-radius: 20px;
-}
-
-.user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.user-name {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.user-role {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  background: #ccc;
-  border-radius: 50%;
-}
-
 /* MAIN */
 .container-principal {
   display: grid;
