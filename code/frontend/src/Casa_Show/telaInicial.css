@@ -29,14 +29,12 @@ body {
 
 /* HEADER */
 
-.header {
-  width: 100%;
+.header-show {
+  width: 90%;
   height: 140px;
-
   display: flex;
   justify-content: space-around;
   align-items: center;
-
   padding: 0 40px;
 }
 
@@ -55,17 +53,11 @@ body {
 
   cursor: pointer;
   transition: 0.3s;
+  margin-left: 30px;
 }
 
 .nav-btn:hover {
   transform: scale(1.05);
-}
-
-.active {
-  background-color: #b80000;
-
-  padding: 18px 36px;
-  border-radius: 25px;
 }
 
 /* PERFIL */
@@ -74,6 +66,7 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  margin-left: 100px;
 }
 
 .perfil-info h2 {
@@ -111,7 +104,7 @@ body {
 }
 
 .painel {
-  width: 60%;
+  width: 50%;
   min-height: 620px;
 
   border-radius: 30px;
@@ -131,19 +124,15 @@ body {
 .painel-titulo h1 {
   font-size: 2rem;
   font-weight: 400;
-
-  text-decoration: underline;
-  text-decoration-color: #00a2ff;
+  width: 95%;
 }
 
 .painel-titulo h2 {
-  margin-top: 10px;
-
-  font-size: 2rem;
+  margin-top: 3vh;
+  width: 30%;
+  font-size: 1.8rem;
   font-weight: 400;
-
-  text-decoration: underline;
-  text-decoration-color: #00a2ff;
+  margin-left: 30vh;
 }
 
 .cards-grid {
@@ -171,6 +160,9 @@ body {
 
   cursor: pointer;
   transition: 0.3s;
+
+  width: 100%;
+  margin-top: 40px;
 }
 
 .card:hover {

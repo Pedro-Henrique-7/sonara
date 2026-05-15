@@ -1,14 +1,18 @@
 import "./telaInicial.css";
+import { useNavigate } from "react-router-dom";
 
 export default function telaInicial() {
+  const navigate = useNavigate();
+
   return (
     <div className="home-container">
-      <header className="header">
+      <header className="header-show">
         <nav className="nav">
-          <button className="nav-btn active">Home</button>
+          <button className="nav-btn" onClick={() => navigate("/telaInicial")}>
+            Home
+          </button>
           <button className="nav-btn">Buscar</button>
           <button className="nav-btn">Meus Eventos</button>
-          <button className="nav-btn">Plano</button>
         </nav>
 
         <div className="perfil-area">
@@ -27,18 +31,22 @@ export default function telaInicial() {
           </div>
 
           <div className="cards-grid">
-            <div className="card">Criar Eventos</div>
+            <div className="card" onClick={() => navigate("/marcarEvento")}>
+              Criar Eventos
+            </div>
 
             <div className="card">Contratar Artistas</div>
 
-            <div className="card">Meus Eventos</div>
+            <div className="card" onClick={() => navigate("/listaMeusEventos")}>
+              Meus Eventos
+            </div>
 
             <div className="card">Suporte</div>
           </div>
         </section>
       </main>
 
-      <footer className="footer">
+      {/* <footer className="footer">
         <div className="footer-box">
           <h3>NOSSO ENDEREÇO:</h3>
           <p>JandiraCity, 123–São Paulo-SP</p>
@@ -57,7 +65,7 @@ export default function telaInicial() {
           <p>Email: sonara@gmail.com.br</p>
           <p>Telefone: (11) 99999-9999</p>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 }

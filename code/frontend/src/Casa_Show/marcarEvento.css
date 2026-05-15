@@ -1,0 +1,245 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* MAIN */
+
+.main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  margin-top: 120px;
+}
+
+.card-evento {
+  width: 88%;
+  min-height: 640px;
+
+  background: linear-gradient(to bottom, #c10000, #ff3c00);
+
+  border-radius: 30px;
+
+  padding: 22px;
+
+  display: flex;
+  gap: 30px;
+
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+  margin-top: 20vh;
+}
+
+/* GALERIA */
+
+.galeria {
+  width: 30%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.foto-principal {
+  width: 100%;
+  height: 240px;
+
+  border-radius: 25px;
+
+  object-fit: cover;
+
+  border: 2px solid black;
+}
+
+.miniaturas {
+  display: flex;
+  gap: 20px;
+}
+
+.miniaturas img {
+  width: 130px;
+  height: 170px;
+
+  border-radius: 12px;
+
+  object-fit: cover;
+
+  border: 2px solid black;
+  margin-left: 12vh;
+  margin-top: 25vh;
+}
+
+.mais-fotos {
+  width: 130px;
+  height: 170px;
+
+  border-radius: 12px;
+
+  object-fit: cover;
+
+  border: 2px solid black;
+}
+
+.mais-fotos {
+  background: rgba(0, 0, 0, 0.7);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 50px;
+  margin-top: 25vh;
+}
+
+.btn-fotos {
+  margin-top: 55px;
+
+  width: 210px;
+  height: 45px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #0a0a0a;
+  color: white;
+
+  font-size: 20px;
+
+  cursor: pointer;
+}
+
+/* FORMULARIO */
+
+.formulario {
+  flex: 1;
+
+  background: linear-gradient(to bottom, #d92c00, #f24900);
+
+  border-radius: 20px;
+
+  padding: 35px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+
+.formulario label {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.formulario input,
+.formulario textarea {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: #e6a390;
+
+  padding: 18px;
+
+  border-radius: 12px;
+
+  color: white;
+  font-size: 18px;
+
+  margin-bottom: 25px;
+}
+
+.formulario textarea {
+  height: 140px;
+  resize: none;
+}
+
+.formulario input::placeholder,
+.formulario textarea::placeholder {
+  color: #f5d1c8;
+}
+
+.linha-inputs {
+  display: flex;
+  justify-content: space-between;
+
+  margin-top: 10px;
+}
+
+.campo {
+  width: 38%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-marcar {
+  margin: auto;
+  margin-top: 40px;
+
+  width: 320px;
+  height: 60px;
+
+  border: none;
+  border-radius: 18px;
+
+  background: #0c0c0c;
+  color: white;
+
+  font-size: 24px;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.btn-marcar:hover {
+  transform: scale(1.03);
+}
+
+.endereco-section {
+  margin-top: 20px;
+}
+
+.endereco-section h2 {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: white;
+  text-decoration: underline;
+}
+
+.text-endereco {
+  background-color: aqua;
+}
+.pequeno {
+  max-width: 180px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1200px) {
+  .card-evento {
+    flex-direction: column;
+  }
+
+  .galeria {
+    width: 100%;
+  }
+
+  .formulario {
+    width: 100%;
+  }
+
+  .linha-inputs {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .campo {
+    width: 100%;
+  }
+}

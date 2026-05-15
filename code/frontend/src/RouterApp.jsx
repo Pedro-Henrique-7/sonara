@@ -17,6 +17,8 @@ import PerfilArtista from "./artista/telaPerfilArtista.jsx";
 
 // CASA DE SHOW
 import TelaInicial from "./casa_show/telaInicial.jsx";
+import MarcarEvento from "./casa_show/marcarEvento.jsx";
+import ListaMeusEventos from "./casa_show/meus-eventos-casaShow.jsx";
 
 export default function RouterApp() {
   return (
@@ -39,7 +41,9 @@ export default function RouterApp() {
 
         {/* Casa de Show */}
 
-        <Route path="/casaShow" element={<TelaInicial/>} />
+        <Route path="/casaShow" element={<TelaInicial />} />
+        <Route path="/marcarEvento" element={<MarcarEvento />} />
+        <Route path="/listaMeusEventos" element={<ListaMeusEventos />} />
       </Routes>
     </BrowserRouter>
   );
