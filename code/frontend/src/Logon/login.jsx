@@ -22,11 +22,12 @@ function Login() {
       const response = await loginUsuario(email, senha);
 
       //  response aqui é response.data (o Axios já desembrulha)
-      if (response.status_code === 200) {
+      if (response.status === true) {
         sessionStorage.setItem(
           "usuario",
-          JSON.stringify(response.response.usuario),
+          JSON.stringify(response.usuario)
         );
+        sessionStorage.setItem("token", response.token)
         navigate("/shows");
       } else {
         // caso o back retorne 2xx mas com status_code diferente

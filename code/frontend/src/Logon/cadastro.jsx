@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./cadastro.css";
 import logo from "../img/sonara-logo.svg";
 import { cadastrarUsuario } from "../services/usuarioService";
-import {
-  cadastrarEndereco,
-  buscarCep,
-  buscarLatLong,
-} from "../services/enderecoService";
+import { buscarCep, buscarLatLong } from "../services/enderecoService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
 import { buscarGeneroMusical } from "../services/generoMusicalService";
+
 function Cadastro() {
   const navigate = useNavigate();
   const [erro, setErro] = useState("");
@@ -18,39 +15,34 @@ function Cadastro() {
   const [carregando, setCarregando] = useState(false);
   const [buscandoCep, setBuscandoCep] = useState(false);
 
-  // Listas vindas do banco
   const [generos, setGeneros] = useState([]);
   const [nacionalidades, setNacionalidades] = useState([]);
-  const [tipoUsuario, setTipoUsuario] = useState([]);
-  const [generoMusical, setGeneroMusical] = useState([]);
+  const [generosMusical, setGenerosMusical] = useState([]);
 
   const [form, setForm] = useState({
     nome: "",
-    cpf: "",
-    nascimento: "",
     email: "",
     "confirm-email": "",
-    tel: "",
     senha: "",
     "confirm-senha": "",
-    id_nacionalidade: "",
-    id_genero: "",
-    cep: "",
-    logradouro: "",
-    numero: "",
-    bairro: "",
-    localidade: "",
-    estado: "",
-    latitude: "",
-    longitude: "",
-    complemento: "",
+    cpf: "",
+    data_nasc: "",        
+    nacionalidade_id: "",
+    genero_id: "",
+    telefone: "",
     tipo_usuario: "",
     nome_artistico: "",
     descricao: "",
-    id_genero_musical: "",
+    generos_musicais: [],
+    cep: "",
+    cidade: "",
+    estado: "",
+    logradouro: "",
+    numero: "",
+    complemento: "",
+    bairro: "",
   });
 
-  // Busca gêneros e nacionalidades ao montar o componente
   useEffect(() => {
     buscarGeneros()
       .then((data) => setGeneros(data.response.generos ?? []))
@@ -60,16 +52,23 @@ function Cadastro() {
       .then((data) => setNacionalidades(data.response.nacionalidades ?? []))
       .catch(() => setErro("Erro ao carregar nacionalidades."));
 
-    buscarGeneroMusical().then((data) =>
-      setGeneroMusical(data.response.GeneroMusical ?? []).catch(() =>
-        setErro("Erro ao carregar Generos Musicais."),
-      ),
-    );
+    buscarGeneroMusical()
+      .then((data) => setGenerosMusical(data.response.GeneroMusical ?? []))
+      .catch(() => setErro("Erro ao carregar Gêneros Musicais."));
   }, []);
 
   function handleChange(e) {
     setErro("");
-    setForm({ ...form, [e.target.id]: e.target.value });
+    const { id, value } = e.target
+    setForm((prev) => ({ ...prev, [id]: value }));
+  }
+
+
+  function handleGeneroMusicalChange(e) {
+    const selecionados = Array.from(e.target.selectedOptions).map((opt) =>
+      Number(opt.value)
+    );
+    setForm((prev) => ({ ...prev, generos_musicais: selecionados }));
   }
 
   async function handleCepBlur() {
@@ -79,7 +78,7 @@ function Cadastro() {
     try {
       setBuscandoCep(true);
       const dados = await buscarCep(cepLimpo);
-
+      console.log("dados cep: " + dados)
       if (dados.erro) {
         setErro("CEP não encontrado.");
         return;
@@ -92,7 +91,7 @@ function Cadastro() {
         ...prev,
         logradouro: dados.logradouro || "",
         bairro: dados.bairro || "",
-        localidade: dados.localidade || "",
+        cidade: dados.localidade || "", 
         estado: dados.uf || "",
         latitude: coordenadas?.lat || "",
         longitude: coordenadas?.lng || "",
@@ -118,63 +117,54 @@ function Cadastro() {
       return;
     }
     if (form.senha.length < 8) {
-      setErro("A senha deve ter pelo menos 6 caracteres.");
+      setErro("A senha deve ter pelo menos 8 caracteres.");
+      return;
+    }
+
+
+    if (form.tipo_usuario === "artista" && form.generos_musicais.length === 0) {
+      setErro("Selecione pelo menos um gênero musical.");
       return;
     }
 
     try {
       setCarregando(true);
 
-      // PASSO 1: Cadastrar endereço
-      const endereco = {
-        cep: form.cep,
-        logradouro: form.logradouro,
-        numero: form.numero,
-        bairro: form.bairro,
-        cidade: form.localidade,
-        estado: form.estado,
-        latitude: form.latitude,
-        longitude: form.longitude,
-        complemento: form.complemento,
-      };
-      const respostaEndereco = await cadastrarEndereco(endereco);
+      const hoje = new Date().toISOString().split("T")[0]
 
-      if (respostaEndereco.erro || !respostaEndereco.response?.id_endereco) {
-        setErro(respostaEndereco.mensagem);
-        return;
-      }
-
-      //Cadastrar usuário
       const usuario = {
         nome: form.nome,
-        cpf: form.cpf,
-        data_nasc: form.nascimento,
         email: form.email,
-        telefone: form.tel,
         senha: form.senha,
-        nacionalidade_id: Number(form.id_nacionalidade),
-        genero_id: Number(form.id_genero),
-        endereco_id: respostaEndereco.response.id_endereco,
+        cpf: form.cpf,
+        data_nasc: form.data_nasc,
+        nacionalidade_id: Number(form.nacionalidade_id),
+        genero_id: Number(form.genero_id),
+        telefone: form.telefone,     
+        tipo_usuario: form.tipo_usuario,
+        nome_artistico: form.nome_artistico,
+        descricao: form.descricao,
+        generos_musicais: form.generos_musicais,
+        cep: form.cep,
+        cidade: form.cidade,
+        estado: form.estado,
+        logradouro: form.logradouro,
+        numero: form.numero, 
+        complemento: form.complemento,
+        bairro: form.bairro,
       };
 
       const respostaUsuario = await cadastrarUsuario(usuario);
-      console.log("Resposta Usuário:", respostaUsuario);
 
-      if (respostaUsuario.erro) {
-        setErro(respostaUsuario.mensagem || "Erro ao cadastrar usuário.");
+      if (respostaUsuario.status_code !== 201) {
+        setErro(respostaUsuario.message || "Erro ao cadastrar usuário.");
         return;
       }
-
-      const artista = {
-        nome_artistico: form.nome_artistico,
-        descricao: form.descricao,
-        id_genero_musical: form.id_genero_musical,
-      };
 
       setSucesso(true);
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      setErro(err.message);
+      setErro(err.message || "Erro inesperado.");
     } finally {
       setCarregando(false);
     }
@@ -188,126 +178,69 @@ function Cadastro() {
       </header>
 
       <main>
-        <form
-          className="cadastro-form"
-          autoComplete="off"
-          onSubmit={handleSubmit}
-        >
+        <form className="cadastro-form" autoComplete="off" onSubmit={handleSubmit}>
+
           {/* DADOS PESSOAIS */}
           <section className="secao-dados">
             <h3>Dados Pessoais</h3>
 
-            {/* LINHA 1 */}
             <div className="grupo-duplo">
               <div className="campo">
                 <label htmlFor="nome">Nome Completo</label>
-                <input
-                  type="text"
-                  id="nome"
-                  placeholder="Digite seu nome"
-                  value={form.nome}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="nome" placeholder="Digite seu nome"
+                  value={form.nome} onChange={handleChange} required />
               </div>
 
               <div className="campo">
                 <label htmlFor="cpf">CPF</label>
-                <input
-                  type="text"
-                  id="cpf"
-                  placeholder="000.000.000-00"
-                  value={form.cpf}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="cpf" placeholder="000.000.000-00"
+                  value={form.cpf} onChange={handleChange} required />
               </div>
 
               <div className="campo">
-                <label htmlFor="nascimento">Data de Nascimento</label>
-                <input
-                  type="date"
-                  id="nascimento"
-                  value={form.nascimento}
-                  onChange={handleChange}
-                  required
-                />
+                <label htmlFor="data_nasc">Data de Nascimento</label>
+                <input type="date" id="data_nasc"
+                  value={form.data_nasc} onChange={handleChange} required />
               </div>
             </div>
 
-            {/* LINHA 2 */}
             <div className="grupo-duplo">
               <div className="campo">
                 <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="Seu email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="email" id="email" placeholder="Seu email"
+                  value={form.email} onChange={handleChange} required />
               </div>
 
               <div className="campo">
                 <label htmlFor="confirm-email">Confirmar Email</label>
-                <input
-                  type="email"
-                  id="confirm-email"
-                  placeholder="Repita o email"
-                  value={form["confirm-email"]}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="email" id="confirm-email" placeholder="Repita o email"
+                  value={form["confirm-email"]} onChange={handleChange} required />
               </div>
 
+
               <div className="campo">
-                <label htmlFor="tel">Telefone</label>
-                <input
-                  type="tel"
-                  id="tel"
-                  placeholder="(00) 00000-0000"
-                  value={form.tel}
-                  onChange={handleChange}
-                  required
-                />
+                <label htmlFor="telefone">Telefone</label>
+                <input type="tel" id="telefone" placeholder="(00) 00000-0000"
+                  value={form.telefone} onChange={handleChange} required />
               </div>
             </div>
 
-            {/* LINHA 3 */}
             <div className="grupo-duplo">
               <div className="campo">
                 <label htmlFor="senha">Senha</label>
-                <input
-                  type="password"
-                  id="senha"
-                  placeholder="Crie uma senha"
-                  value={form.senha}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="password" id="senha" placeholder="Crie uma senha"
+                  value={form.senha} onChange={handleChange} required />
               </div>
 
               <div className="campo">
                 <label htmlFor="confirm-senha">Confirmar Senha</label>
-                <input
-                  type="password"
-                  id="confirm-senha"
-                  placeholder="Repita a senha"
-                  value={form["confirm-senha"]}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="password" id="confirm-senha" placeholder="Repita a senha"
+                  value={form["confirm-senha"]} onChange={handleChange} required />
               </div>
 
               <div className="campo">
-                <label htmlFor="id_genero">Gênero</label>
-                <select
-                  id="id_genero"
-                  value={form.id_genero}
-                  onChange={handleChange}
-                  required
-                >
+                <label htmlFor="genero_id">Gênero</label>
+                <select id="genero_id" value={form.genero_id} onChange={handleChange} required>
                   <option value="">Selecione...</option>
                   {generos.map((genero) => (
                     <option key={genero.id_genero} value={genero.id_genero}>
@@ -318,22 +251,14 @@ function Cadastro() {
               </div>
             </div>
 
-            {/* LINHA 4 */}
             <div className="grupo-duplo">
+
               <div className="campo">
-                <label htmlFor="id_nacionalidade">Nacionalidade</label>
-                <select
-                  id="id_nacionalidade"
-                  value={form.id_nacionalidade}
-                  onChange={handleChange}
-                  required
-                >
+                <label htmlFor="nacionalidade_id">Nacionalidade</label>
+                <select id="nacionalidade_id" value={form.nacionalidade_id} onChange={handleChange} required>
                   <option value="">Selecione...</option>
                   {nacionalidades.map((nacionalidade) => (
-                    <option
-                      key={nacionalidade.id_nacionalidade}
-                      value={nacionalidade.id_nacionalidade}
-                    >
+                    <option key={nacionalidade.id_nacionalidade} value={nacionalidade.id_nacionalidade}>
                       {nacionalidade.nome}
                     </option>
                   ))}
@@ -341,159 +266,113 @@ function Cadastro() {
               </div>
 
               <div className="campo">
-                <label htmlFor="id_">Selecione uma Opção</label>
-                <select>
+                <label htmlFor="tipo_usuario">Tipo de Usuário</label>
+                <select id="tipo_usuario" value={form.tipo_usuario} onChange={handleChange} required>
                   <option value="">Selecione...</option>
-                  <option value="">Artista</option>
-                  <option value="">Organizador</option>
-                  <option value="">Usúsario</option>
+                  <option value="artista">Artista</option>
+                  <option value="organizador">Organizador</option>
+                  <option value="user">Usuário</option>
                 </select>
               </div>
 
-              <div className="campo">
-                <label htmlFor="id_genero_musical">Gênero Musical</label>
 
-                <select
-                  id="id_genero_musical"
-                  value={form.id_genero_musical}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Selecione...</option>
-
-                  {generoMusical.map((genero) => (
-                    <option
-                      key={genero.id_genero_musical}
-                      value={genero.id_genero_musical}
-                    >
-                      {genero.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {form.tipo_usuario === "artista" && (
+                <div className="campo">
+                  <label htmlFor="generos_musicais">Gêneros Musicais</label>
+                  <select id="generos_musicais" multiple
+                    value={form.generos_musicais} onChange={handleGeneroMusicalChange} required>
+                    {generosMusical.map((genero) => (
+                      <option key={genero.id_genero_musical} value={genero.id_genero_musical}>
+                        {genero.nome}
+                      </option>
+                    ))}
+                  </select>
+                  <small>Segure Ctrl para selecionar mais de um</small>
+                </div>
+              )}
             </div>
+
+            {form.tipo_usuario === "artista" && (
+              <div className="grupo-duplo">
+                <div className="campo">
+                  <label htmlFor="nome_artistico">Nome Artístico</label>
+                  <input type="text" id="nome_artistico" placeholder="Seu nome artístico"
+                    value={form.nome_artistico} onChange={handleChange} required />
+                </div>
+
+                <div className="campo">
+                  <label htmlFor="descricao">Descrição</label>
+                  <input type="text" id="descricao" placeholder="Fale sobre você"
+                    value={form.descricao} onChange={handleChange} />
+                </div>
+              </div>
+            )}
           </section>
 
-          {/* ENDEREÇO */}
+
           <section className="secao-endereco">
             <h3>Endereço</h3>
 
             <div className="grid-endereco">
               <div className="campo cep">
                 <label htmlFor="cep">
-                  CEP{" "}
-                  {buscandoCep && (
-                    <span className="buscando-cep">Buscando...</span>
-                  )}
+                  CEP {buscandoCep && <span className="buscando-cep">Buscando...</span>}
                 </label>
-                <input
-                  type="text"
-                  id="cep"
-                  placeholder="00000-000"
-                  maxLength="9"
-                  value={form.cep}
-                  onChange={handleChange}
-                  onBlur={handleCepBlur}
-                  required
-                />
+                <input type="text" id="cep" placeholder="00000-000" maxLength="9"
+                  value={form.cep} onChange={handleChange} onBlur={handleCepBlur} required />
               </div>
 
               <div className="campo rua">
                 <label htmlFor="logradouro">Rua</label>
-                <input
-                  type="text"
-                  id="logradouro"
-                  placeholder="Rua, Avenida..."
-                  value={form.logradouro}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="logradouro" placeholder="Rua, Avenida..."
+                  value={form.logradouro} onChange={handleChange} required />
               </div>
 
               <div className="campo numero">
                 <label htmlFor="numero">Nº</label>
-                <input
-                  type="text"
-                  id="numero"
-                  value={form.numero}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="numero"
+                  value={form.numero} onChange={handleChange} required />
               </div>
 
               <div className="campo bairro">
                 <label htmlFor="bairro">Bairro</label>
-                <input
-                  type="text"
-                  id="bairro"
-                  value={form.bairro}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="bairro"
+                  value={form.bairro} onChange={handleChange} required />
               </div>
 
+     
               <div className="campo cidade">
-                <label htmlFor="localidade">Cidade</label>
-                <input
-                  type="text"
-                  id="localidade"
-                  value={form.localidade}
-                  onChange={handleChange}
-                  required
-                />
+                <label htmlFor="cidade">Cidade</label>
+                <input type="text" id="cidade"
+                  value={form.cidade} onChange={handleChange} required />
               </div>
 
               <div className="campo uf">
                 <label htmlFor="estado">UF</label>
-                <input
-                  type="text"
-                  id="estado"
-                  maxLength="2"
-                  value={form.estado}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="text" id="estado" maxLength="2"
+                  value={form.estado} onChange={handleChange} required />
               </div>
 
               <div className="campo complemento">
                 <label htmlFor="complemento">Complemento</label>
-                <input
-                  type="text"
-                  id="complemento"
-                  maxLength="100"
-                  value={form.complemento}
-                  onChange={handleChange}
-                />
+                <input type="text" id="complemento" maxLength="100"
+                  value={form.complemento} onChange={handleChange} />
               </div>
             </div>
           </section>
 
-          {/* FEEDBACK */}
           {erro && <p className="mensagem-erro">{erro}</p>}
-          {sucesso && (
-            <p className="mensagem-sucesso">
-              Cadastro realizado! Redirecionando...
-            </p>
-          )}
+          {sucesso && <p className="mensagem-sucesso">Cadastro realizado! Redirecionando...</p>}
 
-          {/* BOTÕES */}
           <div className="botoes">
-            <button
-              type="button"
-              className="btn-secundario"
-              onClick={() => navigate("/login")}
-            >
+            <button type="button" className="btn-secundario" onClick={() => navigate("/login")}>
               Já tenho conta
             </button>
-
-            <button
-              type="submit"
-              className="btn-primario"
-              disabled={carregando || buscandoCep}
-            >
+            <button type="submit" className="btn-primario" disabled={carregando || buscandoCep}>
               {carregando ? "Cadastrando..." : "Cadastrar"}
             </button>
           </div>
+
         </form>
       </main>
     </div>
