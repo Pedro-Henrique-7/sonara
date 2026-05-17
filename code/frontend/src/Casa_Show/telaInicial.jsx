@@ -35,7 +35,9 @@ export default function telaInicial() {
               Criar Eventos
             </div>
 
-            <div className="card">Contratar Artistas</div>
+            <div className="card" onClick={() => navigate("/contratarArtista")}>
+              Contratar Artistas
+            </div>
 
             <div className="card" onClick={() => navigate("/listaMeusEventos")}>
               Meus Eventos

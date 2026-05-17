@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.sonaraContratarConteudo {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(to bottom, #f00000 0%, #ff0000 60%, #ff4d00 100%);
+  border-radius: 24px;
+  padding: 45px 55px 50px;
+  box-sizing: border-box;
+  box-shadow: 0 5px 0 #b12600;
+  margin-top: 80px;
+}
+
+.sonaraContratarTitulo {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin-bottom: 45px;
+}
+
+.sonaraContratarGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 45px 38px;
+  justify-items: center;
+}
+
+.sonaraContratarCard {
+  width: 190px;
+  background: linear-gradient(
+    to bottom,
+    #000000 30%,
+    #3f3f3f 70%,
+    #696969 100%
+  );
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.45);
+  transition: 0.2s;
+}
+
+.sonaraContratarCard:hover {
+  transform: translateY(-6px);
+}
+
+.sonaraContratarCardTopo {
+  height: 90px;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.sonaraContratarFoto {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid #ff4800;
+  background-image: url("../img/show1.jfif");
+  background-size: cover;
+  background-position: center;
+  transform: translateY(34px);
+}
+
+.sonaraContratarCardConteudo {
+  padding: 48px 18px 22px;
+  text-align: center;
+  color: white;
+}
+
+.sonaraContratarCardConteudo h2 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  font-weight: 600;
+  margin-left: -74px;
+}
+
+.sonaraContratarCardConteudo span {
+  font-size: 0.72rem;
+  color: #e4e4e4;
+}
+
+.sonaraContratarEstrelas {
+  color: #ffe600;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 14px 0 12px;
+  font-size: 1rem;
+}
+
+.sonaraContratarEstrelaOff {
+  color: #d8d8d8;
+}
+
+.sonaraContratarCardConteudo p {
+  font-size: 0.68rem;
+  margin-bottom: 5px;
+}
+
+.sonaraContratarCardConteudo small {
+  display: block;
+  font-size: 0.62rem;
+  color: #ededed;
+  margin-bottom: 18px;
+}
+
+.sonaraContratarBtnVerMais {
+  border: none;
+  background: transparent;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sonaraContratarBtnVerMais svg {
+  font-size: 1rem;
+}
+
+.sonaraContratarBtnVerMais:hover {
+  opacity: 0.8;
+}
