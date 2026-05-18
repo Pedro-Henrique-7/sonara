@@ -12,6 +12,9 @@ export default function MarcarEvento() {
       <main className="main">
         <section className="card-evento">
           <div className="galeria">
+            <div className="foto_Show">
+              <img src={show2} alt="Show 2" />
+            </div>
             <div className="miniaturas">
               <img src={show1} alt="Show 1" />
               <img src={show2} alt="Show 2" />

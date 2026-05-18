@@ -83,7 +83,7 @@
   box-shadow: var(--sombra-card);
 
   border: 1px solid rgba(255, 255, 255, 0.08);
-  height: 90vh;
+  height: 75vh;
 }
 
 /* =========================================================
@@ -132,17 +132,13 @@
 }
 
 .sobreEventoImagemPrincipal {
-  width: 25%;
-  height: 25%;
+  width: 20%;
+  height: 20%;
 
   object-fit: cover;
 
   transition: 0.3s ease;
   margin-top: 0;
-}
-
-.sobreEventoImagemPrincipal:hover {
-  transform: scale(1.03);
 }
 
 /* =========================================================
@@ -225,7 +221,6 @@
 .sobreEventoBoxLocalizacao,
 .sobreEventoNomeBox {
   padding: 16px;
-
   font-size: 15px;
   line-height: 1.5;
 }
@@ -242,8 +237,7 @@
    MAPA
 ========================================================= */
 .sobreEventoMapaImagem {
-  width: 100%;
-  max-width: 500px;
+  width: 20%;
   height: 240px;
 
   object-fit: cover;
@@ -266,11 +260,8 @@
 .sobreEventoRodapeSecao img {
   width: 130px;
   height: 130px;
-
   object-fit: cover;
-
   border-radius: 18px;
-
   border: 2px solid rgba(255, 255, 255, 0.08);
 }
 

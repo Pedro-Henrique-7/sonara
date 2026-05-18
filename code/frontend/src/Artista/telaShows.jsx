@@ -63,7 +63,7 @@ export default function Shows() {
         <h3 className="titulo">Eventos Para você</h3>
 
         <div className="grid">
-          {Array.from({ length: 12 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => (
             <div className="card" key={i}>
               <img src={show3} alt="evento" />
 

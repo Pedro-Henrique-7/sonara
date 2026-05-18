@@ -1,492 +1,352 @@
-/* arquivo: visualizarArtista.css */
-
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap");
-
+/* =========================================================
+   RESET
+========================================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ========================= */
-/* PÁGINA */
-/* ========================= */
-
-.visualizarArtistaPagina {
+/* =========================================================
+   CONTAINER PRINCIPAL
+========================================================= */
+.sonaraContratarConteudo {
   width: 100%;
-  min-height: 100vh;
+  max-width: 1440px;
 
+  margin: 60px auto;
+  padding: 55px 48px 65px;
+
+  border-radius: 32px;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.12),
+      transparent 30%
+    ),
+    linear-gradient(180deg, #ff1e1e 0%, #ff3b1f 48%, #ff6a00 100%);
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* brilho decorativo */
+.sonaraContratarConteudo::before {
+  content: "";
+
+  position: absolute;
+  top: -120px;
+  right: -120px;
+
+  width: 300px;
+  height: 300px;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  border-radius: 50%;
+  filter: blur(10px);
+}
+
+/* =========================================================
+   TITULO
+========================================================= */
+.sonaraContratarTitulo {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 50px;
+  margin-left: 40px;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+.sonaraContratarGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 36px;
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+.sonaraContratarCard {
+  width: 100%;
+  background: rgba(255, 248, 244, 0.96);
+  border-radius: 24px;
+  overflow: hidden;
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border 0.28s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(6px);
+  position: relative;
+}
+
+.sonaraContratarCard:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.28);
+}
+
+/* =========================================================
+   TOPO CARD
+========================================================= */
+.sonaraContratarCardTopo {
+  height: 120px;
+  background: linear-gradient(135deg, #ff2d00 0%, #ff5e00 45%, #ff7a00 100%);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-
-  padding: 48px 20px;
-
-  font-family: "DM Sans", sans-serif;
-
-  background: radial-gradient(
-    ellipse 60% 40% at 50% 0%,
-    rgba(255, 120, 0, 0.12) 0%,
-    transparent 70%
-  );
+  align-items: flex-end;
+  position: relative;
 }
 
-/* ========================= */
-/* CONTAINER */
-/* ========================= */
-
-.visualizarArtistaContainer {
-  width: 100%;
-  max-width: 1060px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 16px;
+/* detalhe topo */
+.sonaraContratarCardTopo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.08), transparent);
 }
 
-/* ========================= */
-/* CARD PRINCIPAL */
-/* ========================= */
-
-.visualizarArtistaCard {
-  width: 100%;
-
-  background: rgba(20, 20, 20, 0.98);
-
-  border: 0.5px solid rgba(255, 255, 255, 0.09);
-
-  border-radius: 24px;
-
-  padding: 32px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-/* ========================= */
-/* TOPO */
-/* ========================= */
-
-.visualizarArtistaTopo {
-  display: flex;
-  align-items: flex-start;
-  gap: 28px;
-
-  flex-wrap: wrap;
-}
-
-.visualizarArtistaImagem {
-  width: 148px;
-  height: 148px;
-
-  border-radius: 18px;
-
-  object-fit: cover;
-
-  border: 0.5px solid rgba(255, 255, 255, 0.1);
-
+/* =========================================================
+   FOTO
+========================================================= */
+.sonaraContratarFoto {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 5px solid #ffffff;
+  background-image: url("../img/show1.jfif");
+  background-size: cover;
+  background-position: center;
+  transform: translateY(42px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28);
+  z-index: 2;
   flex-shrink: 0;
-
-  transition: transform 0.25s ease;
 }
 
-.visualizarArtistaImagem:hover {
-  transform: scale(1.02);
-}
-
-.visualizarArtistaInfo {
-  flex: 1;
-
+/* =========================================================
+   CONTEUDO CARD
+========================================================= */
+.sonaraContratarCardConteudo {
+  padding: 62px 24px 28px;
   display: flex;
   flex-direction: column;
-
-  gap: 14px;
-
-  min-width: 240px;
+  align-items: center;
+  text-align: center;
 }
 
-.visualizarArtistaTitulo {
-  color: rgba(255, 255, 255, 0.4);
+/* =========================================================
+   NOME
+========================================================= */
+.sonaraContratarCardConteudo h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #141414;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
 
-  font-size: 0.75rem;
+/* =========================================================
+   GENERO / CATEGORIA
+========================================================= */
+.sonaraContratarCardConteudo span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #5f5f5f;
+  margin-bottom: 14px;
+}
+
+/* =========================================================
+   ESTRELAS
+========================================================= */
+.sonaraContratarEstrelas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  color: #ffc400;
+}
+
+.sonaraContratarEstrelaOff {
+  color: #d3d3d3;
+}
+
+/* =========================================================
+   TEXTO
+========================================================= */
+.sonaraContratarCardConteudo p {
+  font-size: 0.88rem;
   font-weight: 500;
 
-  text-transform: uppercase;
+  color: #2d2d2d;
 
-  letter-spacing: 1.2px;
+  margin-bottom: 7px;
+
+  line-height: 1.5;
 }
 
-.visualizarArtistaNome {
-  color: white;
+.sonaraContratarCardConteudo small {
+  font-size: 0.76rem;
 
-  font-family: "DM Serif Display", serif;
-  font-size: 2.4rem;
-  font-weight: 400;
+  color: #7a7a7a;
 
-  line-height: 1.05;
+  margin-bottom: 22px;
 
-  letter-spacing: -0.5px;
+  line-height: 1.4;
 }
 
-.visualizarArtistaGenero,
-.visualizarArtistaTelefone {
-  color: rgba(255, 255, 255, 0.55);
-
-  font-size: 0.9rem;
-
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-}
-
-/* ========================= */
-/* ESTRELAS */
-/* ========================= */
-
-.visualizarArtistaEstrelas {
-  display: flex;
-  align-items: center;
-
-  gap: 3px;
-
-  font-size: 1rem;
-
-  color: #e8960a;
-}
-
-.visualizarArtistaEstrelaApagada {
-  color: rgba(255, 255, 255, 0.15);
-}
-
-/* ========================= */
-/* SEPARADOR INTERNO */
-/* ========================= */
-
-.visualizarArtistaCard > * + * {
-  border-top: 0.5px solid rgba(255, 255, 255, 0.06);
-  padding-top: 28px;
-}
-
-.visualizarArtistaCard > *:first-child {
-  border-top: none;
-  padding-top: 0;
-}
-
-/* ========================= */
-/* DESCRIÇÃO */
-/* ========================= */
-
-.visualizarArtistaDescricao {
+/* =========================================================
+   BOTAO
+========================================================= */
+.sonaraContratarBtnVerMais {
   width: 100%;
 
-  color: rgba(255, 255, 255, 0.65);
+  border: none;
 
-  font-size: 0.9rem;
+  padding: 13px 18px;
 
-  line-height: 1.9;
-}
+  border-radius: 14px;
 
-/* ========================= */
-/* INFORMAÇÕES */
-/* ========================= */
+  background: linear-gradient(135deg, #ff3d00, #ff6a00);
 
-.visualizarArtistaInfosExtras {
-  display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-  gap: 12px;
-}
-
-.visualizarArtistaBox {
-  background: rgba(255, 255, 255, 0.03);
-
-  border: 0.5px solid rgba(255, 255, 255, 0.07);
-
-  border-radius: 16px;
-
-  padding: 18px 20px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 6px;
-
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
-}
-
-.visualizarArtistaBox:hover {
-  background: rgba(255, 255, 255, 0.05);
-
-  border-color: rgba(255, 255, 255, 0.13);
-}
-
-.visualizarArtistaBoxTitulo {
-  color: rgba(255, 255, 255, 0.4);
-
-  font-size: 0.72rem;
-  font-weight: 500;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.9px;
-}
-
-.visualizarArtistaBoxTexto {
-  color: white;
-
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* ========================= */
-/* LOCALIZAÇÃO */
-/* ========================= */
-
-.visualizarArtistaLocalizacao {
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  color: rgba(255, 255, 255, 0.65);
-
-  font-size: 0.9rem;
-}
-
-.visualizarArtistaIconeLocal {
-  color: #d17000;
-
-  font-size: 1rem;
-}
-
-/* ========================= */
-/* RODAPÉ */
-/* ========================= */
-
-.visualizarArtistaRodape {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  gap: 24px;
-
-  flex-wrap: wrap;
-}
-
-/* ========================= */
-/* CACHE */
-/* ========================= */
-
-.visualizarArtistaCache {
-  display: flex;
-  flex-direction: column;
-
-  gap: 4px;
-}
-
-.visualizarArtistaCache span {
-  color: rgba(255, 255, 255, 0.4);
-
-  font-size: 0.72rem;
-  font-weight: 500;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.9px;
-}
-
-.visualizarArtistaCache strong {
   color: #ffffff;
 
-  font-family: "DM Serif Display", serif;
-  font-size: 1.9rem;
-  font-weight: 400;
-}
+  font-size: 0.86rem;
+  font-weight: 700;
 
-/* ========================= */
-/* REDES */
-/* ========================= */
-
-.visualizarArtistaRedes {
   display: flex;
   align-items: center;
-
-  gap: 10px;
-}
-
-.visualizarArtistaRedes svg {
-  width: 42px;
-  height: 42px;
-
-  padding: 11px;
-
-  border-radius: 12px;
-
-  background: rgba(255, 255, 255, 0.05);
-
-  border: 0.5px solid rgba(255, 255, 255, 0.08);
-
-  color: rgba(255, 255, 255, 0.6);
+  justify-content: center;
+  gap: 8px;
 
   cursor: pointer;
 
   transition:
     transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+
+  box-shadow: 0 10px 20px rgba(255, 72, 0, 0.25);
 }
 
-.visualizarArtistaRedes svg:hover {
-  transform: translateY(-3px);
-
-  background: rgba(255, 255, 255, 0.09);
-
-  border-color: rgba(255, 255, 255, 0.18);
-
-  color: white;
+.sonaraContratarBtnVerMais svg {
+  font-size: 1rem;
 }
 
-/* ========================= */
-/* BOTÕES */
-/* ========================= */
-
-.visualizarArtistaBotoes {
-  display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-  gap: 12px;
-}
-
-.visualizarArtistaBotao {
-  border: 0.5px solid rgba(255, 255, 255, 0.12);
-
-  padding: 15px 20px;
-
-  border-radius: 14px;
-
-  background: rgba(255, 255, 255, 0.05);
-
-  color: white;
-
-  font-family: "DM Sans", sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
-}
-
-.visualizarArtistaBotao:hover {
+.sonaraContratarBtnVerMais:hover {
   transform: translateY(-2px);
 
-  background: rgba(255, 255, 255, 0.09);
+  opacity: 0.96;
 
-  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 14px 26px rgba(255, 72, 0, 0.32);
 }
 
-.visualizarArtistaBotao:active {
+.sonaraContratarBtnVerMais:active {
   transform: scale(0.98);
 }
 
-.visualizarArtistaBotao:last-child {
-  background: #a35f00;
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+@media (max-width: 1200px) {
+  .sonaraContratarConteudo {
+    padding: 50px 40px 60px;
+  }
 
-  border-color: transparent;
-
-  color: #fff8f0;
+  .sonaraContratarGrid {
+    gap: 30px;
+  }
 }
 
-.visualizarArtistaBotao:last-child:hover {
-  background: #bf6e00;
+@media (max-width: 992px) {
+  .sonaraContratarConteudo {
+    border-radius: 26px;
+    padding: 42px 30px 50px;
+  }
 
-  border-color: transparent;
+  .sonaraContratarTitulo {
+    margin-bottom: 40px;
+  }
+
+  .sonaraContratarGrid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
 }
-
-/* ========================= */
-/* RESPONSIVO */
-/* ========================= */
 
 @media (max-width: 768px) {
-  .visualizarArtistaCard {
-    padding: 24px;
+  .sonaraContratarConteudo {
+    margin: 30px 16px;
+
+    padding: 34px 22px 42px;
+
+    border-radius: 24px;
   }
 
-  .visualizarArtistaTopo {
-    flex-direction: column;
-    align-items: center;
-
+  .sonaraContratarTitulo {
     text-align: center;
-  }
 
-  .visualizarArtistaInfo {
-    align-items: center;
-  }
-
-  .visualizarArtistaNome {
     font-size: 2rem;
   }
 
-  .visualizarArtistaRodape {
-    flex-direction: column;
-    align-items: flex-start;
+  .sonaraContratarGrid {
+    gap: 24px;
+  }
+
+  .sonaraContratarCardTopo {
+    height: 110px;
+  }
+
+  .sonaraContratarFoto {
+    width: 100px;
+    height: 100px;
+
+    transform: translateY(38px);
+  }
+
+  .sonaraContratarCardConteudo {
+    padding-top: 58px;
   }
 }
 
-@media (max-width: 540px) {
-  .visualizarArtistaPagina {
-    padding: 16px 12px;
+@media (max-width: 520px) {
+  .sonaraContratarConteudo {
+    padding: 28px 16px 36px;
   }
 
-  .visualizarArtistaCard {
-    padding: 20px;
-
-    border-radius: 20px;
+  .sonaraContratarGrid {
+    grid-template-columns: 1fr;
   }
 
-  .visualizarArtistaImagem {
-    width: 130px;
-    height: 130px;
-
-    border-radius: 16px;
+  .sonaraContratarCard {
+    max-width: 100%;
   }
 
-  .visualizarArtistaNome {
+  .sonaraContratarTitulo {
     font-size: 1.7rem;
   }
 
-  .visualizarArtistaDescricao {
-    font-size: 0.88rem;
+  .sonaraContratarCardConteudo h2 {
+    font-size: 1.08rem;
   }
 
-  .visualizarArtistaRodape {
-    align-items: center;
-
-    text-align: center;
-  }
-
-  .visualizarArtistaCache {
-    align-items: center;
-  }
-
-  .visualizarArtistaRedes {
-    justify-content: center;
-
-    width: 100%;
-  }
-
-  .visualizarArtistaBotao {
-    width: 100%;
+  .sonaraContratarBtnVerMais {
+    padding: 12px;
+    font-size: 0.82rem;
   }
 }

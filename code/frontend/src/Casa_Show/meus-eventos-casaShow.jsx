@@ -101,6 +101,7 @@ export default function ListaMeusEventos() {
           ))}
         </div>
       </main>
+
       <FooterSonara />
     </div>
   );
