@@ -27,68 +27,6 @@ body {
   color: white;
 }
 
-/* HEADER */
-
-.header-show {
-  width: 90%;
-  height: 140px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0 40px;
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 70px;
-}
-
-.nav-btn {
-  border: none;
-  background: transparent;
-
-  color: white;
-  font-size: 2.3rem;
-
-  cursor: pointer;
-  transition: 0.3s;
-  margin-left: 30px;
-}
-
-.nav-btn:hover {
-  transform: scale(1.05);
-}
-
-/* PERFIL */
-
-.perfil-area {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-left: 100px;
-}
-
-.perfil-info h2 {
-  font-size: 2rem;
-  font-weight: 400;
-}
-
-.perfil-info span {
-  font-size: 1.1rem;
-}
-
-.perfil-icon {
-  font-size: 4rem;
-}
-
-.logout-icon {
-  font-size: 2.2rem;
-  margin-left: 10px;
-
-  cursor: pointer;
-}
-
 /* MAIN */
 
 .main {

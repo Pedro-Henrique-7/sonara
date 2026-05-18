@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./telaShows.css";
 import { Search } from "lucide-react";
-
+import FooterSonara from "./footer";
 import Header from "./Header";
 
 import show1 from "../img/show1.jfif";
@@ -72,6 +72,8 @@ export default function Shows() {
           ))}
         </div>
       </div>
+
+      <FooterSonara />
     </div>
   );
 }

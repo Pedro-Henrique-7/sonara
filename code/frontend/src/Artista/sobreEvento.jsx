@@ -3,6 +3,7 @@ import "./sobreEvento.css";
 import fotoShow from "../img/fotoShow.png";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import Header from "./Header";
+import FooterSonara from "./footer";
 
 export default function SobreEvento() {
   const navigate = useNavigate();
@@ -56,6 +57,7 @@ export default function SobreEvento() {
           </div>
         </div>
       </main>
+      <FooterSonara />
     </div>
   );
 }

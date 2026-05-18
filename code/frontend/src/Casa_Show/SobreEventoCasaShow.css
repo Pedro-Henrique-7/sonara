@@ -1,0 +1,341 @@
+/* =========================================================
+   RESET
+========================================================= */
+.sobreEventoPagina * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
+.sobreEventoPagina {
+  --cor-card: linear-gradient(
+    180deg,
+    rgba(180, 0, 0, 0.96) 0%,
+    rgba(255, 72, 0, 0.96) 100%
+  );
+
+  --cor-box: rgba(130, 45, 0, 0.88);
+
+  --cor-borda: rgba(0, 0, 0, 0.35);
+
+  --cor-texto: #ffffff;
+  --cor-texto-soft: rgba(255, 255, 255, 0.85);
+
+  --cor-botao: #9e1400;
+  --cor-botao-hover: #7c0f00;
+
+  --radius-card: 18px;
+  --radius-box: 14px;
+
+  --sombra-card: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+  width: 100%;
+  min-height: 100vh;
+
+  font-family: "Segoe UI", sans-serif;
+  color: var(--cor-texto);
+
+  background: linear-gradient(
+    180deg,
+    var(--cor-fundo-topo) 0%,
+    var(--cor-fundo-meio) 45%,
+    var(--cor-fundo-final) 100%
+  );
+}
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+========================================================= */
+.sobreEventoConteudoPrincipal {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+.sobreEventoConteudoPrincipal > h2 {
+  margin-bottom: 30px;
+
+  font-size: 34px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   CARD GERAL
+========================================================= */
+.sobreEventoContainerInformacoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+
+  padding: 34px;
+
+  background: var(--cor-card);
+
+  border-radius: var(--radius-card);
+
+  box-shadow: var(--sombra-card);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  height: 90vh;
+}
+
+/* =========================================================
+   COLUNAS
+========================================================= */
+.sobreEventoTopoSecao,
+.sobreEventoContainerSobre {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* =========================================================
+   TITULOS INTERNOS
+========================================================= */
+.sobreEventoFormularioContainer label,
+.sobreEventoInfoCacheContainer label,
+.sobreEventoNomeArea label,
+.sobreEventoDescricaoArea label,
+.sobreEventoLocalizacao label,
+.sobreEventoMapaArea label {
+  margin-bottom: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: var(--cor-texto-soft);
+}
+
+/* =========================================================
+   IMAGEM PRINCIPAL
+========================================================= */
+.sobreEventoCardImagem {
+  position: relative;
+
+  width: 100%;
+  max-width: 500px;
+  height: 240px;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  margin-top: 280px;
+}
+
+.sobreEventoImagemPrincipal {
+  width: 25%;
+  height: 25%;
+
+  object-fit: cover;
+
+  transition: 0.3s ease;
+  margin-top: 0;
+}
+
+.sobreEventoImagemPrincipal:hover {
+  transform: scale(1.03);
+}
+
+/* =========================================================
+   LINHAS
+========================================================= */
+.sobreEventoLinhaCampos,
+.sobreEventoLinhaInfo,
+.sobreEventoInfoHorario {
+  display: flex;
+  gap: 14px;
+
+  flex-wrap: wrap;
+}
+
+/* =========================================================
+   CAMPOS
+========================================================= */
+.sobreEventoFormularioContainer section,
+.sobreEventoInfoCacheContainer section,
+.sobreEventoCampoData div,
+.sobreEventoCampoInicio div,
+.sobreEventoBoxInfo,
+.sobreEventoNomeBox,
+.sobreEventoDescricaoBox,
+.sobreEventoBoxLocalizacao {
+  background: var(--cor-box);
+
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--radius-box);
+
+  color: white;
+
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+/* =========================================================
+   INPUTS PEQUENOS
+========================================================= */
+.sobreEventoFormularioContainer section,
+.sobreEventoInfoCacheContainer section,
+.sobreEventoCampoData div,
+.sobreEventoCampoInicio div,
+.sobreEventoBoxInfo {
+  display: flex;
+  align-items: center;
+
+  height: 42px;
+
+  padding-inline: 14px;
+
+  font-size: 13px;
+}
+
+.sobreEventoFormularioContainer section {
+  width: 100%;
+  max-width: 380px;
+}
+
+.sobreEventoCampoData div {
+  width: 120px;
+}
+
+.sobreEventoCampoInicio div,
+.sobreEventoBoxInfo {
+  width: 90px;
+}
+
+/* =========================================================
+   ÁREAS DE TEXTO
+========================================================= */
+.sobreEventoNomeArea,
+.sobreEventoDescricaoArea,
+.sobreEventoLocalizacao,
+.sobreEventoMapaArea {
+  display: flex;
+  flex-direction: column;
+}
+
+.sobreEventoDescricaoBox,
+.sobreEventoBoxLocalizacao,
+.sobreEventoNomeBox {
+  padding: 16px;
+
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.sobreEventoDescricaoBox {
+  min-height: 120px;
+}
+
+.sobreEventoBoxLocalizacao {
+  min-height: 150px;
+}
+
+/* =========================================================
+   MAPA
+========================================================= */
+.sobreEventoMapaImagem {
+  width: 100%;
+  max-width: 500px;
+  height: 240px;
+
+  object-fit: cover;
+
+  border-radius: 16px;
+
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  margin-top: 3%;
+}
+
+/* =========================================================
+   ARTISTA
+========================================================= */
+.sobreEventoRodapeSecao {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sobreEventoRodapeSecao img {
+  width: 130px;
+  height: 130px;
+
+  object-fit: cover;
+
+  border-radius: 18px;
+
+  border: 2px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+.sobreEventoBotaoInscricao {
+  width: fit-content;
+
+  padding: 12px 26px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: var(--cor-botao);
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.sobreEventoBotaoInscricao:hover {
+  background: var(--cor-botao-hover);
+
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+@media (max-width: 1000px) {
+  .sobreEventoContainerInformacoes {
+    grid-template-columns: 1fr;
+  }
+
+  .sobreEventoCardImagem,
+  .sobreEventoMapaImagem {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .sobreEventoConteudoPrincipal {
+    padding: 18px;
+  }
+
+  .sobreEventoContainerInformacoes {
+    padding: 20px;
+    gap: 26px;
+  }
+
+  .sobreEventoConteudoPrincipal > h2 {
+    font-size: 26px;
+  }
+
+  .sobreEventoCardImagem {
+    height: 200px;
+  }
+
+  .sobreEventoMapaImagem {
+    height: 190px;
+  }
+}

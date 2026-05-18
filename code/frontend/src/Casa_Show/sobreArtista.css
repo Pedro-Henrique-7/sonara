@@ -1,0 +1,492 @@
+/* arquivo: visualizarArtista.css */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========================= */
+/* PÁGINA */
+/* ========================= */
+
+.visualizarArtistaPagina {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 48px 20px;
+
+  font-family: "DM Sans", sans-serif;
+
+  background: radial-gradient(
+    ellipse 60% 40% at 50% 0%,
+    rgba(255, 120, 0, 0.12) 0%,
+    transparent 70%
+  );
+}
+
+/* ========================= */
+/* CONTAINER */
+/* ========================= */
+
+.visualizarArtistaContainer {
+  width: 100%;
+  max-width: 1060px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+/* ========================= */
+/* CARD PRINCIPAL */
+/* ========================= */
+
+.visualizarArtistaCard {
+  width: 100%;
+
+  background: rgba(20, 20, 20, 0.98);
+
+  border: 0.5px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 24px;
+
+  padding: 32px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ========================= */
+/* TOPO */
+/* ========================= */
+
+.visualizarArtistaTopo {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+
+  flex-wrap: wrap;
+}
+
+.visualizarArtistaImagem {
+  width: 148px;
+  height: 148px;
+
+  border-radius: 18px;
+
+  object-fit: cover;
+
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+
+  flex-shrink: 0;
+
+  transition: transform 0.25s ease;
+}
+
+.visualizarArtistaImagem:hover {
+  transform: scale(1.02);
+}
+
+.visualizarArtistaInfo {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  min-width: 240px;
+}
+
+.visualizarArtistaTitulo {
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1.2px;
+}
+
+.visualizarArtistaNome {
+  color: white;
+
+  font-family: "DM Serif Display", serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.5px;
+}
+
+.visualizarArtistaGenero,
+.visualizarArtistaTelefone {
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 0.9rem;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+/* ========================= */
+/* ESTRELAS */
+/* ========================= */
+
+.visualizarArtistaEstrelas {
+  display: flex;
+  align-items: center;
+
+  gap: 3px;
+
+  font-size: 1rem;
+
+  color: #e8960a;
+}
+
+.visualizarArtistaEstrelaApagada {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* ========================= */
+/* SEPARADOR INTERNO */
+/* ========================= */
+
+.visualizarArtistaCard > * + * {
+  border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+  padding-top: 28px;
+}
+
+.visualizarArtistaCard > *:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* ========================= */
+/* DESCRIÇÃO */
+/* ========================= */
+
+.visualizarArtistaDescricao {
+  width: 100%;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 0.9rem;
+
+  line-height: 1.9;
+}
+
+/* ========================= */
+/* INFORMAÇÕES */
+/* ========================= */
+
+.visualizarArtistaInfosExtras {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+  gap: 12px;
+}
+
+.visualizarArtistaBox {
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
+
+  border-radius: 16px;
+
+  padding: 18px 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.visualizarArtistaBox:hover {
+  background: rgba(255, 255, 255, 0.05);
+
+  border-color: rgba(255, 255, 255, 0.13);
+}
+
+.visualizarArtistaBoxTitulo {
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 0.72rem;
+  font-weight: 500;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.9px;
+}
+
+.visualizarArtistaBoxTexto {
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ========================= */
+/* LOCALIZAÇÃO */
+/* ========================= */
+
+.visualizarArtistaLocalizacao {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 0.9rem;
+}
+
+.visualizarArtistaIconeLocal {
+  color: #d17000;
+
+  font-size: 1rem;
+}
+
+/* ========================= */
+/* RODAPÉ */
+/* ========================= */
+
+.visualizarArtistaRodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 24px;
+
+  flex-wrap: wrap;
+}
+
+/* ========================= */
+/* CACHE */
+/* ========================= */
+
+.visualizarArtistaCache {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.visualizarArtistaCache span {
+  color: rgba(255, 255, 255, 0.4);
+
+  font-size: 0.72rem;
+  font-weight: 500;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.9px;
+}
+
+.visualizarArtistaCache strong {
+  color: #ffffff;
+
+  font-family: "DM Serif Display", serif;
+  font-size: 1.9rem;
+  font-weight: 400;
+}
+
+/* ========================= */
+/* REDES */
+/* ========================= */
+
+.visualizarArtistaRedes {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.visualizarArtistaRedes svg {
+  width: 42px;
+  height: 42px;
+
+  padding: 11px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 0.5px solid rgba(255, 255, 255, 0.08);
+
+  color: rgba(255, 255, 255, 0.6);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.visualizarArtistaRedes svg:hover {
+  transform: translateY(-3px);
+
+  background: rgba(255, 255, 255, 0.09);
+
+  border-color: rgba(255, 255, 255, 0.18);
+
+  color: white;
+}
+
+/* ========================= */
+/* BOTÕES */
+/* ========================= */
+
+.visualizarArtistaBotoes {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+  gap: 12px;
+}
+
+.visualizarArtistaBotao {
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+
+  padding: 15px 20px;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: white;
+
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.visualizarArtistaBotao:hover {
+  transform: translateY(-2px);
+
+  background: rgba(255, 255, 255, 0.09);
+
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.visualizarArtistaBotao:active {
+  transform: scale(0.98);
+}
+
+.visualizarArtistaBotao:last-child {
+  background: #a35f00;
+
+  border-color: transparent;
+
+  color: #fff8f0;
+}
+
+.visualizarArtistaBotao:last-child:hover {
+  background: #bf6e00;
+
+  border-color: transparent;
+}
+
+/* ========================= */
+/* RESPONSIVO */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .visualizarArtistaCard {
+    padding: 24px;
+  }
+
+  .visualizarArtistaTopo {
+    flex-direction: column;
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .visualizarArtistaInfo {
+    align-items: center;
+  }
+
+  .visualizarArtistaNome {
+    font-size: 2rem;
+  }
+
+  .visualizarArtistaRodape {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 540px) {
+  .visualizarArtistaPagina {
+    padding: 16px 12px;
+  }
+
+  .visualizarArtistaCard {
+    padding: 20px;
+
+    border-radius: 20px;
+  }
+
+  .visualizarArtistaImagem {
+    width: 130px;
+    height: 130px;
+
+    border-radius: 16px;
+  }
+
+  .visualizarArtistaNome {
+    font-size: 1.7rem;
+  }
+
+  .visualizarArtistaDescricao {
+    font-size: 0.88rem;
+  }
+
+  .visualizarArtistaRodape {
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .visualizarArtistaCache {
+    align-items: center;
+  }
+
+  .visualizarArtistaRedes {
+    justify-content: center;
+
+    width: 100%;
+  }
+
+  .visualizarArtistaBotao {
+    width: 100%;
+  }
+}

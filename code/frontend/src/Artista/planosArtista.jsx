@@ -6,6 +6,7 @@ import platina from "../img/platina.png";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import "./planosArtista.css";
 import Header from "./Header";
+import FooterSonara from "./footer";
 
 const planos = [
   {
@@ -68,6 +69,7 @@ export default function PlanosArtista() {
           ))}
         </div>
       </main>
+      <FooterSonara />
     </>
   );
 }

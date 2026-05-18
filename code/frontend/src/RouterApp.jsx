@@ -20,6 +20,8 @@ import TelaInicial from "./casa_show/telaInicial.jsx";
 import MarcarEvento from "./casa_show/marcarEvento.jsx";
 import ListaMeusEventos from "./casa_show/meus-eventos-casaShow.jsx";
 import ContratarArtista from "./casa_show/contratarArtista.jsx";
+import TelaSobreArtista from "./casa_show/sobreArtista.jsx";
+import SobreEventoCasaShow from "./casa_show/sobreEventoCasaShow.jsx";
 
 export default function RouterApp() {
   return (
@@ -46,6 +48,8 @@ export default function RouterApp() {
         <Route path="/marcarEvento" element={<MarcarEvento />} />
         <Route path="/listaMeusEventos" element={<ListaMeusEventos />} />
         <Route path="/contratarArtista" element={<ContratarArtista />} />
+        <Route path="/sobreArtista" element={<TelaSobreArtista />} />
+        <Route path="/sobreEventoCasaShow" element={<SobreEventoCasaShow />} />
       </Routes>
     </BrowserRouter>
   );

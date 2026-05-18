@@ -1,0 +1,112 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.footerSonara {
+  width: 100%;
+  background: #000;
+  color: white;
+  font-family: "Poppins", sans-serif;
+}
+
+.footerSonaraTopo {
+  width: 100%;
+  height: 2px;
+  background: #ff3c00;
+}
+
+.footerSonaraConteudo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 12px 20px 30px;
+  gap: 40px;
+}
+
+.footerSonaraColuna {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footerSonaraTitulo {
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.footerSonaraTexto {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+.footerSonaraAzul {
+  color: #00aaff;
+}
+
+.footerSonaraBottom {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 16px 10px;
+
+  border-top: 1px solid #8d8d8d;
+}
+
+.footerSonaraDireitos {
+  font-size: 13px;
+  font-weight: 300;
+  color: white;
+}
+
+.footerSonaraRedes {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.footerSonaraIcone {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footerSonaraIcone:hover {
+  transform: scale(1.1);
+}
+
+.facebook {
+  color: #0094ff;
+  font-size: 34px;
+}
+
+.youtube {
+  color: #ff0000;
+  font-size: 38px;
+}
+
+.x {
+  color: white;
+  font-size: 34px;
+}
+
+@media (max-width: 900px) {
+  .footerSonaraConteudo {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .footerSonaraBottom {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+}

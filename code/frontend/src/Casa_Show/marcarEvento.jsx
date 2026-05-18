@@ -1,19 +1,21 @@
 import "./marcarEvento.css";
-import { useNavigate } from "react-router-dom";
+import HeaderCasaShow from "./headerCasaShow.jsx";
 import show1 from "../img/show1.jfif";
 import show2 from "../img/show2.webp";
 import show3 from "../img/show3.png";
+import FooterSonara from "../Artista/footer.jsx";
 
-export default function AlgumaTela() {
-  const navigate = useNavigate();
+export default function MarcarEvento() {
   return (
     <div className="pagina">
+      <HeaderCasaShow />
       <main className="main">
         <section className="card-evento">
           <div className="galeria">
             <div className="miniaturas">
-              <img src={show2} alt="" />
-
+              <img src={show1} alt="Show 1" />
+              <img src={show2} alt="Show 2" />
+              <img src={show3} alt="Show 3" />
               <div className="mais-fotos">+3</div>
             </div>
 
@@ -76,6 +78,8 @@ export default function AlgumaTela() {
           </div>
         </section>
       </main>
+
+      <FooterSonara />
     </div>
   );
 }

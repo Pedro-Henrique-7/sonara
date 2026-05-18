@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import HeaderCasaShow from "./headerCasaShow.jsx";
 import "./meus-eventos-casaShow.css";
-import fotoPerfil from "../img/fotoPerfil.jpg";
-
+import FooterSonara from "../Artista/footer.jsx";
 // Mock — substitua por chamada à API
 const eventosMock = [
   {
@@ -54,6 +54,7 @@ export default function ListaMeusEventos() {
 
   return (
     <div className="meus-eventos-casa-show">
+      <HeaderCasaShow />
       <main
         className={`meus-eventos-casa-show__main ${
           visible ? "meus-eventos-casa-show__main--visible" : ""
@@ -61,7 +62,10 @@ export default function ListaMeusEventos() {
       >
         <h2 className="meus-eventos-casa-show__titulo">Meus Eventos</h2>
 
-        <div className="meus-eventos-casa-show__grid">
+        <div
+          className="meus-eventos-casa-show__grid"
+          onClick={() => navigate("/sobreEventoCasaShow")}
+        >
           {eventos.map((evento, index) => (
             <div
               key={evento.id}
@@ -97,6 +101,7 @@ export default function ListaMeusEventos() {
           ))}
         </div>
       </main>
+      <FooterSonara />
     </div>
   );
 }

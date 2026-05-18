@@ -4,6 +4,7 @@ import "./meusEventos.css";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import show2 from "../img/show2.webp";
 import Header from "./Header";
+import FooterSonara from "./footer";
 // Dados mockados — substitua por chamada à API
 const eventoMock = {
   imagem: show2, // coloque a URL ou import da imagem do evento
@@ -103,6 +104,7 @@ export default function MeusEventos() {
           </div>
         </div>
       </main>
+      <FooterSonara />
     </div>
   );
 }

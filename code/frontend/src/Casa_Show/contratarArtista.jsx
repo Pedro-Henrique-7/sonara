@@ -1,6 +1,8 @@
 import "./contratarArtista.css";
-import { FaArrowLeft, FaSignOutAlt, FaEye, FaStar } from "react-icons/fa";
+import { FaEye, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import HeaderCasaShow from "./headerCasaShow.jsx";
+import FooterSonara from "../Artista/footer.jsx";
 
 export default function TelaContratarArtistas() {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ export default function TelaContratarArtistas() {
 
   return (
     <div className="sonaraContratarPagina">
+      <HeaderCasaShow />
       <main className="sonaraContratarConteudo">
         <h1 className="sonaraContratarTitulo">Artistas Próximos</h1>
 
@@ -42,7 +45,10 @@ export default function TelaContratarArtistas() {
 
                 <small>{artista.estilo}</small>
 
-                <button className="sonaraContratarBtnVerMais">
+                <button
+                  className="sonaraContratarBtnVerMais"
+                  onClick={() => navigate("/sobreArtista")}
+                >
                   <FaEye />
                   Ver mais
                 </button>
@@ -51,6 +57,7 @@ export default function TelaContratarArtistas() {
           ))}
         </div>
       </main>
+      <FooterSonara />
     </div>
   );
 }

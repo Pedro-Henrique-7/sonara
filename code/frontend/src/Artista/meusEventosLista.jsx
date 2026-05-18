@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./meusEventosLista.css";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import Header from "./Header";
+import FooterSonara from "./footer";
 
 // Mock — substitua por chamada à API
 const eventosMock = [
@@ -96,6 +97,7 @@ export default function ListaEventos() {
           ))}
         </div>
       </main>
+      <FooterSonara />
     </div>
   );
 }

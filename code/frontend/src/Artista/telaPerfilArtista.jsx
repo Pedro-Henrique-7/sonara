@@ -7,6 +7,7 @@ import { deletarUsuario } from "../services/usuarioService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
 import Header from "./Header";
+import FooterSonara from "./footer";
 
 export default function PerfilArtista() {
   const navigate = useNavigate();
@@ -350,6 +351,7 @@ export default function PerfilArtista() {
           </div>
         </div>
       </div>
+      <FooterSonara />
     </div>
   );
 }
