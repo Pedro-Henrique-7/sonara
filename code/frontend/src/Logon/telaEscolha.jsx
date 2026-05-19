@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../img/sonara-logo.svg";
 import "./telaEscolha.css";
 export default function TelaEscolha() {
+
+    useEffect(() => {
+      sessionStorage.clear();
+    }, []);
+
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
   return (

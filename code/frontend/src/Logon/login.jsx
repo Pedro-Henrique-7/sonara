@@ -3,10 +3,16 @@ import { useState } from "react";
 import "./login.css";
 import "../index.css";
 import logo from "../img/sonara-logo.svg";
+import { useEffect } from "react";
 
 import { loginUsuario } from "../services/usuarioService";
 
 function Login() {
+
+  useEffect(() => {
+      sessionStorage.clear();
+    }, []);
+
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
@@ -28,11 +34,16 @@ function Login() {
           JSON.stringify(response.usuario)
         );
         sessionStorage.setItem("token", response.token)
-        navigate("/shows");
-      } else {
-        // caso o back retorne 2xx mas com status_code diferente
-        setErro("Email ou senha incorretos.");
-      }
+        if (response.usuario.tipo_usuario === "Artista") {
+          navigate("/shows");
+        } else if (response.usuario.tipo_usuario === "Organizador") {
+          navigate("/casaShow");
+        } else{
+          navigate("/login");
+        }
+      }else {
+          setErro("Email ou senha incorretos.");
+        }
     } catch (error) {
       // ✅ Axios joga aqui para status >= 400
       const mensagem = error.response?.data?.message;

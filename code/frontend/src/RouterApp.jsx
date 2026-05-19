@@ -35,7 +35,7 @@ export default function RouterApp() {
 
         {/* ARTISTA */}
         <Route path="/shows" element={<Shows />} />
-        <Route path="/sobreEvento" element={<SobreEvento />} />
+        <Route path="/sobreEvento/:id" element={<SobreEvento />} />
         <Route path="/eventoInscricao" element={<EventoInscricao />} />
         <Route path="/planosArtista" element={<PlanosArtista />} />
         <Route path="/meusEventos" element={<MeusEventos />} />
