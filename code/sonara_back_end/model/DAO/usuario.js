@@ -1,8 +1,8 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
- * Data: 25/04/2026
+ * Objetivo: DAO de usuário — foto agora é atributo direto de tb_usuario
+ * Data: 19/05/2026
  * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Versão: 1.2
 *****************************************************************************/
 
 const knex = require('knex');
@@ -11,73 +11,57 @@ const knexConfig = require('../database_conf/knex');
 const knexDatabase = knex(knexConfig.development);
 
 
-
-const getSelectAllUsers = async function(){
+const getSelectAllUsers = async function () {
     try {
-      
-        let sql = `select * from vw_usuario`
-    
+        let sql = `select * from tb_usuario`
         let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
+        if (Array.isArray(result[0]))
             return result[0]
         else
             return false
 
     } catch (error) {
-       
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdUsers = async function(id){
+const getSelectByIdUsers = async function (id) {
     try {
-    
-        let sql = `select * from tb_usuario where id_usuario=${id}`
-        
-       
+        let sql = `select * from tb_usuario where id_usuario = ${id}`
         let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
+        if (Array.isArray(result[0]))
+            return result[0]
         else
             return false
 
     } catch (error) {
-      
         return false
     }
 }
 
-
-const getSelectByIdUsersOrganizer = async function(id){
+const getSelectByIdUsersOrganizer = async function (id) {
     try {
-    
-        let sql = `select * from tb_organizador where usuario_id=${id}`
-        
-       
+        let sql = `select * from tb_organizador where usuario_id = ${id}`
         let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
+        if (Array.isArray(result[0]))
+            return result[0]
         else
             return false
 
     } catch (error) {
-      
         return false
     }
 }
 
-
-const getSelectLastID = async function() {
+const getSelectLastID = async function () {
     try {
         let result = await knexDatabase('tb_usuario')
             .max('id_usuario as id_usuario')
             .first()
-        
-        console.log('getSelectLastID result:', result) 
+
         return result
     } catch (error) {
         console.log(error)
@@ -85,10 +69,12 @@ const getSelectLastID = async function() {
     }
 }
 
-const getUsuarioByUsuarioEmail = async function(email) {
+// Aceita string ou objeto { email }
+const getUsuarioByUsuarioEmail = async function (email) {
     try {
-        let sql = `select * from vw_usuario where email = '${email}'`
+        const emailValue = (typeof email === 'object' && email !== null) ? email.email : email
 
+        let sql = `select * from vw_usuario_com_senha where email = '${emailValue}'`
         const result = await knexDatabase.raw(sql)
 
         if (Array.isArray(result[0]) && result[0].length > 0)
@@ -101,11 +87,9 @@ const getUsuarioByUsuarioEmail = async function(email) {
     }
 }
 
-
-const getUsuarioByUsuarioCPF = async function(cpf) {
+const getUsuarioByUsuarioCPF = async function (cpf) {
     try {
-        let sql = `select * from tb_usuario where email = '${cpf}'`
-
+        let sql = `select * from tb_usuario where cpf = '${cpf}'`
         const result = await knexDatabase.raw(sql)
 
         if (Array.isArray(result[0]) && result[0].length > 0)
@@ -118,7 +102,7 @@ const getUsuarioByUsuarioCPF = async function(cpf) {
     }
 }
 
-const setInsertUsers = async function(usuario){
+const setInsertUsers = async function (usuario) {
     try {
         let sql = `
         INSERT INTO tb_usuario (
@@ -141,39 +125,30 @@ const setInsertUsers = async function(usuario){
             ${usuario.telefone ? `'${usuario.telefone}'` : null}
         );`
 
-
         let result = await knexDatabase.raw(sql)
-
-
         return !!result
 
     } catch (error) {
         console.log(error)
-    
+        return false
     }
 }
 
-
-const setUpdateUsers = async function(usuario){
+const setUpdateUsers = async function (usuario) {
     try {
-  
         let sql = `update tb_usuario set 
-        nome = "${usuario.nome}",
-        email = "${usuario.email}",
-        senha = "${usuario.senha}",
-        telefone = ${usuario.telefone === null ? "NULL" : `"${usuario.telefone}"`},
-        cpf = "${usuario.cpf}",
-        data_nasc = "${usuario.data_nasc}",
+        nome             = '${usuario.nome}',
+        email            = '${usuario.email}',
+        telefone         = ${usuario.telefone === null ? 'NULL' : `'${usuario.telefone}'`},
+        cpf              = '${usuario.cpf}',
+        data_nasc        = '${usuario.data_nasc}',
         nacionalidade_id = ${usuario.nacionalidade_id},
-        endereco_id = ${usuario.endereco_id},
-        genero_id = ${usuario.genero_id}
-    where id_usuario = ${usuario.id_usuario}`;
-
-    
+        genero_id        = ${usuario.genero_id}
+        where id_usuario = ${usuario.id_usuario}`
 
         let result = await knexDatabase.raw(sql)
 
-        if(result)
+        if (result)
             return true
         else
             return false
@@ -183,21 +158,34 @@ const setUpdateUsers = async function(usuario){
     }
 }
 
-const setDeleteUsers = async function(id){
+// Atualiza apenas o campo foto da tb_usuario
+const setUpdateFotoUsuario = async function (id_usuario, url_foto) {
     try {
-      
-        let sql = `delete from tb_usuario where id_usuario=${id}`
-        
-       
+        let sql = `update tb_usuario set foto = '${url_foto}' where id_usuario = ${id_usuario}`
         let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result))
+        if (result)
+            return true
+        else
+            return false
+
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+}
+
+const setDeleteUsers = async function (id) {
+    try {
+        let sql = `delete from tb_usuario where id_usuario = ${id}`
+        let result = await knexDatabase.raw(sql)
+
+        if (Array.isArray(result))
             return result
         else
             return false
 
     } catch (error) {
-       
         return false
     }
 }
@@ -208,9 +196,10 @@ module.exports = {
     getSelectByIdUsers,
     setInsertUsers,
     setUpdateUsers,
+    setUpdateFotoUsuario,
     getSelectLastID,
     setDeleteUsers,
     getSelectByIdUsersOrganizer,
     getUsuarioByUsuarioEmail,
     getUsuarioByUsuarioCPF
-} 
+}

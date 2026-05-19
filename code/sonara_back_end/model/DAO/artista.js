@@ -35,7 +35,7 @@ const getSelectByIdArtistUser = async function (id) {
 
     try {
 
-        let sql = `SELECT * FROM tb_artista WHERE id_usuario = ?`
+        let sql = `SELECT * FROM tb_artista WHERE usuario_id = ?`
 
         let result = await knexDatabase.raw(sql, [id])
 
