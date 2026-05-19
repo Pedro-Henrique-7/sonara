@@ -1,7 +1,7 @@
 /*********************************************************************************************
  * Objetivo: Módulo responsável pelo upload de imagens para o Azure Blob Storage
  * Data: 19/05/2026
- * Autor: Davi de Alemida Santos
+ * Autor: Pedro Henrique
  * Versão: 1.0
  **********************************************************************************************/
 
