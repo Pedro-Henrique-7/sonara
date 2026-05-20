@@ -1,8 +1,7 @@
 const express = require('express')
 const cors = require('cors')
-const bodyParser = require('body-parser')
 
-const bodyParserJson = bodyParser.json()
+const bodyParserJson = express.json()
 
 
 const controllereventoOrganizador = require('../controller/evento_organizador/evento_organizador.js')
@@ -11,9 +10,7 @@ const controllereventoOrganizador = require('../controller/evento_organizador/ev
 const router = express.Router()
 router.use((request, response, next ) => {
     response.header('Access-Control-Allow-Origin', '*')
-    response.header('Acess-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-
-    router.use(cors())
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     next()
 })
 

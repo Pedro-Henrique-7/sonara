@@ -62,7 +62,7 @@ const buscarEventoOrganizadorId = async function(id){
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
@@ -79,7 +79,7 @@ const inserirEventoOrganizador = async function(eventoOrganizador, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do eventoOrganizador
             let validar = await validarDadosEventoOrganizador(eventoOrganizador)
@@ -128,7 +128,7 @@ const atualizarEventoOrganizador = async function(eventoOrganizador, id, content
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do eventoOrganizador
                 let validar = await validarDadosEventoOrganizador(eventoOrganizador)
@@ -204,7 +204,7 @@ const excluirEventoOrganizador = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 

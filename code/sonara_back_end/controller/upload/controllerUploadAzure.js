@@ -8,10 +8,10 @@
 ***************************************************************************************/
 
 //Import dos dados de configuração da AZURE
-const AZURE = require('../modulo/config_upload_azure.js')
+const AZURE = require('../modulo/conf_azure_upload.js')
 
 //Import da biblioteca para fazer requisições pelo Back-end
-const fetch = require('node-fetch').default
+const fetch = require('node-fetch')
 
 //Função para realizar o upload de arquivos no servidor da Azure
 const uploadFiles = async function(file){

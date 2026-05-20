@@ -79,7 +79,7 @@ const inserirGenero = async function(genero, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do genero
             let validar = await validarDadosGenero(genero)
@@ -128,7 +128,7 @@ const atualizarGenero = async function(genero, id, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do genero
                 let validar = await validarDadosGenero(genero)
@@ -203,7 +203,7 @@ const excluirGenero = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == '[ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += '[ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 
@@ -219,7 +219,7 @@ const validarDadosGenero = async function(genero){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if(genero.nome == '' || genero.nome == undefined || genero.nome == null || genero.nome.length > 100){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == '[Nome incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += '[Nome incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     

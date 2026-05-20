@@ -62,7 +62,7 @@ const buscarAvaliacaoArtistaId = async function(id){
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
@@ -79,7 +79,7 @@ const inserirAvaliacaoArtista = async function(AvaliacaoArtista, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do AvaliacaoArtista
             let validar = await validarDadosAvaliacaoArtista(AvaliacaoArtista)
@@ -128,7 +128,7 @@ const atualizarAvaliacaoArtista = async function(AvaliacaoArtista, id, contentTy
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do AvaliacaoArtista
                 let validar = await validarDadosAvaliacaoArtista(AvaliacaoArtista)
@@ -203,7 +203,7 @@ const excluirAvaliacaoArtista = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 

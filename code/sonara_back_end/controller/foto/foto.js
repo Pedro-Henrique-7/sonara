@@ -205,7 +205,7 @@ const excluirFoto = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == '[ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += '[ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 

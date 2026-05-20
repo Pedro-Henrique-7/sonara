@@ -79,7 +79,7 @@ const inserirStatus = async function(status, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do Status
             let validar = await validarDadosStatus(status)
@@ -128,7 +128,7 @@ const atualizarStatus = async function(status, id, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do Status
                 let validar = await validarDadosStatus(status)
@@ -203,7 +203,7 @@ const excluirStatus = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == '[ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += '[ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 
@@ -219,7 +219,7 @@ const validarDadosStatus = async function(Status){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if(Status.nome == '' || Status.nome == undefined || Status.nome == null || Status.nome.length > 100){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == '[Nome incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += '[Nome incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     

@@ -79,7 +79,7 @@ const inserirNacionalidade = async function(nacionalidade, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do nacionalidade
             let validar = await validarDadosNacionalidade(nacionalidade)
@@ -128,7 +128,7 @@ const atualizarNacionalidade = async function(nacionalidade, id, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do nacionalidade
                 let validar = await validarDadosNacionalidade(nacionalidade)
@@ -203,7 +203,7 @@ const excluirnacionalidade = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == '[ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += '[ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 
@@ -219,7 +219,7 @@ const validarDadosNacionalidade = async function(nacionalidade){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if(nacionalidade.nome == '' || nacionalidade.nome == undefined || nacionalidade.nome == null || nacionalidade.nome.length > 100){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == '[Nome incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += '[Nome incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     

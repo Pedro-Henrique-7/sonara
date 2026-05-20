@@ -17,7 +17,7 @@ const listarPerfilUsuario = async function(){
 
     try {
        
-        let usuarioPerfil = await usuarioPerfilDAO_VEWS.getSelectViewUserPerfil
+        let usuarioPerfil = await usuarioPerfilDAO_VEWS.getSelectViewUserPerfil()
         
         if(usuarioPerfil){
             if(usuarioPerfil.length > 0){

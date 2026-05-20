@@ -79,7 +79,7 @@ const inserirTipoRedesSociais = async function(TipoRedesSociais, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do TipoRedesSociaiss
             let validar = await validarDadosTipoRedesSociais(TipoRedesSociais)
@@ -128,7 +128,7 @@ const atualizarTipoRedesSociais = async function(TipoRedesSociais, id, contentTy
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do TipoRedesSociaiss
                 let validar = await validarDadosTipoRedesSociais(TipoRedesSociais)
@@ -203,7 +203,7 @@ const excluirTipoRedesSociais = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == '[ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += '[ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 

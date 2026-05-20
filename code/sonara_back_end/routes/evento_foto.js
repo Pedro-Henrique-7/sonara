@@ -1,79 +1,71 @@
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
+/******************************************************************************
+ * Objetivo: Rota de foto de evento com multer para receber multipart/form-data
+ * Data: 19/05/2026
+ * Versão: 2.0
+ *****************************************************************************/
 
-const bodyParserJson = bodyParser.json()
-
+const express    = require('express')
+const cors       = require('cors')
+const multer     = require('multer')
+const router     = express.Router()
 
 const controllerEventoFoto = require('../controller/evento_foto/evento_foto')
 
-//configurção do cors 
-const router = express.Router()
-router.use((request, response, next ) => {
-    response.header('Access-Control-Allow-Origin', '*')
-    response.header('Acess-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+// Multer em memória — buffer vai direto para o Azure
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+    fileFilter: (req, file, cb) => {
+        const permitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+        if (permitidos.includes(file.mimetype)) {
+            cb(null, true)
+        } else {
+            cb(new Error('Tipo não permitido. Use JPG, PNG ou WEBP.'), false)
+        }
+    }
+})
 
-    router.use(cors())
+router.use((request, response, next) => {
+    response.header('Access-Control-Allow-Origin', '*')
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     next()
 })
 
-
-
-
-// retornar todos os generos
-router.get('/', cors(), async function (request, response){
-
-  let EventoFoto  = await controllerEventoFoto.listareventoFoto()
-    
-    response.status(EventoFoto.status_code)
-    response.json(EventoFoto)
-})
-module.exports = router 
-
-
-// pegar EventoFoto por id
-router.get('/:id', cors(), async function (request, response){
-    let IdEventoFoto = request.params.id
-
-    let EventoFoto = await controllerEventoFoto.buscareventoFotoId(IdEventoFoto)
-    response.status(EventoFoto.status_code)
-    response.json(EventoFoto)  
-
-
+// GET todos
+router.get('/', cors(), async function (request, response) {
+    let EventoFoto = await controllerEventoFoto.listareventoFoto()
+    response.status(EventoFoto.status_code).json(EventoFoto)
 })
 
-
-//inserir EventoFoto
-router.post('/', cors(), bodyParserJson, async function (request, response) {
-
-
-    let dadosBody = request.body
-    let contentType = request.headers['content-type']
-
-    let EventoFoto = await controllerEventoFoto.inserireventoFoto(dadosBody, contentType)
-
-    response.status(EventoFoto.status_code)
-    response.json(EventoFoto)
+// GET por id
+router.get('/:id', cors(), async function (request, response) {
+    let EventoFoto = await controllerEventoFoto.buscareventoFotoId(request.params.id)
+    response.status(EventoFoto.status_code).json(EventoFoto)
 })
 
-
-router.put('/:id', cors(), bodyParserJson, async function(request, response) {
-    let dadosBody = request.body
-    
-    let IdEventoFoto = request.params.id
-
-    let contentType = request.headers['content-type']
-
-    let EventoFoto = await controllerEventoFoto.atualizareventoFoto(dadosBody, IdEventoFoto, contentType)
-    response.status(EventoFoto.status_code)
-    response.json(EventoFoto)
+// POST — multipart/form-data com campo "foto" (arquivo) + "evento_id"
+router.post('/', cors(), upload.single('foto'), async function (request, response) {
+    let EventoFoto = await controllerEventoFoto.inserireventoFoto(
+        request.body,   // { evento_id }
+        request.file    // arquivo do multer (buffer, originalname, mimetype)
+    )
+    response.status(EventoFoto.status_code).json(EventoFoto)
 })
 
-router.delete('/:id', cors(), async function(request, response) {
-    let IdEventoFoto = request.params.id
-
-    let EventoFoto = await controllerEventoFoto.excluireventoFoto(IdEventoFoto)
-    response.status(EventoFoto.status_code)
-    response.json(EventoFoto)
+// PUT — novo arquivo é opcional
+router.put('/:id', cors(), upload.single('foto'), async function (request, response) {
+    let EventoFoto = await controllerEventoFoto.atualizareventoFoto(
+        request.body,
+        request.params.id,
+        request.file
+    )
+    response.status(EventoFoto.status_code).json(EventoFoto)
 })
-  
+
+// DELETE
+router.delete('/:id', cors(), async function (request, response) {
+    let EventoFoto = await controllerEventoFoto.excluireventoFoto(request.params.id)
+    response.status(EventoFoto.status_code).json(EventoFoto)
+})
+
+module.exports = router

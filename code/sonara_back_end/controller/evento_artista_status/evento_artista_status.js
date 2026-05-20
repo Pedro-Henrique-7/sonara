@@ -80,7 +80,7 @@ const inserirEventoArtistaStatus = async function(EventoArtistaStatus, contentTy
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do EventoArtistaStatus
             let validar = await validarDadosEventoArtistaStatus(EventoArtistaStatus)
@@ -129,7 +129,7 @@ const atualizarEventoArtistaStatus = async function(EventoArtistaStatus, id, con
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do EventoArtistaStatus
                 let validar = await validarDadosEventoArtistaStatus(EventoArtistaStatus)
@@ -204,7 +204,7 @@ const excluirEventoArtistaStatus = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == '[ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += '[ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 

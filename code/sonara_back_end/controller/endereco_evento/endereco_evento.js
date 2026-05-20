@@ -62,7 +62,7 @@ const buscarEnderecoEventoId = async function(id){
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
@@ -79,7 +79,7 @@ const inserirEnderecoEvento = async function(endereco, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
             //Chama a função de validar todos os dados do endereco
             let validar = await validarDadosEnderecoEvento(endereco)
@@ -128,7 +128,7 @@ const atualizarEnderecoEvento = async function(endereco, id, contentType){
 
     try {
         //Validação do tipo de conteúdo da requisição (Obrigatório ser um JSON)
-        if(String(contentType).toUpperCase() == 'APPLICATION/JSON'){
+        if(String(contentType).toUpperCase().includes('APPLICATION/JSON')){
 
                 //Chama a função de validar todos os dados do endereco
                 let validar = await validarDadosEnderecoEvento(endereco)
@@ -203,7 +203,7 @@ const excluirEnderecoEvento = async function(id){
                 return MESSAGES.ERROR_NOT_FOUND 
             }
         }else{
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [ID incorreto]'
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS 
         }
 
@@ -219,36 +219,36 @@ const validarDadosEnderecoEvento = async function(endereco){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     if(endereco.cep == '' || endereco.cep == undefined || endereco.cep == null || endereco.cep.length > 11){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [cep incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [cep incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
     
     }else if(endereco.cidade == '' || endereco.cidade == undefined || endereco.cidade == null || endereco.cidade.length > 170) {
-           MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [endereco incorreto]' 
+           MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [endereco incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     }else if(endereco.estado == '' || endereco.estado == undefined || endereco.estado == null || endereco.estado.length > 25){
-            MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [estadoo incorreto]' 
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [estadoo incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     } else if(endereco.logradouro == '' || endereco.logradouro == undefined || endereco.logradouro == null ||  endereco.logradouro.length > 14){
-         MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [logradouro incorreto]' 
+         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [logradouro incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     }else if(endereco.numero == '' || endereco.numero == undefined || endereco.numero == null || endereco.numero.length > 30){
-         MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [numero incorreto]' 
+         MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [numero incorreto]' 
         return MESSAGES.ERROR_REQUIRED_FIELDS
 
     }else if(endereco.complemento == '' || endereco.complemento == undefined || endereco.complemento == null || endereco.complemento.length > 25){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [complemento incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [complemento incorreto]' 
     return MESSAGES.ERROR_REQUIRED_FIELDS
 
 
     }else if(endereco.bairro == '' || endereco.bairro == undefined || endereco.bairro == null || endereco.bairro.length > 30){
-    MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [bairro incorreto]' 
+    MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [bairro incorreto]' 
    return MESSAGES.ERROR_REQUIRED_FIELDS
 
     }else if(endereco.evento_id == '' || endereco.evento_id == undefined || endereco.evento_id == null || isNaN(endereco.evento_id)){
-        MESSAGES.ERROR_REQUIRED_FIELDS.message == ' [evento_id incorreto]' 
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [evento_id incorreto]' 
     return MESSAGES.ERROR_REQUIRED_FIELDS
 
    

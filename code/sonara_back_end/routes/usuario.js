@@ -7,14 +7,13 @@
 
 const express    = require('express')
 const cors       = require('cors')
-const bodyParser = require('body-parser')
 const multer     = require('multer')
 
 const { criarToken, authMiddleware } = require('../jwt/conf_jwt')
 const controllerUsuario = require('../controller/usuario/usuario')
 
 const router         = express.Router()
-const bodyParserJson = bodyParser.json()
+const bodyParserJson = express.json()
 
 // Multer em memória — usado no cadastro e no update de foto
 const upload = multer({
@@ -63,7 +62,6 @@ router.post('/login', cors(), bodyParserJson, async (req, res) => {
 })
 
 // Inserir usuário — aceita multipart/form-data
-// campos: "dados" (JSON string com os dados do usuário) + "foto" (arquivo, opcional)
 router.post('/', cors(), upload.single('foto'), async function (request, response) {
 
     // o campo "dados" vem como string JSON no form-data, fazemos o parse aqui
@@ -138,18 +136,18 @@ router.delete('/:id', authMiddleware, cors(), async function (request, response)
 })
 
 // Buscar usuário por ID
-router.get('/:id', authMiddleware, cors(), async function (request, response) {
+router.get('/organizador/:id', cors(), async function (request, response) {
     let idUsuario = request.params.id
-    let usuario   = await controllerUsuario.buscarUsuarioId(idUsuario)
+    let usuario   = await controllerUsuario.buscarOrganizadorUsuarioId(idUsuario)
 
     response.status(usuario.status_code)
     response.json(usuario)
 })
 
 // Buscar organizador por ID de usuário
-router.get('/organizador/:id', cors(), async function (request, response) {
+router.get('/:id', authMiddleware, cors(), async function (request, response) {
     let idUsuario = request.params.id
-    let usuario   = await controllerUsuario.buscarOrganizadorUsuarioId(idUsuario)
+    let usuario   = await controllerUsuario.buscarUsuarioId(idUsuario)
 
     response.status(usuario.status_code)
     response.json(usuario)

@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 //instancia para criar um objteto com as caracteristicas do multer
 
 
-const PORT = process.PORT || 8080
+const PORT = process.env.PORT || 8080
 
 //Porta
 const app = express()
@@ -83,6 +83,8 @@ const eventoArtistaStatus = require('./routes/evento_artista_status')
 
 const enderecoEvento = require("./routes/endereco_evento")
 
+const usuarioPerfil = require('./routes/VEWS/usuario_perfil')
+
 
 //Configuração das rotas
 app.use("/v1/sonara/genero", generoRoutes)
@@ -131,6 +133,8 @@ app.use('/v1/sonara/artistaGeneroMusical', artistaGeneroMusical)
 app.use('/v1/sonara/eventoArtista', artistaEvento)
 
 app.use('/v1/sonara/eventoArtistaStatus', eventoArtistaStatus)
+
+app.use('/v1/sonara/usuarioPerfil', usuarioPerfil)
 
 app.listen(PORT, function(){
   console.log('API aguardando resposta ;)')

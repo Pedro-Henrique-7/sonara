@@ -263,7 +263,7 @@ const atualizarUsuario = async function (usuario, id, contentType) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (String(contentType).toUpperCase() !== 'APPLICATION/JSON') {
+        if (!String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
             return MESSAGES.ERROR_CONTENT_TYPE
         }
 
