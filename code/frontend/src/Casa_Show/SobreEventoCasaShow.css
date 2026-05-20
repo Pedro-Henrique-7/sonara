@@ -83,7 +83,7 @@
   box-shadow: var(--sombra-card);
 
   border: 1px solid rgba(255, 255, 255, 0.08);
-  height: 75vh;
+  height: 85vh;
 }
 
 /* =========================================================
@@ -132,8 +132,8 @@
 }
 
 .sobreEventoImagemPrincipal {
-  width: 20%;
-  height: 20%;
+  width: 28%;
+  height: 28%;
 
   object-fit: cover;
 
