@@ -259,70 +259,118 @@ const loginUsuario = async function (usuario) {
     }
 }
 
-const atualizarUsuario = async function (usuario, id, contentType) {
+const atualizarUsuario = async function (usuario, id, arquivo) {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (!String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
-            return MESSAGES.ERROR_CONTENT_TYPE
-        }
 
-        let validarID = await buscarUsuarioId(id)
-        if (validarID.status_code !== 200) return validarID
-
+    
         usuario.id_usuario = Number(id)
 
-        let enderecoUsuario = {
-            cep:         usuario.cep,
-            cidade:      usuario.cidade,
-            estado:      usuario.estado,
-            logradouro:  usuario.logradouro,
-            numero:      usuario.numero,
-            complemento: usuario.complemento,
-            bairro:      usuario.bairro,
-            usuario_id:  usuario.id_usuario
+        let validarID = await buscarUsuarioId(usuario.id_usuario)
+        if (validarID.status_code !== 200) return validarID
+
+        // ===== FOTO (opcional) =====
+        if (arquivo) {
+            let urlFoto = await uploadImagemAzure(
+                arquivo.buffer,
+                arquivo.originalname,
+                arquivo.mimetype
+            )
+
+            if (urlFoto) {
+                await usuarioDAO.setUpdateFotoUsuario(usuario.id_usuario, urlFoto)
+                usuario.foto = urlFoto
+            }
         }
 
-        await enderecoDAO.setUpdateAddress(enderecoUsuario)
+        // ===== MONTA SOMENTE O QUE VEIO =====
+        let dadosUsuario = { id_usuario: usuario.id_usuario }
 
+        if (usuario.nome) dadosUsuario.nome = usuario.nome
+        if (usuario.email) dadosUsuario.email = usuario.email
+        if (usuario.senha) dadosUsuario.senha = usuario.senha
+        if (usuario.cpf) dadosUsuario.cpf = usuario.cpf
+        if (usuario.data_nasc) dadosUsuario.data_nasc = usuario.data_nasc
+        if (usuario.nacionalidade_id) dadosUsuario.nacionalidade_id = usuario.nacionalidade_id
+        if (usuario.genero_id) dadosUsuario.genero_id = usuario.genero_id
+        if (usuario.telefone) dadosUsuario.telefone = usuario.telefone
+
+       
+        let resultUsuario = await usuarioDAO.setUpdateUsers(dadosUsuario)
+        if (!resultUsuario) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+
+        // ===== TIPO DE USUÁRIO =====
         let tipoUsuario = usuario.tipo_usuario?.toLowerCase()
 
-        if (tipoUsuario === 'artista') {
+        if (tipoUsuario == 'artista') {
+
+            if (!usuario.generos_musicais || !Array.isArray(usuario.generos_musicais) || usuario.generos_musicais.length === 0) {
+                return { status: false, status_code: 400, message: 'Artista deve ter pelo menos um gênero musical [Campo: generos_musicais]' }
+            }
+
             let artistaBanco = await artistaDAO.getSelectByIdArtistUser(usuario.id_usuario)
 
-            if (artistaBanco) {
+            if (!artistaBanco) {
                 let artista = {
                     nome_artistico: usuario.nome_artistico,
-                    descricao:      usuario.descricao,
-                    usuario_id:     usuario.id_usuario,
-                    id_artista:     artistaBanco.id_artista
+                    usuario_id: usuario.id_usuario,
+                    descricao: usuario.descricao,
+                }
+
+                await artistaDAO.setInsertArtist(artista)
+                artistaBanco = await artistaDAO.getSelectByIdArtistUser(usuario.id_usuario)
+            } else {
+                let artista = {
+                    nome_artistico: usuario.nome_artistico,
+                    descricao: usuario.descricao,
+                    usuario_id: usuario.id_usuario,
+                    id_artista: artistaBanco.id_artista
                 }
 
                 await artistaDAO.setUpdateArtist(artista)
-
-                if (usuario.generos_musicais && Array.isArray(usuario.generos_musicais)) {
-                    await artistaGeneroMusicalDAO.deleteByArtistaId(artistaBanco.id_artista)
-
-                    for (let generoId of usuario.generos_musicais) {
-                        await artistaGeneroMusicalDAO.setInsertArtistGendersSong({
-                            genero_musical_id: generoId,
-                            artista_id:        artistaBanco.id_artista
-                        })
-                    }
-                }
             }
 
-        } else if (tipoUsuario === 'organizador') {
+            // Atualiza gêneros
+            await artistaGeneroMusicalDAO.setDeleteArtistGendersSong(artistaBanco.id_artista)
+
+            for (let generoId of usuario.generos_musicais) {
+                await artistaGeneroMusicalDAO.setInsertArtistGendersSong({
+                    genero_musical_id: generoId,
+                    artista_id: artistaBanco.id_artista
+                })
+            }
+
+        } else if (tipoUsuario == 'organizador') {
+
             let organizadorBanco = await organizadorDAO.getSelectByUsuarioId(usuario.id_usuario)
+
             if (!organizadorBanco) {
                 await organizadorDAO.setInsertOrganizer({ usuario_id: usuario.id_usuario })
             }
         }
 
+        // ===== ENDEREÇO =====
+        let enderecoUsuario = {
+            cep: usuario.cep,
+            cidade: usuario.cidade,
+            estado: usuario.estado,
+            logradouro: usuario.logradouro,
+            numero: usuario.numero,
+            complemento: usuario.complemento,
+            bairro: usuario.bairro,
+            usuario_id: usuario.id_usuario
+        }
+
+        await enderecoDAO.setUpdateAddress(enderecoUsuario)
+
+        delete usuario.senha
+
         MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
         MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
         MESSAGES.HEADER.message     = MESSAGES.SUCCESS_UPDATED_ITEM.message
-        MESSAGES.HEADER.response    = { usuario, endereco: enderecoUsuario }
+        MESSAGES.HEADER.response    = usuario
 
         return MESSAGES.HEADER
 

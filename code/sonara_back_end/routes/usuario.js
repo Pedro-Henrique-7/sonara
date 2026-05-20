@@ -115,15 +115,20 @@ router.get('/', authMiddleware, cors(), async function (request, response) {
 })
 
 // Atualizar usuário
-router.put('/:id', cors(), bodyParserJson, async function (request, response) {
-    let dadosBody   = request.body
-    let idUsuario   = request.params.id
-    let contentType = request.headers['content-type']
+router.put('/:id', cors(), upload.single('foto'), async function (request, response) {
 
-    let usuario = await controllerUsuario.atualizarUsuario(dadosBody, idUsuario, contentType)
+    let idUsuario = request.params.id
 
-    response.status(usuario.status_code)
-    response.json(usuario)
+    let usuario = request.body.dados
+
+    if (typeof usuario === 'string') {
+        usuario = JSON.parse(usuario)
+    }
+
+    let result = await controllerUsuario.atualizarUsuario(usuario, idUsuario, request.file)
+
+    response.status(result.status_code)
+    response.json(result)
 })
 
 // Deletar usuário
