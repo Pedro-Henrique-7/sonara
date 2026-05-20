@@ -15,7 +15,7 @@ const { uploadImagemAzure }   = require('../modulo/azure_upload.js')
 
 const DEFAULT_MESSAGES = require('../modulo/conf_message.js')
 
-
+//listarUSuarios
 const listarUsuarios = async function () {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
