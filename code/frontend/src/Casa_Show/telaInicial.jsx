@@ -8,9 +8,9 @@ export default function TelaInicial() {
 
   return (
     <div className="home-container">
-      <HeaderCasaShow />
-
       <main className="main">
+        <HeaderCasaShow />
+
         <section className="painel">
           <div className="painel-titulo">
             <h1>Olá Usuario</h1>

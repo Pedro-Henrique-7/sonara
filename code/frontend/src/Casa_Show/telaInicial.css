@@ -83,7 +83,6 @@ body {
 ========================================================= */
 .cards-grid {
   width: 100%;
-
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 70px;
@@ -94,10 +93,9 @@ body {
 /* =========================================================
    CARD
 ========================================================= */
-.tela-inicial-card {
-  width: 100%;
-  min-height: 120px;
-
+.card {
+  width: 80%;
+  min-height: 160px;
   margin-top: 40px;
 
   display: flex;
@@ -115,7 +113,7 @@ body {
   transition: 0.3s;
 }
 
-.tela-inicial-card:hover {
+.card:hover {
   transform: translateY(-5px);
   background-color: #1d1d24;
 }
