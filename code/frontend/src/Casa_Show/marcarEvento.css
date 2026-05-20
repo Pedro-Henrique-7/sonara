@@ -21,119 +21,161 @@ body {
 .card-evento {
   width: 88%;
   min-height: 640px;
-
   background: linear-gradient(to bottom, #c10000, #ff3c00);
-
   border-radius: 30px;
-
   padding: 22px;
-
   display: flex;
   gap: 30px;
-
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
   margin-top: 20vh;
-}
-
-/* IMG */
-.foto_Show img {
-  height: 20vh;
-  width: 40vh;
-  margin-top: 5px;
-  border-radius: 20px;
 }
 
 /* GALERIA */
 
 .galeria {
   width: 30%;
-
   display: flex;
   flex-direction: column;
+  gap: 16px; /* espaço uniforme entre os filhos, sem margin-top gigante */
 }
 
-.foto-principal {
-  width: 100%;
-  height: 240px;
-
-  border-radius: 25px;
-
+.foto_Show img {
+  width: 25%;
+  height: 220px;
+  border-radius: 20px;
   object-fit: cover;
-
   border: 2px solid black;
 }
 
 .miniaturas {
   display: flex;
-  gap: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 30vh;
 }
 
 .miniaturas img {
-  width: 130px;
-  height: 170px;
-
+  width: 80px;
+  height: 80px;
   border-radius: 12px;
-
   object-fit: cover;
-
   border: 2px solid black;
-  margin-left: 15vh;
-  margin-top: 25vh;
+  margin-top: 12vh;
 }
 
 .mais-fotos {
-  width: 130px;
-  height: 170px;
-
+  width: 80px;
+  height: 80px;
   border-radius: 12px;
-
-  object-fit: cover;
-
-  border: 2px solid black;
-}
-
-.mais-fotos {
   background: rgba(0, 0, 0, 0.7);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 50px;
-  margin-top: 25vh;
+  font-size: 24px;
+  color: white;
+  border: 2px solid black;
+  /* REMOVIDO: margin-top: 25vh */
 }
 
 .btn-fotos {
-  margin-top: 55px;
-
-  width: 210px;
+  width: 100%; /* ocupa toda a largura da galeria */
   height: 45px;
-
   border: none;
   border-radius: 30px;
-
   background: #0a0a0a;
   color: white;
-
-  font-size: 20px;
-
+  font-size: 18px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-fotos:hover {
+  background: #333;
+}
+
+/* PREVIEW GRID */
+
+.preview-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid black;
+}
+
+.preview-item img {
+  width: 100%;
+  height: 10%;
+  object-fit: cover;
+}
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+}
+
+.overlay-ok {
+  color: #4cff72;
+}
+.overlay-erro {
+  color: #ff4c4c;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-remover-foto {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* FORMULARIO */
 
 .formulario {
   flex: 1;
-
   background: linear-gradient(to bottom, #d92c00, #f24900);
-
   border-radius: 20px;
-
   padding: 35px;
-
   display: flex;
   flex-direction: column;
-
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
@@ -145,19 +187,13 @@ body {
 .formulario input,
 .formulario textarea {
   width: 95%;
-
   border: none;
   outline: none;
-
   background: #e6a390;
-
   padding: 18px;
-
   border-radius: 12px;
-
   color: white;
   font-size: 18px;
-
   margin-bottom: 25px;
 }
 
@@ -174,13 +210,11 @@ body {
 .linha-inputs {
   display: flex;
   justify-content: space-between;
-
   margin-top: 10px;
 }
 
 .campo {
   width: 38%;
-
   display: flex;
   flex-direction: column;
 }
@@ -188,19 +222,14 @@ body {
 .btn-marcar {
   margin: auto;
   margin-top: 40px;
-
   width: 320px;
   height: 60px;
-
   border: none;
   border-radius: 18px;
-
   background: #0c0c0c;
   color: white;
-
   font-size: 24px;
   cursor: pointer;
-
   transition: 0.3s;
 }
 
@@ -219,11 +248,31 @@ body {
   text-decoration: underline;
 }
 
-.text-endereco {
-  background-color: aqua;
+.msg-sucesso {
+  background: #1a7a1a;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
-.pequeno {
-  max-width: 180px;
+
+.msg-erro {
+  background: #7a0000;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.cep-info {
+  color: #ffe;
+  font-size: 13px;
+}
+.cep-erro {
+  color: #ff4c4c;
+  font-size: 13px;
 }
 
 /* RESPONSIVO */

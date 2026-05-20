@@ -49,13 +49,12 @@
   gap: 2rem;
 }
 
-/* ---------- FOTO DE PERFIL - ESTILO APRIMORADO ---------- */
+/* ---------- FOTO DE PERFIL - ---------- */
 .pa-foto-wrapper {
   position: relative;
   width: 100%;
   max-width: 220px;
   aspect-ratio: 1/1;
-  margin: 0 auto 1rem auto;
   cursor: pointer;
 }
 
@@ -63,7 +62,6 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  overflow: hidden;
   background: linear-gradient(145deg, #2a1a3e, #1a0a2e);
   box-shadow:
     0 20px 35px -10px rgba(0, 0, 0, 0.4),

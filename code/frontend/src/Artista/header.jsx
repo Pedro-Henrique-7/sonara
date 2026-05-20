@@ -16,7 +16,8 @@ export default function Header() {
     carregarUsuario();
     // Atualiza o header quando PerfilArtista salvar os dados
     window.addEventListener("usuarioAtualizado", carregarUsuario);
-    return () => window.removeEventListener("usuarioAtualizado", carregarUsuario);
+    return () =>
+      window.removeEventListener("usuarioAtualizado", carregarUsuario);
   }, []);
 
   const fotoUrl = usuarioObj?.foto_url || fotoPerfil;
@@ -40,19 +41,28 @@ export default function Header() {
 
             <span className="nav-item">Buscar</span>
 
-            <span className="nav-item" onClick={() => navigate("/listaEventos")}>
+            <span
+              className="nav-item"
+              onClick={() => navigate("/listaEventos")}
+            >
               Meus Eventos
             </span>
 
-            <span className="nav-item" onClick={() => navigate("/planosArtista")}>
+            <span
+              className="nav-item"
+              onClick={() => navigate("/planosArtista")}
+            >
               Plano
             </span>
           </nav>
 
           <div className="user">
             <div className="user-info">
-              <span className="user-name" onClick={() => navigate(rotaPerfil())}>
-                {usuarioObj?.nome_artistico || "Usuário"}
+              <span
+                className="user-name"
+                onClick={() => navigate(rotaPerfil())}
+              >
+                {usuarioObj?.nome || "Usuário"}
               </span>
               <span className="user-role">{tipoUsuario}</span>
             </div>
@@ -61,7 +71,9 @@ export default function Header() {
               <img
                 src={fotoUrl}
                 alt="Perfil"
-                onError={(e) => { e.target.src = fotoPerfil; }}
+                onError={(e) => {
+                  e.target.src = fotoPerfil;
+                }}
               />
             </div>
           </div>

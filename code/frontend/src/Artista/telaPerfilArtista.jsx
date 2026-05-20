@@ -2,14 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import "./telaPerfilArtista.css";
 import fotoPerfil from "../img/fotoPerfil.jpg";
-import { atualizarUsuario, atualizarFotoUsuario, deletarUsuario } from "../services/usuarioService";
+import {
+  atualizarUsuario,
+  atualizarFotoUsuario,
+  deletarUsuario,
+} from "../services/usuarioService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
 import { buscarEventos } from "../services/eventoService";
 import Header from "./header";
 import FooterSonara from "./footer";
 
-const PLACEHOLDER_IMG = "https://placehold.co/600x300/1a1a2e/ffffff?text=Sem+Foto";
+const PLACEHOLDER_IMG =
+  "https://placehold.co/600x300/1a1a2e/ffffff?text=Sem+Foto";
 
 export default function PerfilArtista() {
   const navigate = useNavigate();
@@ -49,7 +54,10 @@ export default function PerfilArtista() {
 
   useEffect(() => {
     const usuarioSalvo = sessionStorage.getItem("usuario");
-    if (!usuarioSalvo) { navigate("/login"); return; }
+    if (!usuarioSalvo) {
+      navigate("/login");
+      return;
+    }
 
     const u = JSON.parse(usuarioSalvo);
     setIdUsuario(u.id_usuario);
@@ -57,22 +65,22 @@ export default function PerfilArtista() {
     if (u.foto_url) setFotoPerfilUrl(u.foto_url);
 
     setForm({
-      nome:             u.nome             || "",
-      data_nasc:        u.data_nasc?.split("T")[0] || "",
-      email:            u.email            || "",
-      telefone:         u.telefone         || "",
+      nome: u.nome || "",
+      data_nasc: u.data_nasc?.split("T")[0] || "",
+      email: u.email || "",
+      telefone: u.telefone || "",
       nacionalidade_id: u.nacionalidade_id || "",
-      genero_id:        u.genero_id        || "",
-      cpf:              u.cpf              || "",
-      cep:              u.cep              || "",
-      logradouro:       u.logradouro       || "",
-      numero:           u.numero           || "",
-      complemento:      u.complemento      || "",
-      bairro:           u.bairro           || "",
-      cidade:           u.cidade           || "",
-      estado:           u.estado           || "",
-      nome_artistico:   u.nome_artistico   || "",
-      descricao:        u.descricao        || "",
+      genero_id: u.genero_id || "",
+      cpf: u.cpf || "",
+      cep: u.cep || "",
+      logradouro: u.logradouro || "",
+      numero: u.numero || "",
+      complemento: u.complemento || "",
+      bairro: u.bairro || "",
+      cidade: u.cidade || "",
+      estado: u.estado || "",
+      nome_artistico: u.nome_artistico || "",
+      descricao: u.descricao || "",
     });
 
     buscarGeneros()
@@ -88,7 +96,7 @@ export default function PerfilArtista() {
       .then((json) => {
         const todos = json?.response?.eventos ?? [];
         const meus = todos.filter((ev) =>
-          ev.artistas?.some((a) => a.usuario_id === u.id_usuario)
+          ev.artistas?.some((a) => a.usuario_id === u.id_usuario),
         );
         setMeusEventos(meus);
       })
@@ -132,18 +140,18 @@ export default function PerfilArtista() {
   };
 
   function validarForm() {
-    if (!form.nome.trim())      return "Nome é obrigatório.";
-    if (!form.email.trim())     return "Email é obrigatório.";
+    if (!form.nome.trim()) return "Nome é obrigatório.";
+    if (!form.email.trim()) return "Email é obrigatório.";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) return "Email inválido.";
-    if (!form.telefone.trim())  return "Telefone é obrigatório.";
-    if (!form.cpf.trim())       return "CPF é obrigatório.";
-    if (!form.cep.trim())       return "CEP é obrigatório.";
+    if (!form.telefone.trim()) return "Telefone é obrigatório.";
+    if (!form.cpf.trim()) return "CPF é obrigatório.";
+    if (!form.cep.trim()) return "CEP é obrigatório.";
     if (!form.logradouro.trim()) return "Logradouro é obrigatório.";
-    if (!form.numero.trim())    return "Número é obrigatório.";
-    if (!form.bairro.trim())    return "Bairro é obrigatório.";
-    if (!form.cidade.trim())    return "Cidade é obrigatória.";
-    if (!form.estado.trim())    return "Estado é obrigatório.";
+    if (!form.numero.trim()) return "Número é obrigatório.";
+    if (!form.bairro.trim()) return "Bairro é obrigatório.";
+    if (!form.cidade.trim()) return "Cidade é obrigatória.";
+    if (!form.estado.trim()) return "Estado é obrigatório.";
     return null;
   }
 
@@ -151,7 +159,10 @@ export default function PerfilArtista() {
     if (!idUsuario) return;
 
     const erroValidacao = validarForm();
-    if (erroValidacao) { setErro(erroValidacao); return; }
+    if (erroValidacao) {
+      setErro(erroValidacao);
+      return;
+    }
 
     setSalvando(true);
     setErro("");
@@ -185,7 +196,7 @@ export default function PerfilArtista() {
   async function handleDeletar() {
     if (!idUsuario) return;
     const confirmar = window.confirm(
-      "Tem certeza que deseja deletar sua conta? Essa ação não pode ser desfeita."
+      "Tem certeza que deseja deletar sua conta? Essa ação não pode ser desfeita.",
     );
     if (!confirmar) return;
 
@@ -215,22 +226,22 @@ export default function PerfilArtista() {
     if (!u) return;
     if (u.foto_url) setFotoPerfilUrl(u.foto_url);
     setForm({
-      nome:             u.nome             || "",
-      data_nasc:        u.data_nasc?.split("T")[0] || "",
-      email:            u.email            || "",
-      telefone:         u.telefone         || "",
+      nome: u.nome || "",
+      data_nasc: u.data_nasc?.split("T")[0] || "",
+      email: u.email || "",
+      telefone: u.telefone || "",
       nacionalidade_id: u.nacionalidade_id || "",
-      genero_id:        u.genero_id        || "",
-      cpf:              u.cpf              || "",
-      cep:              u.cep              || "",
-      logradouro:       u.logradouro       || "",
-      numero:           u.numero           || "",
-      complemento:      u.complemento      || "",
-      bairro:           u.bairro           || "",
-      cidade:           u.cidade           || "",
-      estado:           u.estado           || "",
-      nome_artistico:   u.nome_artistico   || "",
-      descricao:        u.descricao        || "",
+      genero_id: u.genero_id || "",
+      cpf: u.cpf || "",
+      cep: u.cep || "",
+      logradouro: u.logradouro || "",
+      numero: u.numero || "",
+      complemento: u.complemento || "",
+      bairro: u.bairro || "",
+      cidade: u.cidade || "",
+      estado: u.estado || "",
+      nome_artistico: u.nome_artistico || "",
+      descricao: u.descricao || "",
     });
     setErro("");
     setSucesso("");
@@ -242,7 +253,7 @@ export default function PerfilArtista() {
     setSaindo(true);
     sessionStorage.removeItem("usuario");
     sessionStorage.removeItem("token");
-    setTimeout(() => navigate("/"), 2000);  
+    setTimeout(() => navigate("/"), 2000);
   }
 
   const isArtista = tipoUsuario?.toLowerCase() === "artista";
@@ -251,7 +262,6 @@ export default function PerfilArtista() {
     <div className="pa-wrapper">
       <Header />
       <div className="pa-central">
-
         {/* LEFT COLUMN */}
         <div className="pa-col-left">
           <div className="pa-foto-wrapper">
@@ -259,11 +269,22 @@ export default function PerfilArtista() {
               <img
                 src={fotoPerfilUrl}
                 alt="Artista"
-                onError={(e) => { e.target.src = fotoPerfil; }}
+                onError={(e) => {
+                  e.target.src = fotoPerfil;
+                }}
               />
             </div>
-            <button className="pa-edit-btn" title="Editar foto" onClick={handleFotoClick}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <button
+              className="pa-edit-btn"
+              title="Editar foto"
+              onClick={handleFotoClick}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
               </svg>
@@ -280,40 +301,55 @@ export default function PerfilArtista() {
           <div className="pa-plano-card">
             <div className="pa-plano-header">
               <span className="pa-plano-titulo">Plano Diamante</span>
-              <svg className="pa-plano-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                className="pa-plano-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
               </svg>
             </div>
             <p className="pa-plano-desc">
-              O plano definitivo para artistas estabelecidos. Tenha acesso ilimitado a todas as
-              ferramentas da plataforma, analytics avançados, posicionamento premium nas buscas e
-              suporte dedicado 24/7.
+              O plano definitivo para artistas estabelecidos. Tenha acesso
+              ilimitado a todas as ferramentas da plataforma, analytics
+              avançados, posicionamento premium nas buscas e suporte dedicado
+              24/7.
             </p>
           </div>
 
           <div className="pa-plano-card pa-plano-card--secondary">
             <div className="pa-plano-header">
               <span className="pa-plano-titulo">Plano Platina</span>
-              <svg className="pa-plano-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg
+                className="pa-plano-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
                 <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
               </svg>
             </div>
             <p className="pa-plano-desc">
-              Acesse recursos exclusivos para artistas em crescimento. Divulgue seus eventos para
-              um público maior e tenha destaque nas buscas da plataforma.
+              Acesse recursos exclusivos para artistas em crescimento. Divulgue
+              seus eventos para um público maior e tenha destaque nas buscas da
+              plataforma.
             </p>
           </div>
         </div>
 
         {/* RIGHT COLUMN */}
         <div className="pa-col-right">
-
           {/* MEUS EVENTOS */}
           <div className="pa-eventos-card">
             <h3 className="pa-card-title">Meus Eventos</h3>
             <div className="pa-eventos-content">
               {meusEventos.length === 0 ? (
-                <p style={{ color: "#888", fontSize: "0.9rem" }}>Nenhum evento encontrado.</p>
+                <p style={{ color: "#888", fontSize: "0.9rem" }}>
+                  Nenhum evento encontrado.
+                </p>
               ) : (
                 <div className="pa-eventos-grid">
                   {meusEventos.map((ev) => (
@@ -326,8 +362,15 @@ export default function PerfilArtista() {
                       <img
                         src={ev.fotos?.[0]?.caminho || PLACEHOLDER_IMG}
                         alt={ev.evento_nome}
-                        onError={(e) => { e.target.src = PLACEHOLDER_IMG; }}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
+                        onError={(e) => {
+                          e.target.src = PLACEHOLDER_IMG;
+                        }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                        }}
                       />
                     </div>
                   ))}
@@ -340,107 +383,213 @@ export default function PerfilArtista() {
           <div className="pa-dados-card">
             <h3 className="pa-card-title">Dados Pessoais</h3>
             <div className="pa-dados-grid">
+              <input
+                className="pa-input"
+                id="nome"
+                value={form.nome}
+                onChange={handleChange}
+                placeholder="Nome"
+              />
 
-              <input className="pa-input" id="nome" value={form.nome}
-                onChange={handleChange} placeholder="Nome" />
+              <input
+                className="pa-input"
+                id="data_nasc"
+                type="date"
+                value={form.data_nasc}
+                onChange={handleChange}
+              />
 
-              <input className="pa-input" id="data_nasc" type="date"
-                value={form.data_nasc} onChange={handleChange} />
+              <input
+                className="pa-input"
+                id="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Email"
+              />
 
-              <input className="pa-input" id="email" type="email"
-                value={form.email} onChange={handleChange} placeholder="Email" />
+              <input
+                className="pa-input"
+                id="telefone"
+                value={form.telefone}
+                onChange={handleChange}
+                placeholder="Telefone"
+              />
 
-              <input className="pa-input" id="telefone" value={form.telefone}
-                onChange={handleChange} placeholder="Telefone" />
+              <input
+                className="pa-input"
+                id="cpf"
+                value={form.cpf}
+                onChange={handleChange}
+                placeholder="CPF"
+              />
 
-              <input className="pa-input" id="cpf" value={form.cpf}
-                onChange={handleChange} placeholder="CPF" />
-
-              <select className="pa-input" id="nacionalidade_id"
-                value={form.nacionalidade_id} onChange={handleChange}>
+              <select
+                className="pa-input"
+                id="nacionalidade_id"
+                value={form.nacionalidade_id}
+                onChange={handleChange}
+              >
                 <option value="">Nacionalidade</option>
                 {nacionalidades.map((n) => (
-                  <option key={n.id_nacionalidade} value={n.id_nacionalidade}>{n.nome}</option>
+                  <option key={n.id_nacionalidade} value={n.id_nacionalidade}>
+                    {n.nome}
+                  </option>
                 ))}
               </select>
 
-              <select className="pa-input" id="genero_id"
-                value={form.genero_id} onChange={handleChange}>
+              <select
+                className="pa-input"
+                id="genero_id"
+                value={form.genero_id}
+                onChange={handleChange}
+              >
                 <option value="">Gênero</option>
                 {generos.map((g) => (
-                  <option key={g.id_genero} value={g.id_genero}>{g.nome}</option>
+                  <option key={g.id_genero} value={g.id_genero}>
+                    {g.nome}
+                  </option>
                 ))}
               </select>
             </div>
 
             {/* ENDEREÇO */}
-            <h3 className="pa-card-title" style={{ marginTop: "1.2rem" }}>Endereço</h3>
+            <h3 className="pa-card-title" style={{ marginTop: "1.2rem" }}>
+              Endereço
+            </h3>
             <div className="pa-dados-grid">
-              <input className="pa-input" id="cep" value={form.cep}
-                onChange={handleChange} placeholder="CEP" maxLength={9} />
+              <input
+                className="pa-input"
+                id="cep"
+                value={form.cep}
+                onChange={handleChange}
+                placeholder="CEP"
+                maxLength={9}
+              />
 
-              <input className="pa-input" id="logradouro" value={form.logradouro}
-                onChange={handleChange} placeholder="Logradouro" />
+              <input
+                className="pa-input"
+                id="logradouro"
+                value={form.logradouro}
+                onChange={handleChange}
+                placeholder="Logradouro"
+              />
 
-              <input className="pa-input" id="numero" value={form.numero}
-                onChange={handleChange} placeholder="Número" />
+              <input
+                className="pa-input"
+                id="numero"
+                value={form.numero}
+                onChange={handleChange}
+                placeholder="Número"
+              />
 
-              <input className="pa-input" id="bairro" value={form.bairro}
-                onChange={handleChange} placeholder="Bairro" />
+              <input
+                className="pa-input"
+                id="bairro"
+                value={form.bairro}
+                onChange={handleChange}
+                placeholder="Bairro"
+              />
 
-              <input className="pa-input" id="cidade" value={form.cidade}
-                onChange={handleChange} placeholder="Cidade" />
+              <input
+                className="pa-input"
+                id="cidade"
+                value={form.cidade}
+                onChange={handleChange}
+                placeholder="Cidade"
+              />
 
-              <input className="pa-input" id="estado" value={form.estado}
-                onChange={handleChange} placeholder="UF" maxLength={2} />
+              <input
+                className="pa-input"
+                id="estado"
+                value={form.estado}
+                onChange={handleChange}
+                placeholder="UF"
+                maxLength={2}
+              />
 
-              <input className="pa-input" id="complemento" value={form.complemento}
-                onChange={handleChange} placeholder="Complemento" />
+              <input
+                className="pa-input"
+                id="complemento"
+                value={form.complemento}
+                onChange={handleChange}
+                placeholder="Complemento"
+              />
             </div>
 
             {/* CAMPOS ARTISTA */}
             {isArtista && (
               <>
-                <h3 className="pa-card-title" style={{ marginTop: "1.2rem" }}>Dados Artísticos</h3>
+                <h3 className="pa-card-title" style={{ marginTop: "1.2rem" }}>
+                  Dados Artísticos
+                </h3>
                 <div className="pa-dados-grid">
-                  <input className="pa-input" id="nome_artistico" value={form.nome_artistico}
-                    onChange={handleChange} placeholder="Nome artístico" />
-                  <input className="pa-input" id="descricao" value={form.descricao}
-                    onChange={handleChange} placeholder="Descrição / Bio" />
+                  <input
+                    className="pa-input"
+                    id="nome_artistico"
+                    value={form.nome_artistico}
+                    onChange={handleChange}
+                    placeholder="Nome artístico"
+                  />
+                  <input
+                    className="pa-input"
+                    id="descricao"
+                    value={form.descricao}
+                    onChange={handleChange}
+                    placeholder="Descrição / Bio"
+                  />
                 </div>
               </>
             )}
 
-            {erro   && <p style={{ color: "red",   marginTop: "0.8rem" }}>{erro}</p>}
-            {sucesso && <p style={{ color: "green", marginTop: "0.8rem" }}>{sucesso}</p>}
+            {erro && (
+              <p style={{ color: "red", marginTop: "0.8rem" }}>{erro}</p>
+            )}
+            {sucesso && (
+              <p style={{ color: "green", marginTop: "0.8rem" }}>{sucesso}</p>
+            )}
 
             <div className="pa-dados-actions">
-              <button className="pa-btn pa-btn-cancelar" onClick={handleCancelar}>
+              <button
+                className="pa-btn pa-btn-cancelar"
+                onClick={handleCancelar}
+              >
                 Cancelar
               </button>
-              <button className="pa-btn pa-btn-salvar" onClick={handleSalvar} disabled={salvando}>
+              <button
+                className="pa-btn pa-btn-salvar"
+                onClick={handleSalvar}
+                disabled={salvando}
+              >
                 {salvando ? "Salvando..." : "Salvar"}
               </button>
               <button
                 className="pa-btn pa-btn-deletar"
                 onClick={handleSair}
                 disabled={saindo}
-                style={{ backgroundColor: "#555", color: "#fff", marginLeft: "auto" }}
+                style={{
+                  backgroundColor: "#555",
+                  color: "#fff",
+                  marginLeft: "auto",
+                }}
               >
-                {deletando ? "Deletando..." : "Deletar conta"}
+                {saindo ? "Saindo" : "Sair"}
               </button>
 
               <button
                 className="pa-btn pa-btn-deletar"
                 onClick={handleDeletar}
                 disabled={deletando}
-                style={{ backgroundColor: "#c0392b", color: "#fff", marginLeft: "auto" }}
+                style={{
+                  backgroundColor: "#c0392b",
+                  color: "#fff",
+                  marginLeft: "auto",
+                }}
               >
-                {saindo ? "Saindo..." : "Sair"}
+                {deletando ? "Deletando..." : "Deletar"}
               </button>
             </div>
           </div>
-
         </div>
       </div>
       <FooterSonara />
