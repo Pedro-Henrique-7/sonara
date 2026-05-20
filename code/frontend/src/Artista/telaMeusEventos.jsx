@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./meusEventos.css";
-import fotoPerfil from "../img/fotoPerfil.jpg";
 import show2 from "../img/show2.webp";
-import Header from "./Header";
+import Header from "./header";
 import FooterSonara from "./footer";
 // Dados mockados — substitua por chamada à API
 const eventoMock = {
@@ -22,9 +21,6 @@ export default function MeusEventos() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [evento] = useState(eventoMock);
-  const usuario = sessionStorage.getItem("usuario");
-  const usuarioObj = usuario ? JSON.parse(usuario) : null;
-
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 50);
     return () => clearTimeout(timer);

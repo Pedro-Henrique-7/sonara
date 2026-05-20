@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./sobreEvento.css";
 import fotoShow from "../img/fotoShow.png";
-import Header from "./Header";
+import Header from "./header";
 import FooterSonara from "./footer";
 
 import { buscarEventosPorId } from "../services/eventoService";

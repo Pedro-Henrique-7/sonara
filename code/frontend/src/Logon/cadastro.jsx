@@ -26,7 +26,7 @@ function Cadastro() {
     senha: "",
     "confirm-senha": "",
     cpf: "",
-    data_nasc: "",        
+    data_nasc: "",
     nacionalidade_id: "",
     genero_id: "",
     telefone: "",
@@ -41,6 +41,7 @@ function Cadastro() {
     numero: "",
     complemento: "",
     bairro: "",
+    foto: null,
   });
 
   useEffect(() => {
@@ -59,10 +60,15 @@ function Cadastro() {
 
   function handleChange(e) {
     setErro("");
-    const { id, value } = e.target
+    const { id, value } = e.target;
     setForm((prev) => ({ ...prev, [id]: value }));
   }
 
+  function handleFotoChange(e) {
+    setErro("");
+    const arquivo = e.target.files[0] || null;
+    setForm((prev) => ({ ...prev, foto: arquivo }));
+  }
 
   function handleGeneroMusicalChange(e) {
     const selecionados = Array.from(e.target.selectedOptions).map((opt) =>
@@ -78,7 +84,7 @@ function Cadastro() {
     try {
       setBuscandoCep(true);
       const dados = await buscarCep(cepLimpo);
-      console.log("dados cep: " + dados)
+      console.log("dados cep: " + dados);
       if (dados.erro) {
         setErro("CEP não encontrado.");
         return;
@@ -91,7 +97,7 @@ function Cadastro() {
         ...prev,
         logradouro: dados.logradouro || "",
         bairro: dados.bairro || "",
-        cidade: dados.localidade || "", 
+        cidade: dados.localidade || "",
         estado: dados.uf || "",
         latitude: coordenadas?.lat || "",
         longitude: coordenadas?.lng || "",
@@ -121,7 +127,6 @@ function Cadastro() {
       return;
     }
 
-
     if (form.tipo_usuario === "artista" && form.generos_musicais.length === 0) {
       setErro("Selecione pelo menos um gênero musical.");
       return;
@@ -129,8 +134,6 @@ function Cadastro() {
 
     try {
       setCarregando(true);
-
-      const hoje = new Date().toISOString().split("T")[0]
 
       const usuario = {
         nome: form.nome,
@@ -140,7 +143,7 @@ function Cadastro() {
         data_nasc: form.data_nasc,
         nacionalidade_id: Number(form.nacionalidade_id),
         genero_id: Number(form.genero_id),
-        telefone: form.telefone,     
+        telefone: form.telefone,
         tipo_usuario: form.tipo_usuario,
         nome_artistico: form.nome_artistico,
         descricao: form.descricao,
@@ -149,12 +152,12 @@ function Cadastro() {
         cidade: form.cidade,
         estado: form.estado,
         logradouro: form.logradouro,
-        numero: form.numero, 
+        numero: form.numero,
         complemento: form.complemento,
         bairro: form.bairro,
       };
 
-      const respostaUsuario = await cadastrarUsuario(usuario);
+      const respostaUsuario = await cadastrarUsuario(usuario, form.foto || null);
 
       if (respostaUsuario.status_code !== 201) {
         setErro(respostaUsuario.message || "Erro ao cadastrar usuário.");
@@ -217,7 +220,6 @@ function Cadastro() {
                   value={form["confirm-email"]} onChange={handleChange} required />
               </div>
 
-
               <div className="campo">
                 <label htmlFor="telefone">Telefone</label>
                 <input type="tel" id="telefone" placeholder="(00) 00000-0000"
@@ -252,7 +254,6 @@ function Cadastro() {
             </div>
 
             <div className="grupo-duplo">
-
               <div className="campo">
                 <label htmlFor="nacionalidade_id">Nacionalidade</label>
                 <select id="nacionalidade_id" value={form.nacionalidade_id} onChange={handleChange} required>
@@ -274,7 +275,6 @@ function Cadastro() {
                   <option value="user">Usuário</option>
                 </select>
               </div>
-
 
               {form.tipo_usuario === "artista" && (
                 <div className="campo">
@@ -307,9 +307,17 @@ function Cadastro() {
                 </div>
               </div>
             )}
+
+            <div className="grupo-duplo">
+              <div className="campo">
+                <label htmlFor="foto">Foto (opcional)</label>
+                <input type="file" id="foto" accept="image/jpeg,image/png,image/webp"
+                  onChange={handleFotoChange} />
+              </div>
+            </div>
           </section>
 
-
+          {/* ENDEREÇO */}
           <section className="secao-endereco">
             <h3>Endereço</h3>
 
@@ -340,7 +348,6 @@ function Cadastro() {
                   value={form.bairro} onChange={handleChange} required />
               </div>
 
-     
               <div className="campo cidade">
                 <label htmlFor="cidade">Cidade</label>
                 <input type="text" id="cidade"

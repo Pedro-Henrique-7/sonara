@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./meusEventosLista.css";
-import fotoPerfil from "../img/fotoPerfil.jpg";
-import Header from "./Header";
+import Header from "./header";
 import FooterSonara from "./footer";
 
 // Mock — substitua por chamada à API
@@ -40,9 +39,6 @@ const eventosMock = [
     imagem: null,
   },
 ];
-
-const usuario = sessionStorage.getItem("usuario");
-const usuarioObj = usuario ? JSON.parse(usuario) : null;
 
 export default function ListaEventos() {
   const navigate = useNavigate();

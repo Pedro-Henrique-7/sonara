@@ -1,27 +1,27 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // LOGON
-import Cadastro from "./logon/cadastro.jsx";
-import Login from "./logon/login.jsx";
-import TelaEscolha from "./logon/telaEscolha.jsx";
-import TelaRecuperarSenha from "./logon/recuperar_senha.jsx";
+import Cadastro from "./Logon/cadastro.jsx";
+import Login from "./Logon/login.jsx";
+import TelaEscolha from "./Logon/telaEscolha.jsx";
+import TelaRecuperarSenha from "./Logon/recuperar_senha.jsx";
 
 // ARTISTA
-import Shows from "./artista/telaShows.jsx";
-import SobreEvento from "./artista/sobreEvento.jsx";
-import EventoInscricao from "./artista/eventoInscricao.jsx";
-import PlanosArtista from "./artista/planosArtista.jsx";
-import MeusEventos from "./artista/telaMeusEventos.jsx";
-import EventosLista from "./artista/meusEventosLista.jsx";
-import PerfilArtista from "./artista/telaPerfilArtista.jsx";
+import Shows from "./Artista/telaShows.jsx";
+import SobreEvento from "./Artista/sobreEvento.jsx";
+import EventoInscricao from "./Artista/eventoInscricao.jsx";
+import PlanosArtista from "./Artista/planosArtista.jsx";
+import MeusEventos from "./Artista/telaMeusEventos.jsx";
+import EventosLista from "./Artista/meusEventosLista.jsx";
+import PerfilArtista from "./Artista/telaPerfilArtista.jsx";
 
 // CASA DE SHOW
-import TelaInicial from "./casa_show/telaInicial.jsx";
-import MarcarEvento from "./casa_show/marcarEvento.jsx";
-import ListaMeusEventos from "./casa_show/meus-eventos-casaShow.jsx";
-import ContratarArtista from "./casa_show/contratarArtista.jsx";
-import TelaSobreArtista from "./casa_show/sobreArtista.jsx";
-import SobreEventoCasaShow from "./casa_show/sobreEventoCasaShow.jsx";
+import TelaInicial from "./Casa_Show/telaInicial.jsx";
+import MarcarEvento from "./Casa_Show/marcarEvento.jsx";
+import ListaMeusEventos from "./Casa_Show/meus-eventos-casaShow.jsx";
+import ContratarArtista from "./Casa_Show/contratarArtista.jsx";
+import TelaSobreArtista from "./Casa_Show/sobreArtista.jsx";
+import SobreEventoCasaShow from "./Casa_Show/sobreEventoCasaShow.jsx";
 
 export default function RouterApp() {
   return (

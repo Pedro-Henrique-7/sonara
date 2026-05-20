@@ -1,12 +1,33 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import "./header.css";
 
 export default function Header() {
   const navigate = useNavigate();
+  const [usuarioObj, setUsuarioObj] = useState(null);
 
-  const usuario = sessionStorage.getItem("usuario");
-  const usuarioObj = usuario ? JSON.parse(usuario) : null;
+  function carregarUsuario() {
+    const salvo = sessionStorage.getItem("usuario");
+    setUsuarioObj(salvo ? JSON.parse(salvo) : null);
+  }
+
+  useEffect(() => {
+    carregarUsuario();
+    // Atualiza o header quando PerfilArtista salvar os dados
+    window.addEventListener("usuarioAtualizado", carregarUsuario);
+    return () => window.removeEventListener("usuarioAtualizado", carregarUsuario);
+  }, []);
+
+  const fotoUrl = usuarioObj?.foto_url || fotoPerfil;
+  const tipoUsuario = usuarioObj?.tipo_usuario || "";
+
+  function rotaPerfil() {
+    const tipo = tipoUsuario.toLowerCase();
+    if (tipo === "artista") return "/perfil-artista";
+    if (tipo === "organizador") return "/perfil-organizador";
+    return "/perfil";
+  }
 
   return (
     <header className="header">
@@ -19,35 +40,29 @@ export default function Header() {
 
             <span className="nav-item">Buscar</span>
 
-            <span
-              className="nav-item"
-              onClick={() => navigate("/listaEventos")}
-            >
+            <span className="nav-item" onClick={() => navigate("/listaEventos")}>
               Meus Eventos
             </span>
 
-            <span
-              className="nav-item"
-              onClick={() => navigate("/planosArtista")}
-            >
+            <span className="nav-item" onClick={() => navigate("/planosArtista")}>
               Plano
             </span>
           </nav>
 
           <div className="user">
             <div className="user-info">
-              <span
-                className="user-name"
-                onClick={() => navigate("/perfil-artista")}
-              >
-                {usuarioObj?.nome || "Yuri Silva"}
+              <span className="user-name" onClick={() => navigate(rotaPerfil())}>
+                {usuarioObj?.nome_artistico || "Usuário"}
               </span>
-
-              <span className="user-role">Artista</span>
+              <span className="user-role">{tipoUsuario}</span>
             </div>
 
-            <div className="avatar" onClick={() => navigate("/perfil-artista")}>
-              <img src={fotoPerfil} alt="Perfil" />
+            <div className="avatar" onClick={() => navigate(rotaPerfil())}>
+              <img
+                src={fotoUrl}
+                alt="Perfil"
+                onError={(e) => { e.target.src = fotoPerfil; }}
+              />
             </div>
           </div>
         </div>

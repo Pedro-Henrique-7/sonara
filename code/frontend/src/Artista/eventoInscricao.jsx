@@ -1,18 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
 import "./eventoInscricao.css";
 import Header from "./header";
-
-import fotoPerfil from "../img/fotoPerfil.jpg";
+import FooterSonara from "./footer";
 
 export default function EventoInscricao() {
-  const navigate = useNavigate();
-  const usuario = sessionStorage.getItem("usuario");
-  const usuarioObj = usuario ? JSON.parse(usuario) : null;
-  const [fotoPerfilUrl, setFotoPerfilUrl] = useState(fotoPerfil);
-
-  const inputFileRef = useRef(null);
-
   return (
     <div className="pa-wrapper">
       {/* HEADER */}

@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../img/sonara-logo.svg";
 import "./Recuperar_Senha.css";
 
 export default function TelaRecuperarSenha() {
   const navigate = useNavigate();
-  const [count, setCount] = useState(0);
 
   return (
     <div className="app">
@@ -34,7 +32,7 @@ export default function TelaRecuperarSenha() {
         </div>
 
         <div className="botao">
-          <button>Enviar Solicitação</button>
+          <button onClick={() => navigate("/login")}>Enviar Solicitação</button>
         </div>
       </main>
     </div>

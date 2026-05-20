@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./login.css";
 import "../index.css";
 import logo from "../img/sonara-logo.svg";
-import { useEffect } from "react";
-
 import { loginUsuario } from "../services/usuarioService";
 
 function Login() {
@@ -27,16 +25,17 @@ function Login() {
     try {
       const response = await loginUsuario(email, senha);
 
-      //  response aqui é response.data (o Axios já desembrulha)
       if (response.status === true) {
+        const tipoUsuario = response.usuario.tipo_usuario?.toLowerCase();
+
         sessionStorage.setItem(
           "usuario",
           JSON.stringify(response.usuario)
         );
         sessionStorage.setItem("token", response.token)
-        if (response.usuario.tipo_usuario === "Artista") {
+        if (tipoUsuario === "artista") {
           navigate("/shows");
-        } else if (response.usuario.tipo_usuario === "Organizador") {
+        } else if (tipoUsuario === "organizador") {
           navigate("/casaShow");
         } else{
           navigate("/login");
@@ -45,9 +44,7 @@ function Login() {
           setErro("Email ou senha incorretos.");
         }
     } catch (error) {
-      // ✅ Axios joga aqui para status >= 400
-      const mensagem = error.response?.data?.message;
-      setErro(mensagem || "Email ou senha incorretos.");
+      setErro(error.message || "Email ou senha incorretos.");
     } finally {
       setLoading(false);
     }

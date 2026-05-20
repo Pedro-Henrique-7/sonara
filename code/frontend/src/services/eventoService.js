@@ -1,4 +1,4 @@
-const URL_BASE = "http://localhost:8080/v1/sonara/evento";
+const URL_BASE = `${import.meta.env.VITE_API_URL}/evento`;
 
 export async function buscarEventos() {
   const response = await fetch(URL_BASE);
@@ -12,8 +12,8 @@ export async function buscarEventos() {
 
 export async function buscarEventosPorId(id) {
   const response = await fetch(`${URL_BASE}/${id}`);
+  const json = await response.json();
   if (response.ok) {
-    const json = await response.json();
     console.log(json);
     return json;
   }

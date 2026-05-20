@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./telaShows.css";
 import { Search, MapPin, Clock, Calendar } from "lucide-react";
 import FooterSonara from "./footer";
-import Header from "./Header";
+import Header from "./header";
 
 import { buscarEventos } from "../services/eventoService"; // ajuste o caminho se necessário
 

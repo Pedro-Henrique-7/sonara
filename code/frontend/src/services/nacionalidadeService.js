@@ -1,6 +1,6 @@
 // Função relacionada a nacionalidade
 
-const URL_BASE = "http://localhost:8080/v1/sonara/nacionalidade";
+const URL_BASE = `${import.meta.env.VITE_API_URL}/nacionalidade`;
 
 export async function buscarNacionalidades() {
         const response = await fetch(URL_BASE)

@@ -1,6 +1,6 @@
 // Função relacionada a genero
 
-const URL_BASE = "http://localhost:8080/v1/sonara/genero";
+const URL_BASE = `${import.meta.env.VITE_API_URL}/genero`;
 
 export async function buscarGeneros() {
         const response = await fetch(URL_BASE)

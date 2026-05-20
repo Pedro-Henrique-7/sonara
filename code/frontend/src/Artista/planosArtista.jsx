@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../img/sonara-logo.svg";
 import diamante from "../img/diamante.png";
 import platina from "../img/platina.png";
-import fotoPerfil from "../img/fotoPerfil.jpg";
 import "./planosArtista.css";
-import Header from "./Header";
+import Header from "./header";
 import FooterSonara from "./footer";
 
 const planos = [
@@ -26,9 +23,6 @@ const planos = [
 ];
 
 export default function PlanosArtista() {
-  const usuario = sessionStorage.getItem("usuario");
-  const usuarioObj = usuario ? JSON.parse(usuario) : null;
-  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -61,7 +55,7 @@ export default function PlanosArtista() {
               </div>
 
               <div className="plano-card__body">
-                <p className="plano-card__descricao">"{plano.descricao}"</p>
+                <p className="plano-card__descricao">{plano.descricao}</p>
               </div>
 
               <button className="plano-card__btn">Assinar agora</button>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import HeaderCasaShow from "./headerCasaShow.jsx";
 import FooterSonara from "../Artista/footer.jsx";
 
-export default function telaInicial() {
+export default function TelaInicial() {
   const navigate = useNavigate();
 
   return (

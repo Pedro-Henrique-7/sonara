@@ -39,9 +39,6 @@ const eventosMock = [
   },
 ];
 
-const usuario = sessionStorage.getItem("usuario");
-const usuarioObj = usuario ? JSON.parse(usuario) : null;
-
 export default function ListaMeusEventos() {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);

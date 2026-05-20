@@ -1,6 +1,6 @@
 // arquivo para funções relacionadas ao endereco
 
-const URL_BASE = `http://localhost:8080/v1/sonara`;
+const URL_BASE = `${import.meta.env.VITE_API_URL}`;
 
 export async function cadastrarEndereco(endereco) {
   const response = await fetch(`${URL_BASE}/endereco/`, {
