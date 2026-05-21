@@ -1,9 +1,7 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./marcarEvento.css";
 import HeaderCasaShow from "./headerCasaShow.jsx";
-import show1 from "../img/show1.jfif";
-import show2 from "../img/show2.webp";
-import show3 from "../img/show3.png";
 import FooterSonara from "../Artista/footer.jsx";
 
 import { cadastrarEvento } from "../services/eventoService";
@@ -12,6 +10,7 @@ import { buscarCep } from "../services/enderecoService.js";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function MarcarEvento() {
+  const navigate = useNavigate();
   const usuarioObj = JSON.parse(sessionStorage.getItem("usuario") ?? "null");
   const organizador_id = usuarioObj?.id_usuario ?? null;
 
@@ -40,12 +39,8 @@ export default function MarcarEvento() {
   const [erro, setErro] = useState(null);
   const [sucesso, setSucesso] = useState(false);
 
-  // Galeria começa com as imagens estáticas; ao selecionar arquivos, são substituídas
-  const [previews, setPreviews] = useState([
-    { url: show1, file: null, status: "static" },
-    { url: show2, file: null, status: "static" },
-    { url: show3, file: null, status: "static" },
-  ]);
+  // 2. O estado só guarda as fotos do usuário
+  const [previews, setPreviews] = useState([]);
 
   // ─── Formulário do evento ───────────────────────────────────────────────────
   function handleChange(e) {
@@ -94,11 +89,7 @@ export default function MarcarEvento() {
     }));
 
     // Remove as imagens estáticas na primeira seleção; acumula nas próximas
-    setPreviews((prev) => {
-      const semEstaticas = prev.filter((p) => p.status !== "static");
-      return [...semEstaticas, ...novas];
-    });
-
+    setPreviews((prev) => [...prev, ...novas]);
     e.target.value = "";
   }
 
@@ -174,6 +165,11 @@ export default function MarcarEvento() {
       }
 
       setSucesso(true);
+
+      setTimeout(() => {
+        navigate("/casaShow");
+      }, 1500);
+
       setForm({
         nome: "",
         descricao: "",
@@ -198,7 +194,7 @@ export default function MarcarEvento() {
   }
 
   // Foto principal = primeira da lista (pode ser estática ou selecionada)
-  const fotoPrincipal = previews[0]?.url ?? show2;
+  const fotoPrincipal = previews[0]?.url;
 
   return (
     <div className="pagina">
@@ -208,19 +204,27 @@ export default function MarcarEvento() {
           {/* GALERIA — atualiza conforme previews */}
           <div className="galeria">
             <div className="foto_Show">
-              <img src={fotoPrincipal} alt="Foto principal" />
-            </div>
-
-            <div className="miniaturas">
-              {previews.slice(0, 3).map((item, i) => (
-                <img key={i} src={item.url} alt={`miniatura-${i}`} />
-              ))}
-              {previews.length > 3 && (
-                <div className="mais-fotos">+{previews.length - 3}</div>
+              {fotoPrincipal ? (
+                <img src={fotoPrincipal} alt="Foto principal" />
+              ) : (
+                <div className="sem-foto">
+                  <span>Nenhuma foto adicionada</span>
+                </div>
               )}
             </div>
 
-            {/* Input oculto */}
+            {previews.length > 0 && (
+              <div className="miniaturas">
+                {previews.slice(0, 4).map((item, i) => (
+                  <img key={i} src={item.url} alt={`miniatura-${i}`} />
+                ))}
+
+                {previews.length > 4 && (
+                  <div className="mais-fotos">+{previews.length - 4}</div>
+                )}
+              </div>
+            )}
+
             <input
               ref={inputFotoRef}
               type="file"
@@ -235,73 +239,54 @@ export default function MarcarEvento() {
               type="button"
               onClick={() => inputFotoRef.current?.click()}
             >
-              Adicionar mais fotos
+              Adicionar fotos
             </button>
 
-            {/* Previews selecionadas (apenas as não-estáticas) */}
-            {previews.some((p) => p.status !== "static") && (
+            {previews.length > 0 && (
               <div className="preview-grid">
-                {previews
-                  .filter((p) => p.status !== "static")
-                  .map((item, i) => (
-                    <div
-                      key={i}
-                      className={`preview-item preview-${item.status}`}
-                    >
-                      <img src={item.url} alt={`preview-${i}`} />
+                {previews.map((item, i) => (
+                  <div
+                    key={i}
+                    className={`preview-item preview-${item.status}`}
+                  >
+                    <img src={item.url} alt={`preview-${i}`} />
 
-                      {item.status === "enviando" && (
-                        <div className="preview-overlay">
-                          <span className="spinner" />
-                        </div>
-                      )}
-                      {item.status === "ok" && (
-                        <div className="preview-overlay overlay-ok">✓</div>
-                      )}
-                      {item.status === "erro" && (
-                        <div
-                          className="preview-overlay overlay-erro"
-                          title={item.erro}
-                        >
-                          ✗
-                        </div>
-                      )}
-                      {item.status === "pendente" && (
-                        <button
-                          className="btn-remover-foto"
-                          type="button"
-                          onClick={() => {
-                            // Mapeia de volta para o índice real no array completo
-                            const realIndex = previews.findIndex(
-                              (p, idx) =>
-                                p.status !== "static" &&
-                                previews
-                                  .filter((x) => x.status !== "static")
-                                  .indexOf(p) === i,
-                            );
-                            removerPreview(
-                              previews.indexOf(
-                                previews.filter((p) => p.status !== "static")[
-                                  i
-                                ],
-                              ),
-                            );
-                          }}
-                        >
-                          ×
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                    {item.status === "enviando" && (
+                      <div className="preview-overlay">
+                        <span className="spinner" />
+                      </div>
+                    )}
+
+                    {item.status === "ok" && (
+                      <div className="preview-overlay overlay-ok">✓</div>
+                    )}
+
+                    {item.status === "erro" && (
+                      <div
+                        className="preview-overlay overlay-erro"
+                        title={item.erro}
+                      >
+                        ✗
+                      </div>
+                    )}
+
+                    {item.status === "pendente" && (
+                      <button
+                        className="btn-remover-foto"
+                        type="button"
+                        onClick={() => removerPreview(i)}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
 
           {/* FORMULÁRIO */}
           <form className="formulario" onSubmit={handleSubmit}>
-            {sucesso && (
-              <p className="msg-sucesso">Evento marcado com sucesso!</p>
-            )}
             {erro && <p className="msg-erro">{erro}</p>}
 
             <label>nome do evento:</label>
@@ -468,6 +453,9 @@ export default function MarcarEvento() {
                 </div>
               </div>
             </div>
+            {sucesso && (
+              <p className="msg-sucesso">Evento marcado com sucesso!</p>
+            )}
 
             <button className="btn-marcar" type="submit" disabled={enviando}>
               {enviando ? "Enviando..." : "Marcar Evento"}

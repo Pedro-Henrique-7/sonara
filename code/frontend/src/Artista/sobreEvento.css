@@ -26,17 +26,18 @@ body {
 }
 
 .main-img {
-  width: 40%;
+  width: 70%;
   height: 420px;
   object-fit: cover;
   display: block;
+  border-radius: 20px;
 }
 
 .stars {
   margin: 15px 0;
   color: gold;
   font-size: 30px;
-  margin-top: 420px;
+  margin-top: 4vh;
 }
 
 .thumbs {
@@ -182,6 +183,7 @@ body {
   line-height: 1.5;
   margin-bottom: 55px;
   font-size: 15px;
+  width: 18vh;
 }
 
 /* HORA */
@@ -199,9 +201,18 @@ body {
 .evento-hora p {
   line-height: 1.5;
   margin-bottom: 55px;
-  font-size: 15px;
+  font-size: 20px;
+  width: 12vh;
 }
 
+.evento-organizador label {
+  width: 100%;
+  font-size: 20px;
+}
+.evento-local label {
+  width: 100%;
+  font-size: 20px;
+}
 button {
   width: 100%;
   margin-top: 25px;

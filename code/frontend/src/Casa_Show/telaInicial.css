@@ -41,7 +41,8 @@ body {
 ========================================================= */
 .painel {
   width: 50%;
-  height: 90vh;
+
+  height: 30%;
 
   margin-top: 10vh;
   padding: 40px;

@@ -25,9 +25,10 @@ body {
   margin-top: 10.5vh;
   font-weight: bold;
 }
-img {
+.header-escolha img {
   height: 350px;
   position: absolute;
+  margin-top: 10vh;
 }
 
 .mensagem-escolha {

@@ -6,10 +6,9 @@ import logo from "../img/sonara-logo.svg";
 import { loginUsuario } from "../services/usuarioService";
 
 function Login() {
-
   useEffect(() => {
-      sessionStorage.clear();
-    }, []);
+    sessionStorage.clear();
+  }, []);
 
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -28,21 +27,18 @@ function Login() {
       if (response.status === true) {
         const tipoUsuario = response.usuario.tipo_usuario?.toLowerCase();
 
-        sessionStorage.setItem(
-          "usuario",
-          JSON.stringify(response.usuario)
-        );
-        sessionStorage.setItem("token", response.token)
+        sessionStorage.setItem("usuario", JSON.stringify(response.usuario));
+        sessionStorage.setItem("token", response.token);
         if (tipoUsuario === "artista") {
           navigate("/shows");
         } else if (tipoUsuario === "organizador") {
           navigate("/casaShow");
-        } else{
+        } else {
           navigate("/login");
         }
-      }else {
-          setErro("Email ou senha incorretos.");
-        }
+      } else {
+        setErro("Email ou senha incorretos.");
+      }
     } catch (error) {
       setErro(error.message || "Email ou senha incorretos.");
     } finally {
@@ -83,7 +79,9 @@ function Login() {
             />
           </div>
 
-          {erro && <p style={{ color: "red", fontSize: "0.85rem" }}>{erro}</p>}
+          {erro && (
+            <p style={{ color: "white", fontSize: "0.85rem" }}>{erro}</p>
+          )}
 
           <button type="button" onClick={handleSubmit} disabled={loading}>
             {loading ? "Entrando..." : "Entrar"}

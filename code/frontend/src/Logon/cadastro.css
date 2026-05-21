@@ -32,10 +32,11 @@ body {
   margin-top: 10vh;
 }
 
-img {
+.header-cadastro img {
   height: 350px;
   width: 350px;
   position: absolute;
+  margin-top: 9.5vh;
 }
 h2 {
   font-size: 40px;

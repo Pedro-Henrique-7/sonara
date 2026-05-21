@@ -159,7 +159,7 @@ html,
 .card {
   position: relative;
   width: 80%;
-  min-height: 370px;
+  height: 100%;
   border-radius: 24px;
   overflow: hidden;
   border: 2px solid rgba(136, 44, 16, 0.7);
@@ -184,7 +184,6 @@ html,
 
 .card img {
   width: 100%;
-  /* CORRIGIDO: era height: 200% — imagem crescia infinitamente */
   height: 180px;
   object-fit: cover;
   display: block;
@@ -228,9 +227,18 @@ html,
   width: fit-content;
 }
 
-.badge-pendente   { background: #f5a623; color: #000; }
-.badge-confirmado { background: #2ecc71; color: #000; }
-.badge-cancelado  { background: #e74c3c; color: #fff; }
+.badge-pendente {
+  background: #f5a623;
+  color: #000;
+}
+.badge-confirmado {
+  background: #2ecc71;
+  color: #000;
+}
+.badge-cancelado {
+  background: #e74c3c;
+  color: #fff;
+}
 
 /* Slide info */
 .slide-info {
@@ -280,6 +288,7 @@ html,
     box-shadow 0.25s ease;
   z-index: 2;
   box-shadow: 0 10px 25px rgba(244, 81, 30, 0.35);
+  margin-bottom: -1vh;
 }
 
 .card button:hover,
@@ -298,7 +307,9 @@ html,
   font-size: 1rem;
 }
 
-.error-state { color: #e05c5c; }
+.error-state {
+  color: #e05c5c;
+}
 
 /* Sem resultados */
 .sem-resultados {
