@@ -7,6 +7,7 @@ import { buscarCep, buscarLatLong } from "../services/enderecoService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
 import { buscarGeneroMusical } from "../services/generoMusicalService";
+import { buscarTiposRedesSociais, cadastrarRedeSocial } from "../services/redeSocialService";
 
 function Cadastro() {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ function Cadastro() {
   const [generos, setGeneros] = useState([]);
   const [nacionalidades, setNacionalidades] = useState([]);
   const [generosMusical, setGenerosMusical] = useState([]);
+  const [tiposRedesSociais, setTiposRedesSociais] = useState([]);
+  const [redesSociais, setRedesSociais] = useState([]); // [{ tipo_id: "", link: "" }]
 
   const [form, setForm] = useState({
     nome: "",
@@ -56,6 +59,10 @@ function Cadastro() {
     buscarGeneroMusical()
       .then((data) => setGenerosMusical(data.response.GeneroMusical ?? []))
       .catch(() => setErro("Erro ao carregar Gêneros Musicais."));
+
+    buscarTiposRedesSociais()
+      .then((data) => setTiposRedesSociais(data.response.TipoRedesSociais ?? []))
+      .catch(() => setErro("Erro ao carregar tipos de redes sociais."));
   }, []);
 
   function handleChange(e) {
@@ -77,6 +84,22 @@ function Cadastro() {
     setForm((prev) => ({ ...prev, generos_musicais: selecionados }));
   }
 
+  // ── Redes Sociais ──────────────────────────────────────────────
+  function adicionarRedeSocial() {
+    setRedesSociais((prev) => [...prev, { tipo_id: "", link: "" }]);
+  }
+
+  function handleRedeSocialChange(index, field, value) {
+    setRedesSociais((prev) =>
+      prev.map((rs, i) => (i === index ? { ...rs, [field]: value } : rs))
+    );
+  }
+
+  function removerRedeSocial(index) {
+    setRedesSociais((prev) => prev.filter((_, i) => i !== index));
+  }
+  // ──────────────────────────────────────────────────────────────
+
   async function handleCepBlur() {
     const cepLimpo = form.cep.replace(/\D/g, "");
     if (cepLimpo.length !== 8) return;
@@ -84,7 +107,6 @@ function Cadastro() {
     try {
       setBuscandoCep(true);
       const dados = await buscarCep(cepLimpo);
-      console.log("dados cep: " + dados);
       if (dados.erro) {
         setErro("CEP não encontrado.");
         return;
@@ -126,9 +148,15 @@ function Cadastro() {
       setErro("A senha deve ter pelo menos 8 caracteres.");
       return;
     }
-
     if (form.tipo_usuario === "artista" && form.generos_musicais.length === 0) {
       setErro("Selecione pelo menos um gênero musical.");
+      return;
+    }
+
+    // Valida redes sociais: se adicionou uma linha, tipo e link são obrigatórios
+    const redesInvalidas = redesSociais.some((rs) => !rs.tipo_id || !rs.link);
+    if (redesInvalidas) {
+      setErro("Preencha a plataforma e o link de todas as redes sociais adicionadas.");
       return;
     }
 
@@ -163,6 +191,27 @@ function Cadastro() {
         setErro(respostaUsuario.message || "Erro ao cadastrar usuário.");
         return;
       }
+
+      // ── Cadastra redes sociais vinculadas ao usuário recém-criado ──
+      const usuarioId = respostaUsuario.response?.id_usuario;
+
+      if (usuarioId && redesSociais.length > 0) {
+        const cadastros = redesSociais.map((rs) =>
+          cadastrarRedeSocial({
+            link: rs.link,
+            tipo_id: Number(rs.tipo_id),
+            usuario_id: usuarioId,
+          })
+        );
+
+        const resultados = await Promise.allSettled(cadastros);
+        const algumErro = resultados.some((r) => r.status === "rejected");
+        if (algumErro) {
+          // Usuário foi criado, mas alguma rede social falhou — avisa sem bloquear
+          console.warn("Uma ou mais redes sociais não foram cadastradas.");
+        }
+      }
+      // ──────────────────────────────────────────────────────────────
 
       setSucesso(true);
       setTimeout(() => navigate("/login"), 2000);
@@ -317,6 +366,58 @@ function Cadastro() {
             </div>
           </section>
 
+
+          {/* REDES SOCIAIS */}
+          <section className="secao-dados">
+            <h3>
+              Redes Sociais{" "}
+              <span style={{ fontSize: "0.85rem", fontWeight: "normal" }}>(opcional)</span>
+            </h3>
+
+            {redesSociais.map((rs, index) => (
+              <div className="grupo-duplo" key={index}>
+                <div className="campo">
+                  <label>Plataforma</label>
+                  <select
+                    value={rs.tipo_id}
+                    onChange={(e) => handleRedeSocialChange(index, "tipo_id", e.target.value)}
+                  >
+                    <option value="">Selecione...</option>
+                    {tiposRedesSociais.map((tipo) => (
+                      <option key={tipo.id_tipo_redes_sociais} value={tipo.id_tipo_redes_sociais}>
+                        {tipo.nome}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="campo">
+                  <label>Link</label>
+                  <input
+                    type="url"
+                    placeholder="https://..."
+                    value={rs.link}
+                    onChange={(e) => handleRedeSocialChange(index, "link", e.target.value)}
+                  />
+                </div>
+
+                <div className="campo" style={{ display: "flex", alignItems: "flex-end" }}>
+                  <button
+                    type="button"
+                    className="btn-secundario"
+                    onClick={() => removerRedeSocial(index)}
+                  >
+                    Remover
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button type="button" className="btn-secundario" onClick={adicionarRedeSocial}>
+              + Adicionar rede social
+            </button>
+          </section>
+
           {/* ENDEREÇO */}
           <section className="secao-endereco">
             <h3>Endereço</h3>
@@ -367,6 +468,8 @@ function Cadastro() {
               </div>
             </div>
           </section>
+
+
 
           {erro && <p className="mensagem-erro">{erro}</p>}
           {sucesso && <p className="mensagem-sucesso">Cadastro realizado! Redirecionando...</p>}
