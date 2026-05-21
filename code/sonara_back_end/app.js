@@ -63,6 +63,10 @@ const evento = require('./routes/evento')
 const recuperacao = require('./routes/recuperacao_senha')
 
 
+
+
+
+
 const avaliacaoArtista = require('./routes/avaliacao_artista')
 
 const avaliacaoEvento = require('./routes/avaliacao_evento')
@@ -84,6 +88,12 @@ const eventoArtistaStatus = require('./routes/evento_artista_status')
 const enderecoEvento = require("./routes/endereco_evento")
 
 const usuarioPerfil = require('./routes/VEWS/usuario_perfil')
+
+
+
+//views
+const eventosDoOrganizador = require('./routes/VEWS/organizadorEvento')
+
 
 
 //Configuração das rotas
@@ -135,6 +145,8 @@ app.use('/v1/sonara/eventoArtista', artistaEvento)
 app.use('/v1/sonara/eventoArtistaStatus', eventoArtistaStatus)
 
 app.use('/v1/sonara/usuarioPerfil', usuarioPerfil)
+
+app.use('/v1/sonara/eventosDoOrganizador', eventosDoOrganizador)
 
 app.listen(PORT, function(){
   console.log('API aguardando resposta ;)')
