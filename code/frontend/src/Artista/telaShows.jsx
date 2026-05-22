@@ -103,14 +103,12 @@ export default function Shows() {
           </div>
         )}
 
-        
         {erro && (
           <div className="error-state">
             <p>{erro}</p>
           </div>
         )}
 
-        
         {!loading && !erro && busca === "" && sliderEventos.length > 0 && (
           <>
             <h3 className="titulo">Eventos Próximos</h3>
@@ -135,7 +133,9 @@ export default function Shows() {
                       </span>
                     </div>
                     <div className="btn-slide">
-                      <button onClick={() => navigate(`/sobreEvento/${ev.id_evento}`)}>
+                      <button
+                        onClick={() => navigate(`/sobreEvento/${ev.id_evento}`)}
+                      >
                         Ver Mais
                       </button>
                     </div>
@@ -143,7 +143,6 @@ export default function Shows() {
                 ))}
               </div>
 
-              
               <div className="slider-dots">
                 {sliderEventos.map((_, i) => (
                   <span
@@ -157,7 +156,6 @@ export default function Shows() {
           </>
         )}
 
-   
         {!loading && !erro && (
           <>
             <h3 className="titulo">
@@ -199,16 +197,8 @@ export default function Shows() {
                         <p className="card-detalhe">
                           <Clock size={13} />
                           {formatarHora(ev.hora_inicio)}
-                          {ev.hora_fim
-                            ? ` – ${formatarHora(ev.hora_fim)}`
-                            : ""}
+                          {ev.hora_fim ? ` – ${formatarHora(ev.hora_fim)}` : ""}
                         </p>
-                      )}
-
-                      {ev.status_atual && (
-                        <span className={`badge badge-${ev.status_atual.toLowerCase()}`}>
-                          {ev.status_atual}
-                        </span>
                       )}
                     </div>
 

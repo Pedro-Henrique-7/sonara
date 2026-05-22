@@ -213,14 +213,14 @@ export default function MarcarEvento() {
               )}
             </div>
 
-            {previews.length > 0 && (
+            {previews.length > 1 && (
               <div className="miniaturas">
-                {previews.slice(0, 4).map((item, i) => (
+                {previews.slice(1, 5).map((item, i) => (
                   <img key={i} src={item.url} alt={`miniatura-${i}`} />
                 ))}
 
-                {previews.length > 4 && (
-                  <div className="mais-fotos">+{previews.length - 4}</div>
+                {previews.length > 5 && (
+                  <div className="mais-fotos">+{previews.length - 5}</div>
                 )}
               </div>
             )}

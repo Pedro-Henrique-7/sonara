@@ -1,7 +1,7 @@
 .header {
   width: 100%;
   margin-top: 0;
-  margin-left: 30vh;
+  margin-left: 40vh;
 }
 
 .avatar p {
@@ -65,7 +65,7 @@
   display: block;
   font-size: 1.5rem;
   font-weight: bold;
-  width: 200px;
+  width: 100%;
 }
 
 .user-role {
