@@ -296,6 +296,7 @@ const atualizarUsuario = async function (usuario, id, arquivo) {
 
        
         let resultUsuario = await usuarioDAO.setUpdateUsers(dadosUsuario)
+        console.log(resultUsuario)
         
         if (!resultUsuario) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
 

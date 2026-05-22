@@ -127,8 +127,7 @@ const setInsertUsers = async function (usuario) {
         );`
 
         let result = await knexDatabase.raw(sql)
-        return !!result
-
+        console.log(result)
     } catch (error) {
         console.log(error)
         return false
@@ -155,7 +154,7 @@ const setUpdateUsers = async function (usuario) {
 
     } catch (error) {
        
-        return false
+        console.log(error)
     }
 }
 
