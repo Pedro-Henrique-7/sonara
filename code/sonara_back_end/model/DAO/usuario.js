@@ -138,37 +138,24 @@ const setInsertUsers = async function (usuario) {
 const setUpdateUsers = async function (usuario) {
     try {
 
-        const sql = `
-            UPDATE tb_usuario SET
-                nome = ?,
-                email = ?,
-                senha = ?,
-                telefone = ?,
-                cpf = ?,
-                data_nasc = ?,
-                nacionalidade_id = ?,
-                genero_id = ?
-            WHERE id_usuario = ?
-        `
-
-        const params = [
-            usuario.nome,
-            usuario.email,
-            usuario.senha,
-            usuario.telefone,
-            usuario.cpf,
-            usuario.data_nasc,
-            usuario.nacionalidade_id,
-            usuario.genero_id,
-            usuario.id_usuario
-        ]
-
-        const [result] = await knexDatabase.raw(sql, params)
+      const sql = `
+    UPDATE tb_usuario SET
+        nome = '${usuario.nome}',
+        email = '${usuario.email}',
+        senha = '${usuario.senha}',
+        telefone = '${usuario.telefone}',
+        cpf = '${usuario.cpf}',
+        data_nasc = '${usuario.data_nasc}',
+        nacionalidade_id = ${usuario.nacionalidade_id},
+        genero_id = ${usuario.genero_id}
+    WHERE id_usuario = ${usuario.id_usuario}
+`
+        const [result] = await knexDatabase.raw(sql)
 
         return result.affectedRows > 0
 
     } catch (error) {
-        console.log(error)
+       
         return false
     }
 }

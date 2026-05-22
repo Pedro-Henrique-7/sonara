@@ -134,10 +134,10 @@ const setUpdateAddress = async function(endereco){
     logradouro = "${endereco.logradouro}",
     numero = ${endereco.numero},
     complemento = "${endereco.complemento}",
-    bairro      =  "${endereco.bairro}"
+    bairro      =  "${endereco.bairro}",
     usuario_id     = ${endereco.usuario_id}
 where id_endereco = ${endereco.id_endereco}`
-
+console.log(sql)
         let result = await knexDatabase.raw(sql)
 
         if(result)
@@ -146,7 +146,7 @@ where id_endereco = ${endereco.id_endereco}`
             return false
 
     } catch (error) {
-       
+       return false
     }
 }
 

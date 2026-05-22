@@ -7,6 +7,7 @@
 
 const knex = require('knex');
 const knexConfig = require('../database_conf/knex');
+const e = require('express');
 
 const knexDatabase = knex(knexConfig.development);
 
@@ -80,10 +81,9 @@ INSERT INTO tb_evento_artista_status (
 ) VALUES (
   ${evento_artista_status.evento_artista_id},
   ${evento_artista_status.status_id},
-  ${evento_artista_status.data_hora ? `'${evento_foto.data_hora}'` : null}
+  ${evento_artista_status.data_hora ? `'${evento_artista_status.data_hora }'` : null}
 )`
 
- 
 
         let result = await knexDatabase.raw(sql)
 
@@ -93,7 +93,7 @@ INSERT INTO tb_evento_artista_status (
             return false
 
     } catch (error) {
-        return false
+       return false
     }
 }
 

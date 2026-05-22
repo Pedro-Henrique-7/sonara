@@ -120,7 +120,6 @@ const buscarUsuarioEmail = async function (email) {
     }
 }
 
-// arquivo é o objeto do multer (req.file) ou null se não enviado
 const inserirUsuario = async function (usuario, arquivo) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
@@ -259,16 +258,40 @@ const loginUsuario = async function (usuario) {
     }
 }
 
+
+const loginUsuario = async function (usuario) {
+    let MESSAGE = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        const user = await usuarioDAO.getUsuarioByUsuarioEmail(usuario.email)
+        if (!user) return MESSAGE.ERROR_LOGIN
+
+        const senhaVerificada = crypto.verifyPassword(usuario.senha, user.senha)
+
+        if (senhaVerificada) {
+            MESSAGE.HEADER.status           = MESSAGE.SUCCESS_REQUEST.status
+            MESSAGE.HEADER.status_code      = MESSAGE.SUCCESS_REQUEST.status_code
+            MESSAGE.HEADER.response.usuario = user
+            return MESSAGE.HEADER
+        } else {
+            return MESSAGE.ERROR_LOGIN
+        }
+
+    } catch (error) {
+        console.log(error)
+        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
 const atualizarUsuario = async function (usuario, id, arquivo) {
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-
-    
         usuario.id_usuario = Number(id)
 
         let validarID = await buscarUsuarioId(usuario.id_usuario)
+       
         if (validarID.status_code !== 200) return validarID
 
         // ===== FOTO (opcional) =====
@@ -299,6 +322,7 @@ const atualizarUsuario = async function (usuario, id, arquivo) {
 
        
         let resultUsuario = await usuarioDAO.setUpdateUsers(dadosUsuario)
+        
         if (!resultUsuario) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
 
         // ===== TIPO DE USUÁRIO =====
@@ -315,7 +339,7 @@ const atualizarUsuario = async function (usuario, id, arquivo) {
             if (!artistaBanco) {
                 let artista = {
                     nome_artistico: usuario.nome_artistico,
-                    usuario_id: usuario.id_usuario,
+                    id_usuario: usuario.id_usuario,
                     descricao: usuario.descricao,
                 }
 
@@ -325,7 +349,7 @@ const atualizarUsuario = async function (usuario, id, arquivo) {
                 let artista = {
                     nome_artistico: usuario.nome_artistico,
                     descricao: usuario.descricao,
-                    usuario_id: usuario.id_usuario,
+                    id_usuario: usuario.id_usuario,
                     id_artista: artistaBanco.id_artista
                 }
 
@@ -347,7 +371,7 @@ const atualizarUsuario = async function (usuario, id, arquivo) {
             let organizadorBanco = await organizadorDAO.getSelectByUsuarioId(usuario.id_usuario)
 
             if (!organizadorBanco) {
-                await organizadorDAO.setInsertOrganizer({ usuario_id: usuario.id_usuario })
+                await organizadorDAO.setInsertOrganizer({ id_usuario: usuario.id_usuario })
             }
         }
 
@@ -360,7 +384,7 @@ const atualizarUsuario = async function (usuario, id, arquivo) {
             numero: usuario.numero,
             complemento: usuario.complemento,
             bairro: usuario.bairro,
-            usuario_id: usuario.id_usuario
+            id_usuario: usuario.id_usuario
         }
 
         await enderecoDAO.setUpdateAddress(enderecoUsuario)

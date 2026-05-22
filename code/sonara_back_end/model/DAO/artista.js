@@ -91,7 +91,7 @@ const setInsertArtist = async function(artista){
     try {
   let sql = `insert into tb_artista (
     nome_artistico  ,
-    usuario_id,
+    usaurio_id,
     descricao
 ) values (
     "${artista.nome_artistico}",
