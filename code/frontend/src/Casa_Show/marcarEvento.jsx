@@ -79,17 +79,19 @@ export default function MarcarEvento() {
   // ─── Seleção de fotos — atualiza a galeria imediatamente ───────────────────
   function handleSelecionarFotos(e) {
     const arquivos = Array.from(e.target.files);
+
     if (!arquivos.length) return;
 
     const novas = arquivos.map((file) => ({
+      id: crypto.randomUUID(),
       file,
       url: URL.createObjectURL(file),
       status: "pendente",
       erro: null,
     }));
 
-    // Remove as imagens estáticas na primeira seleção; acumula nas próximas
     setPreviews((prev) => [...prev, ...novas]);
+
     e.target.value = "";
   }
 
@@ -213,18 +215,6 @@ export default function MarcarEvento() {
               )}
             </div>
 
-            {previews.length > 1 && (
-              <div className="miniaturas">
-                {previews.slice(1, 5).map((item, i) => (
-                  <img key={i} src={item.url} alt={`miniatura-${i}`} />
-                ))}
-
-                {previews.length > 5 && (
-                  <div className="mais-fotos">+{previews.length - 5}</div>
-                )}
-              </div>
-            )}
-
             <input
               ref={inputFotoRef}
               type="file"
@@ -287,8 +277,6 @@ export default function MarcarEvento() {
 
           {/* FORMULÁRIO */}
           <form className="formulario" onSubmit={handleSubmit}>
-            {erro && <p className="msg-erro">{erro}</p>}
-
             <label>nome do evento:</label>
             <input
               type="text"
@@ -453,6 +441,7 @@ export default function MarcarEvento() {
                 </div>
               </div>
             </div>
+            {erro && <p className="msg-erro">{erro}</p>}
             {sucesso && (
               <p className="msg-sucesso">Evento marcado com sucesso!</p>
             )}
