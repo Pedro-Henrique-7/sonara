@@ -233,32 +233,6 @@ const inserirUsuario = async function (usuario, arquivo) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-
-const loginUsuario = async function (usuario) {
-    let MESSAGE = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
-    try {
-        const user = await usuarioDAO.getUsuarioByUsuarioEmail(usuario.email)
-        if (!user) return MESSAGE.ERROR_LOGIN
-
-        const senhaVerificada = crypto.verifyPassword(usuario.senha, user.senha)
-
-        if (senhaVerificada) {
-            MESSAGE.HEADER.status           = MESSAGE.SUCCESS_REQUEST.status
-            MESSAGE.HEADER.status_code      = MESSAGE.SUCCESS_REQUEST.status_code
-            MESSAGE.HEADER.response.usuario = user
-            return MESSAGE.HEADER
-        } else {
-            return MESSAGE.ERROR_LOGIN
-        }
-
-    } catch (error) {
-        console.log(error)
-        return MESSAGE.ERROR_INTERNAL_SERVER_CONTROLLER
-    }
-}
-
-
 const loginUsuario = async function (usuario) {
     let MESSAGE = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 

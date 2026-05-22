@@ -134,7 +134,6 @@ const setInsertUsers = async function (usuario) {
         return false
     }
 }
-
 const setUpdateUsers = async function (usuario) {
     try {
 
