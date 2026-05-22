@@ -73,11 +73,11 @@ const avaliacaoEvento = require('./routes/avaliacao_evento')
 
 const eventoOrganizador = require('./routes/evento_organizador')
 
-const usuarioFoto = require('./routes/usuario_foto')
+
 
 const eventoStatus = require('./routes/evento_status')
 
-const eventoFoto = require('./routes/evento_foto')
+
 
 const artistaGeneroMusical = require('./routes/artista_genero_musical')
 
@@ -132,11 +132,11 @@ app.use('/v1/sonara/avaliacaoEvento', avaliacaoEvento)
 
 app.use('/v1/sonara/eventoOrganizador', eventoOrganizador)
 
-app.use('/v1/sonara/usuarioFoto', usuarioFoto)
+
 
 app.use('/v1/sonara/eventoStatus', eventoStatus)
 
-app.use('/v1/sonara/eventoFoto', eventoFoto)
+
 
 app.use('/v1/sonara/artistaGeneroMusical', artistaGeneroMusical)
 

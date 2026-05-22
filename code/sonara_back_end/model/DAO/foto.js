@@ -73,7 +73,8 @@ const getSelectLastID = async function(){
 const setInsertPicture = async function(foto){
     try {
         let sql = `insert into tb_foto (foto)
-                    values( "${foto.foto}" )`
+                    values( "${foto.foto}",
+                    "${foto.evento_id}" )`
 
                
         let result = await knexDatabase.raw(sql)
@@ -92,7 +93,8 @@ const setInsertPicture = async function(foto){
 const setUpdatePicture = async function(foto){
     try {
         let sql = `update tb_foto set 
-                        foto               = "${foto.foto}"
+                        foto               = "${foto.foto}",
+                        evento_id          ="${foto.evento_id}"
                         
                     
                     where id_foto = ${foto.id_foto}`

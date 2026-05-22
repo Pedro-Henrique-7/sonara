@@ -215,7 +215,7 @@ const excluirFoto = async function(id){
 }
 
 
-const validarDadosFoto = async (Foto, file) => {
+const validarDadosFoto = async (foto, file) => {
 
     if (!file) {
         return {
@@ -224,7 +224,13 @@ const validarDadosFoto = async (Foto, file) => {
             message: "Arquivo da foto não enviado."
         }
     }
-
+    if((!isNaN(foto.id_evento) && foto.id_evento != '' && foto.id_evento != null && foto.id_evento > 0)){
+        return {
+            status: false,
+            status_code: 400,
+            message: "Arquivo da foto não enviado."
+        }
+    }
     return false
 }
 
