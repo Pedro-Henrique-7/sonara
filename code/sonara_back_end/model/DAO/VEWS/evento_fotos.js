@@ -47,7 +47,7 @@ const getSelectAllEventPhoto = async function(){
 
 const getSelectViewEventOrganizer = async function(id){
     try {
-        let sql = `SELECT * from vw_evento where id_organizador = ${id}`
+        let sql = `SELECT * from vw_evento where organizador_id = ${id}`
         let result = await knexDatabase.raw(sql)
 
         if(Array.isArray(result[0]))
