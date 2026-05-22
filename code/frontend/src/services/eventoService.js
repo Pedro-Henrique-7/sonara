@@ -4,7 +4,7 @@ export async function buscarEventos() {
   const response = await fetch(URL_BASE);
   if (response.ok) {
     const json = await response.json();
-    console.log(json);
+
     return json;
   }
   throw new Error("Erro ao buscar Eventos");
@@ -14,7 +14,7 @@ export async function buscarEventosPorId(id) {
   const response = await fetch(`${URL_BASE}/${id}`);
   const json = await response.json();
   if (response.ok) {
-    console.log(json);
+
     return json;
   }
   throw new Error(json.message ?? "Erro ao buscar Eventos");
@@ -30,7 +30,6 @@ export async function cadastrarEvento(dadosEvento) {
   });
  
   const json = await response.json();
-  console.log(json);
  
   if (response.ok) {
     return json;
@@ -38,5 +37,4 @@ export async function cadastrarEvento(dadosEvento) {
  
   throw new Error(json.message ?? "Erro ao cadastrar evento");
 }
-
 

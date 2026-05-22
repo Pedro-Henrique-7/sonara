@@ -295,6 +295,38 @@
   transform: scale(0.98);
 }
 
+.pa-generos-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.pa-genero-tag {
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  border: 1.5px solid #555;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pa-genero-tag:hover {
+  border-color: #a78bfa;
+  color: #a78bfa;
+}
+
+.pa-genero-tag--ativo {
+  background: #a78bfa;
+  border-color: #a78bfa;
+  color: #fff;
+  font-weight: 600;
+}
+
+
+
 /* ---------- RESPONSIVIDADE PERFEITA ---------- */
 @media (max-width: 900px) {
   .pa-central {

@@ -9,7 +9,8 @@ import {
 } from "../services/usuarioService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
-import { buscarEventos } from "../services/eventoService";
+
+import { buscarGeneroMusical } from "../services/generoMusicalService";
 import Header from "./header";
 import FooterSonara from "./footer";
 
@@ -26,10 +27,13 @@ export default function PerfilArtista() {
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState("");
   const [generos, setGeneros] = useState([]);
+  const [generoMusical, setGenerosMusicais] = useState([]);
   const [nacionalidades, setNacionalidades] = useState([]);
   const [meusEventos, setMeusEventos] = useState([]);
   const [idUsuario, setIdUsuario] = useState(null);
   const [tipoUsuario, setTipoUsuario] = useState("");
+  const [dropdownAberto, setDropdownAberto] = useState(false);
+  const dropdownRef = useRef(null);
 
   const [form, setForm] = useState({
     nome: "",
@@ -39,7 +43,6 @@ export default function PerfilArtista() {
     nacionalidade_id: "",
     genero_id: "",
     cpf: "",
-    // endereço
     cep: "",
     logradouro: "",
     numero: "",
@@ -47,10 +50,21 @@ export default function PerfilArtista() {
     bairro: "",
     cidade: "",
     estado: "",
-    // campos artista
     nome_artistico: "",
     descricao: "",
+    generos_musicais: [],
   });
+
+  // Fecha dropdown ao clicar fora
+  useEffect(() => {
+    function handleClickFora(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownAberto(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickFora);
+    return () => document.removeEventListener("mousedown", handleClickFora);
+  }, []);
 
   useEffect(() => {
     const usuarioSalvo = sessionStorage.getItem("usuario");
@@ -81,6 +95,7 @@ export default function PerfilArtista() {
       estado: u.estado || "",
       nome_artistico: u.nome_artistico || "",
       descricao: u.descricao || "",
+      generos_musicais: u.generos_musicais?.map((g) => g.id_genero_musical) ?? [],
     });
 
     buscarGeneros()
@@ -91,15 +106,9 @@ export default function PerfilArtista() {
       .then((data) => setNacionalidades(data.response.nacionalidades ?? []))
       .catch(() => {});
 
-    // Busca todos os eventos e filtra pelo artista_id do usuário logado
-    buscarEventos()
-      .then((json) => {
-        const todos = json?.response?.eventos ?? [];
-        const meus = todos.filter((ev) =>
-          ev.artistas?.some((a) => a.usuario_id === u.id_usuario),
-        );
-        setMeusEventos(meus);
-      })
+    buscarGeneroMusical()
+      .then((data) => setGenerosMusicais(data.response.GeneroMusical ?? []))
+      .catch(() => {})
       .catch(() => {});
   }, [navigate]);
 
@@ -107,6 +116,20 @@ export default function PerfilArtista() {
     setErro("");
     setSucesso("");
     setForm({ ...form, [e.target.id]: e.target.value });
+  }
+
+  function handleToggleGeneroMusical(id) {
+    setErro("");
+    setSucesso("");
+    setForm((prev) => {
+      const jaSelecionado = prev.generos_musicais.includes(id);
+      return {
+        ...prev,
+        generos_musicais: jaSelecionado
+          ? prev.generos_musicais.filter((gid) => gid !== id)
+          : [...prev.generos_musicais, id],
+      };
+    });
   }
 
   const handleFotoClick = () => inputFileRef.current?.click();
@@ -181,7 +204,6 @@ export default function PerfilArtista() {
       if (resultado.status_code === 200) {
         setSucesso("Dados atualizados com sucesso!");
         sessionStorage.setItem("usuario", JSON.stringify({ ...u, ...payload }));
-        // Dispara evento para o Header atualizar o nome sem reload
         window.dispatchEvent(new Event("usuarioAtualizado"));
       } else {
         setErro(resultado.message || "Erro ao atualizar.");
@@ -242,7 +264,9 @@ export default function PerfilArtista() {
       estado: u.estado || "",
       nome_artistico: u.nome_artistico || "",
       descricao: u.descricao || "",
+      generos_musicais: u.generos_musicais?.map((g) => g.id_genero_musical) ?? [],
     });
+    setDropdownAberto(false);
     setErro("");
     setSucesso("");
   }
@@ -257,6 +281,11 @@ export default function PerfilArtista() {
   }
 
   const isArtista = tipoUsuario?.toLowerCase() === "artista";
+
+  const labelDropdown =
+    form.generos_musicais.length === 0
+      ? "Selecione os gêneros"
+      : `${form.generos_musicais.length} selecionado${form.generos_musicais.length !== 1 ? "s" : ""}`;
 
   return (
     <div className="pa-wrapper">
@@ -539,6 +568,61 @@ export default function PerfilArtista() {
                     placeholder="Descrição / Bio"
                   />
                 </div>
+
+                {/* GÊNEROS MUSICAIS — dropdown com checkboxes */}
+                <div className="pa-generos-section">
+                  <h3 className="pa-card-title">Gêneros Musicais</h3>
+                  <div className="pa-generos-dropdown" ref={dropdownRef}>
+                    {/* Botão que abre/fecha */}
+                    <button
+                      type="button"
+                      className="pa-generos-trigger"
+                      onClick={() => setDropdownAberto((v) => !v)}
+                    >
+                      <span>{labelDropdown}</span>
+                      <svg
+                        className={`pa-generos-arrow ${dropdownAberto ? "pa-generos-arrow--aberto" : ""}`}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <polyline points="6,9 12,15 18,9" />
+                      </svg>
+                    </button>
+
+                    {/* Lista de opções */}
+                    {dropdownAberto && (
+                      <div className="pa-generos-lista">
+                        {generoMusical.length === 0 ? (
+                          <p className="pa-generos-vazio">Carregando...</p>
+                        ) : (
+                          generoMusical.map((g) => {
+                            const selecionado = form.generos_musicais.includes(
+                              g.id_genero_musical,
+                            );
+                            return (
+                              <label
+                                key={g.id_genero_musical}
+                                className="pa-generos-item"
+                              >
+                                <input
+                                  type="checkbox"
+                                  className="pa-generos-cb"
+                                  checked={selecionado}
+                                  onChange={() =>
+                                    handleToggleGeneroMusical(g.id_genero_musical)
+                                  }
+                                />
+                                <span>{g.nome}</span>
+                              </label>
+                            );
+                          })
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </>
             )}
 
@@ -573,7 +657,7 @@ export default function PerfilArtista() {
                   marginLeft: "auto",
                 }}
               >
-                {saindo ? "Saindo" : "Sair"}
+                {saindo ? "Saindo..." : "Sair"}
               </button>
 
               <button
@@ -583,7 +667,6 @@ export default function PerfilArtista() {
                 style={{
                   backgroundColor: "#c0392b",
                   color: "#fff",
-                  marginLeft: "auto",
                 }}
               >
                 {deletando ? "Deletando..." : "Deletar"}

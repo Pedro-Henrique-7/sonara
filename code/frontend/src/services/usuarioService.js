@@ -37,13 +37,15 @@ export async function loginUsuario(email, senha) {
 export async function atualizarUsuario(id, usuario) {
     try {
         const token = sessionStorage.getItem("token");
+        const formData = new FormData();
+        formData.append('dados', JSON.stringify(usuario));
+
         const response = await fetch(`${URL_BASE}/usuario/${id}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(usuario)
+            body: formData
         });
         return response.json();
     } catch {
