@@ -85,7 +85,7 @@ const setInsertArtistReview = async function(artista){
 
 );`
 
-
+console.log(sql)
  
 
         let result = await knexDatabase.raw(sql)

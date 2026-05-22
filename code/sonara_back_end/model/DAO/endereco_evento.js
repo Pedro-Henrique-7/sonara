@@ -128,7 +128,7 @@ const setUpdateAddressEvent = async function(enderco_evento){
     complemento = "${enderco_evento.complemento}",
     bairro      =  "${enderco_evento.bairro}",
     evento_id     = ${enderco_evento.evento_id}
-where id_endereco_evento = ${enderco_evento.id_endereco_evento}`
+where id_endereco_evento = ${enderco_evento.evento_id}`
 
         let result = await knexDatabase.raw(sql)
 

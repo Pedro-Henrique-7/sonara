@@ -90,12 +90,11 @@ const setUpdateEvent = async function(evento){
                         local              = "${evento.local}",
                         data               = "${evento.data}",
                         hora_inicio        = "${evento.hora_inicio}",
-                        hora_fim           = "${evento.hora_fim}",
-                        endereco_id         = ${evento.endereco_id}
+                        hora_fim           = "${evento.hora_fim}"
                         
                     
                     where id_evento = ${evento.id_evento}`
-
+console.log(sql)
         let result = await knexDatabase.raw(sql)
 
         if(result)

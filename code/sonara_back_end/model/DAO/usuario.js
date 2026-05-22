@@ -43,7 +43,8 @@ const getSelectByIdUsers = async function (id) {
 
 const getSelectByIdUsersOrganizer = async function (id) {
     try {
-        let sql = `select * from tb_organizador where usuario_id = ${id}`
+        let sql = `select * from tb_organizador where id_organizador = ${id}`
+   
         let result = await knexDatabase.raw(sql)
 
         if (Array.isArray(result[0]))

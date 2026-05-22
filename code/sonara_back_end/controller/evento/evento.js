@@ -316,7 +316,7 @@ const atualizarEvento = async function (evento, id, contentType) {
         return MESSAGES.HEADER
 
     } catch (error) {
-        console.log(error)
+      
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
