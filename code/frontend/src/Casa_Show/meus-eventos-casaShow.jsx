@@ -52,13 +52,12 @@ export default function ListaMeusEventos() {
   return (
     <div className="meus-eventos-casa-show">
       <HeaderCasaShow />
+      <h2 className="meus-eventos-casa-show__titulo">Meus Eventos</h2>
       <main
         className={`meus-eventos-casa-show__main ${
           visible ? "meus-eventos-casa-show__main--visible" : ""
         }`}
       >
-        <h2 className="meus-eventos-casa-show__titulo">Meus Eventos</h2>
-
         <div
           className="meus-eventos-casa-show__grid"
           onClick={() => navigate("/sobreEventoCasaShow")}

@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import logo from "../img/sonara-logo.svg";
 import "./telaEscolha.css";
 export default function TelaEscolha() {
-
-    useEffect(() => {
-      sessionStorage.clear();
-    }, []);
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
 
   const navigate = useNavigate();
   return (
@@ -23,7 +22,6 @@ export default function TelaEscolha() {
             <button onClick={() => navigate("/shows")}>
               Continuar sem Login
             </button>
-            <button onClick={() => navigate("/casaShow")}>Casa de Show</button>
           </div>
         </div>
       </main>

@@ -18,9 +18,8 @@ export default function TelaContratarArtistas() {
   return (
     <div className="sonaraContratarPagina">
       <HeaderCasaShow />
+      <h1 className="sonaraContratarTitulo">Artistas Próximos</h1>
       <main className="sonaraContratarConteudo">
-        <h1 className="sonaraContratarTitulo">Artistas Próximos</h1>
-
         <div className="sonaraContratarGrid">
           {listaArtistasSonara.map((artista) => (
             <div className="sonaraContratarCard" key={artista.id}>

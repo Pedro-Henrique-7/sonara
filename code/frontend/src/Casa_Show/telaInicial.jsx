@@ -8,9 +8,8 @@ export default function TelaInicial() {
 
   return (
     <div className="home-container">
+      <HeaderCasaShow />
       <main className="main">
-        <HeaderCasaShow />
-
         <section className="painel">
           <div className="painel-titulo">
             <h1>Olá Usuario</h1>
@@ -29,8 +28,6 @@ export default function TelaInicial() {
             <div className="card" onClick={() => navigate("/listaMeusEventos")}>
               Meus Eventos
             </div>
-
-            <div className="card">Suporte</div>
           </div>
         </section>
       </main>

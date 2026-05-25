@@ -62,7 +62,7 @@ export default function Header() {
                 className="user-name"
                 onClick={() => navigate(rotaPerfil())}
               >
-                {usuarioObj?.nome || "Usuário"}
+                {usuarioObj?.nome_artistico || "Usuário"}
               </span>
               <span className="user-role">{tipoUsuario}</span>
             </div>

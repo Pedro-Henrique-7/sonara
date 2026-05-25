@@ -53,13 +53,12 @@ export default function ListaEventos() {
   return (
     <div className="lista-eventos-page">
       <Header />
+      <h2 className="lista-eventos-titulo">Meus Eventos</h2>
       <main
         className={`lista-eventos-main ${
           visible ? "lista-eventos-main--visible" : ""
         }`}
       >
-        <h2 className="lista-eventos-titulo">Meus Eventos</h2>
-
         <div className="lista-eventos-grid">
           {eventos.map((evento, index) => (
             <div
