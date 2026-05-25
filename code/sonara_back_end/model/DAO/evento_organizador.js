@@ -45,6 +45,29 @@ const getSelectByIdOrganizerEvent = async function(id){
 }
 
 
+const getSelectViewEventOrganizer = async function(id){
+    try {
+        let sql = `
+            SELECT * FROM vw_evento 
+            WHERE id_evento IN (
+                SELECT evento_id FROM tb_evento_organizador eo
+                INNER JOIN tb_organizador org ON org.id_organizador = eo.organizador_id
+                WHERE org.usuario_id = ${id}
+            )
+        `
+        let result = await knexDatabase.raw(sql)
+
+        if(Array.isArray(result[0]))
+            return result[0]
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+
+
 const getSelectOrganizerEventByIdEvent = async function (id) {
     try {
         let sql = `select * from tb_evento_organizador where evento_id=${id}`

@@ -112,11 +112,9 @@ export default function MarcarEvento() {
     setEnviando(true);
 
     try {
-      // 1️⃣  Cria o evento
       const json = await cadastrarEvento({ ...form, organizador_id });
       const idCriado = json?.response?.evento?.id_evento ?? null;
 
-      // 2️⃣  Envia as fotos pendentes logo após criar o evento
       const pendentes = previews.filter((p) => p.status === "pendente");
 
       if (idCriado && pendentes.length > 0) {
@@ -137,7 +135,7 @@ export default function MarcarEvento() {
             formData.append("foto", snapshotPreviews[i].file);
             formData.append("evento_id", String(idCriado));
 
-            const res = await fetch(`${API_URL}/eventoFoto`, {
+            const res = await fetch(`${API_URL}/foto`, {
               method: "POST",
               body: formData,
             });

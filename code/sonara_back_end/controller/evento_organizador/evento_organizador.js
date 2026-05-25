@@ -52,7 +52,7 @@ const buscarEventoOrganizadorId = async function(id){
                 if(resulteventoOrganizador.length > 0){
                     MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.HEADER.response.eventoOrganizador = resulteventoOrganizador[0]
+                    MESSAGES.HEADER.response.eventoOrganizador = resulteventoOrganizador
 
                     return MESSAGES.HEADER //200
                 }else{

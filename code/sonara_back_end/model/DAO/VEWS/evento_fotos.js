@@ -47,7 +47,15 @@ const getSelectAllEventPhoto = async function(){
 
 const getSelectViewEventOrganizer = async function(id){
     try {
-        let sql = `SELECT * from vw_evento where organizador_id = ${id}`
+        // id aqui é o id_usuario do usuário logado
+        let sql = `
+            SELECT * FROM vw_evento 
+            WHERE id_evento IN (
+                SELECT evento_id FROM tb_evento_organizador eo
+                INNER JOIN tb_organizador org ON org.id_organizador = eo.organizador_id
+                WHERE org.usuario_id = ${id}
+            )
+        `
         let result = await knexDatabase.raw(sql)
 
         if(Array.isArray(result[0]))
@@ -58,7 +66,6 @@ const getSelectViewEventOrganizer = async function(id){
         return false
     }
 }
-
 
 
 module.exports = {
