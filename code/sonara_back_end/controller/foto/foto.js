@@ -241,23 +241,15 @@ const excluirFoto = async function(id){
 
 
 const validarDadosFoto = async (foto, file) => {
-
     if (!file) {
-        return {
-            status: false,
-            status_code: 400,
-            message: "Arquivo da foto não enviado."
-        }
+        return { status: false, status_code: 400, message: "Arquivo da foto não enviado." }
     }
-    if((!isNaN(foto.evento_id) && foto.evento_id != '' && foto.id_evento != null && foto.id_evento > 0)){
-        return {
-            status: false,
-            status_code: 400,
-            message: "Arquivo da foto não enviado."
-        }
+    if (!foto.evento_id || isNaN(foto.evento_id) || Number(foto.evento_id) <= 0) {
+        return { status: false, status_code: 400, message: "evento_id inválido ou não enviado." }
     }
     return false
 }
+
 
 module.exports = {
     listarFotos,

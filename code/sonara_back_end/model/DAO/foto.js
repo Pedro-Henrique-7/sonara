@@ -74,7 +74,7 @@ const setInsertPicture = async function(foto){
     try {
         let sql = `insert into tb_foto (foto, evento_id)
                     values( "${foto.foto}",
-                    "${foto.evento_id}" )`
+                    ${foto.evento_id} )`
 
                
         let result = await knexDatabase.raw(sql)
