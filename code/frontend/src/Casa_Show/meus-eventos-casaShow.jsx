@@ -61,7 +61,6 @@ export default function ListaMeusEventos() {
   return (
     <div className="meus-eventos-casa-show">
       <HeaderCasaShow />
-      <h2 className="meus-eventos-casa-show__titulo">Meus Eventos</h2>
       <main
         className={`meus-eventos-casa-show__main ${
           visible ? "meus-eventos-casa-show__main--visible" : ""
@@ -69,18 +68,54 @@ export default function ListaMeusEventos() {
       >
         <h2 className="meus-eventos-casa-show__titulo">Meus Eventos</h2>
 
-        <div
-          className="meus-eventos-casa-show__grid"
-          onClick={() => navigate("/sobreEventoCasaShow")}
-        >
-          {eventos.map((evento, index) => (
-            <div
-              key={evento.id}
-              className="meus-eventos-casa-show__card"
-              style={{ animationDelay: `${index * 0.1}s` }}
+        {loading && (
+          <p style={{ color: "rgba(255,255,255,0.7)" }}>Carregando eventos...</p>
+        )}
+
+        {erro && (
+          <p style={{ color: "#ffb3a7", marginBottom: "1rem" }}>{erro}</p>
+        )}
+
+        {!loading && !erro && eventos.length === 0 && (
+          <div
+            style={{
+              color: "rgba(255,255,255,0.6)",
+              textAlign: "center",
+              paddingTop: "4rem",
+            }}
+          >
+            <p style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
+              Você ainda não criou nenhum evento.
+            </p>
+            <button
+              onClick={() => navigate("/marcarEvento")}
+              style={{
+                background: "linear-gradient(135deg,#f4511e,#ff7a1a)",
+                border: "none",
+                borderRadius: "999px",
+                color: "#fff",
+                padding: "0.8rem 2rem",
+                fontSize: "0.95rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                width: "auto",
+              }}
             >
-              <div className="meus-eventos-casa-show__img-wrapper">
-                {evento.imagem ? (
+              Criar meu primeiro evento
+            </button>
+          </div>
+        )}
+
+        {!loading && eventos.length > 0 && (
+          <div className="meus-eventos-casa-show__grid">
+            {eventos.map((evento, index) => (
+              <div
+                key={evento.id_evento ?? index}
+                className="meus-eventos-casa-show__card"
+                style={{ animationDelay: `${index * 0.1}s`, cursor: "pointer" }}
+                onClick={() => navigate(`/editarEvento/${evento.id_evento}`)}
+              >
+                <div className="meus-eventos-casa-show__img-wrapper">
                   <img
                     src={obterImagem(evento)}
                     alt={evento.nome ?? evento.evento_nome ?? "Evento"}
@@ -92,11 +127,6 @@ export default function ListaMeusEventos() {
                 <div className="meus-eventos-casa-show__info">
                 <span className="meus-eventos-casa-show__nome">
                 {evento.evento_nome ?? "Sem título"}
-                </span>
-
-                <span className="meus-eventos-casa-show__datetime">
-                  {formatarData(evento.data)}
-                  {evento.hora_inicio ? `  •  ${evento.hora_inicio.slice(0, 5)}` : ""}
                 </span>
 
                   {evento.local && (
