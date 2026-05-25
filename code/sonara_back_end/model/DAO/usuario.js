@@ -1,15 +1,14 @@
 /******************************************************************************
- * Objetivo: DAO de usuário — foto agora é atributo direto de tb_usuario
+ * Objetivo: DAO de usuário — corrigido getSelectByIdUsersOrganizer e logs
  * Data: 19/05/2026
  * Autor: Davi de Alemida Santos
- * Versão: 1.2
+ * Versão: 1.3
 *****************************************************************************/
 
 const knex = require('knex');
 const knexConfig = require('../database_conf/knex');
 
 const knexDatabase = knex(knexConfig.development);
-
 
 const getSelectAllUsers = async function () {
     try {
@@ -20,8 +19,8 @@ const getSelectAllUsers = async function () {
             return result[0]
         else
             return false
-
     } catch (error) {
+        console.error('[DAO usuario] getSelectAllUsers:', error.message)
         return false
     }
 }
@@ -35,24 +34,25 @@ const getSelectByIdUsers = async function (id) {
             return result[0]
         else
             return false
-
     } catch (error) {
+        console.error('[DAO usuario] getSelectByIdUsers:', error.message)
         return false
     }
 }
 
-const getSelectByIdUsersOrganizer = async function (id) {
+// CORRIGIDO: buscava por id_organizador mas a intenção é buscar o organizador
+// pelo id_usuario, pois recebe o usuario_id do usuário logado.
+const getSelectByIdUsersOrganizer = async function (usuario_id) {
     try {
-        let sql = `select * from tb_organizador where id_organizador = ${id}`
-   
+        let sql = `select * from tb_organizador where usuario_id = ${usuario_id}`
         let result = await knexDatabase.raw(sql)
 
         if (Array.isArray(result[0]))
             return result[0]
         else
             return false
-
     } catch (error) {
+        console.error('[DAO usuario] getSelectByIdUsersOrganizer:', error.message)
         return false
     }
 }
@@ -62,10 +62,9 @@ const getSelectLastID = async function () {
         let result = await knexDatabase('tb_usuario')
             .max('id_usuario as id_usuario')
             .first()
-
         return result
     } catch (error) {
-        console.log(error)
+        console.error('[DAO usuario] getSelectLastID:', error.message)
         return false
     }
 }
@@ -82,8 +81,8 @@ const getUsuarioByUsuarioEmail = async function (email) {
             return result[0][0]
         else
             return false
-
     } catch (error) {
+        console.error('[DAO usuario] getUsuarioByUsuarioEmail:', error.message)
         return false
     }
 }
@@ -97,8 +96,8 @@ const getUsuarioByUsuarioCPF = async function (cpf) {
             return result[0][0]
         else
             return false
-
     } catch (error) {
+        console.error('[DAO usuario] getUsuarioByUsuarioCPF:', error.message)
         return false
     }
 }
@@ -127,38 +126,35 @@ const setInsertUsers = async function (usuario) {
         );`
 
         let result = await knexDatabase.raw(sql)
-        console.log(result)
+        return !!result
     } catch (error) {
-        console.log(error)
+        console.error('[DAO usuario] setInsertUsers:', error.message)
         return false
     }
 }
+
 const setUpdateUsers = async function (usuario) {
     try {
-
-      const sql = `
-    UPDATE tb_usuario SET
-        nome = '${usuario.nome}',
-        email = '${usuario.email}',
-        senha = '${usuario.senha}',
-        telefone = '${usuario.telefone}',
-        cpf = '${usuario.cpf}',
-        data_nasc = '${usuario.data_nasc}',
-        nacionalidade_id = ${usuario.nacionalidade_id},
-        genero_id = ${usuario.genero_id}
-    WHERE id_usuario = ${usuario.id_usuario}
-`
+        const sql = `
+            UPDATE tb_usuario SET
+                nome = '${usuario.nome}',
+                email = '${usuario.email}',
+                senha = '${usuario.senha}',
+                telefone = '${usuario.telefone}',
+                cpf = '${usuario.cpf}',
+                data_nasc = '${usuario.data_nasc}',
+                nacionalidade_id = ${usuario.nacionalidade_id},
+                genero_id = ${usuario.genero_id}
+            WHERE id_usuario = ${usuario.id_usuario}
+        `
         const [result] = await knexDatabase.raw(sql)
-
         return result.affectedRows > 0
-
     } catch (error) {
-       
-        console.log(error)
+        console.error('[DAO usuario] setUpdateUsers:', error.message)
+        return false
     }
 }
 
-// Atualiza apenas o campo foto da tb_usuario
 const setUpdateFotoUsuario = async function (id_usuario, url_foto) {
     try {
         let sql = `update tb_usuario set foto = '${url_foto}' where id_usuario = ${id_usuario}`
@@ -168,9 +164,8 @@ const setUpdateFotoUsuario = async function (id_usuario, url_foto) {
             return true
         else
             return false
-
     } catch (error) {
-        console.log(error)
+        console.error('[DAO usuario] setUpdateFotoUsuario:', error.message)
         return false
     }
 }
@@ -184,12 +179,11 @@ const setDeleteUsers = async function (id) {
             return result
         else
             return false
-
     } catch (error) {
+        console.error('[DAO usuario] setDeleteUsers:', error.message)
         return false
     }
 }
-
 
 module.exports = {
     getSelectAllUsers,
