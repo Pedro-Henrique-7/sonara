@@ -82,7 +82,11 @@ const inserirFoto = async function(Foto, file){
 
     try {
 
+        //FORÇA o evento_id chegar corretamente
+        Foto.evento_id = Number(Foto.evento_id)
+
         let validar = await validarDadosFoto(Foto, file)
+        
         if(validar)
             return validar
 
@@ -95,10 +99,10 @@ const inserirFoto = async function(Foto, file){
             return MESSAGES.HEADER
         }
 
-       
         Foto.foto = urlFotoAzure
 
-       
+        console.log(Foto)
+
         let resultFotos = await FotoDAO.setInsertPicture(Foto)
 
         if(resultFotos){
@@ -106,6 +110,7 @@ const inserirFoto = async function(Foto, file){
             let lastID = await FotoDAO.getSelectLastID()
 
             if(lastID){
+
                 Foto.id = lastID
 
                 MESSAGES.HEADER.status      = MESSAGES.SUCCESS_CREATED_ITEM.status
@@ -114,6 +119,7 @@ const inserirFoto = async function(Foto, file){
                 MESSAGES.HEADER.response    = Foto
 
                 return MESSAGES.HEADER
+
             }else{
                 return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
             }
@@ -123,7 +129,9 @@ const inserirFoto = async function(Foto, file){
         }
 
     } catch (error) {
+
        console.log(error)
+       return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -134,14 +142,21 @@ const atualizarFoto = async function(Foto, file, id){
 
     try {
 
+        //Força os IDs como number
+        Foto.evento_id = Number(Foto.evento_id)
+        Foto.id_foto = Number(id)
+
         if (!file) {
+
             MESSAGES.HEADER.status = false
             MESSAGES.HEADER.status_code = 400
             MESSAGES.HEADER.message = "Arquivo da foto não enviado."
+
             return MESSAGES.HEADER
         }
 
         let validarID = await buscarFotoId(id)
+
         if(validarID.status_code != 200){
             return validarID
         }
@@ -149,28 +164,38 @@ const atualizarFoto = async function(Foto, file, id){
         let urlFotoAzure = await uploadFiles(file)
 
         if(!urlFotoAzure){
+
             MESSAGES.HEADER.status = false
             MESSAGES.HEADER.status_code = 502
             MESSAGES.HEADER.message = "Erro ao enviar imagem para o Azure Storage."
+
             return MESSAGES.HEADER
         }
 
+        //Salva nova URL
         Foto.foto = urlFotoAzure
-        Foto.id_foto = Number(id)
+
+        console.log(Foto)
 
         let result = await FotoDAO.setUpdatePicture(Foto)
 
         if(result){
+
             MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
             MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
             MESSAGES.HEADER.message     = MESSAGES.SUCCESS_UPDATED_ITEM.message
             MESSAGES.HEADER.response    = Foto
+
             return MESSAGES.HEADER
+
         }else{
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
     } catch (error) {
+
+        console.log(error)
+
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -224,7 +249,7 @@ const validarDadosFoto = async (foto, file) => {
             message: "Arquivo da foto não enviado."
         }
     }
-    if((!isNaN(foto.id_evento) && foto.id_evento != '' && foto.id_evento != null && foto.id_evento > 0)){
+    if((!isNaN(foto.evento_id) && foto.evento_id != '' && foto.id_evento != null && foto.id_evento > 0)){
         return {
             status: false,
             status_code: 400,

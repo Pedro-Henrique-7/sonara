@@ -8,7 +8,7 @@
 ***************************************************************************************/
 
 //Import dos dados de configuração da AZURE
-const AZURE = require('../modulo/conf_azure')
+const AZURE = require('../modulo/conf_azure_upload.js')
 
 //Import da biblioteca para fazer requisições pelo Back-end
 const fetch = require('node-fetch')

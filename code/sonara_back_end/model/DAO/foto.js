@@ -72,7 +72,7 @@ const getSelectLastID = async function(){
 
 const setInsertPicture = async function(foto){
     try {
-        let sql = `insert into tb_foto (foto)
+        let sql = `insert into tb_foto (foto, evento_id)
                     values( "${foto.foto}",
                     "${foto.evento_id}" )`
 

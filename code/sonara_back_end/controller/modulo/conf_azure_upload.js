@@ -1,6 +1,6 @@
-const TOKEN = 'sp=r&st=2026-05-08T16:47:56Z&se=2026-06-23T01:02:56Z&sv=2025-11-05&sr=c&sig=pIF9yslJspyY1u9SUGx6qRuXN6sERE971D6mpAb9sT0%3D'
-const ACCOUNT = 'sonara_adm'// colocar nome uploadFastravel lá na azure 
-const CONTAINER = 'uploadsonara' // colocar nome uploadFastravel lá na azure 
+const TOKEN = 'sv=2026-02-06&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2026-06-25T21:38:12Z&st=2026-05-25T13:23:12Z&spr=https&sig=h%2FB05l53hMkplEEsYJtwp%2FxKCPhiKZgoGqZ5jRkQV30%3D'
+const ACCOUNT = 'uploadsonara'// colocar nome  lá na azure 
+const CONTAINER = 'uploadsonara' // colocar nome  lá na azure 
 
 
 module.exports = {

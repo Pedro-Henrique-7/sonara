@@ -6,7 +6,7 @@
  **********************************************************************************************/
 
 const { BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters, BlobSASPermissions } = require('@azure/storage-blob')
-const azureConfig = require('./conf_azure.js')
+const azureConfig = require('./conf_azure_upload')
 const path = require('path')
 const { v4: uuidv4 } = require('uuid')
 
