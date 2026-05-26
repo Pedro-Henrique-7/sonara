@@ -22,6 +22,9 @@ export default function TelaEscolha() {
             <button onClick={() => navigate("/shows")}>
               Continuar sem Login
             </button>
+            <button onClick={() => navigate("/telaDeUsuario")}>
+              entrar como usuario
+            </button>
           </div>
         </div>
       </main>
