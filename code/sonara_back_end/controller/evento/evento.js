@@ -9,8 +9,10 @@ const eventoDAO = require('../../model/DAO/evento.js')
 const enderecoEventoDAO = require('../../model/DAO/endereco_evento.js')
 const eventoOrganizadorDAO = require('../../model/DAO/evento_organizador.js')
 const usuarioDao = require('../../model/DAO/usuario.js')
-const viewBuscarFotoEventoDAO = require('../../model/DAO/VEWS/evento_fotos.js')
 const DEFAULT_MESSAGES = require('../modulo/conf_message.js')
+const artistaDAO = require("../../model/DAO/artista.js")
+const fotoDAO = require("../../model/DAO/foto.js")
+
 
 
 const listarEvento = async function () {
@@ -25,20 +27,160 @@ const listarEvento = async function () {
 
             for (let itemEvento of resultEvento) {
 
-                let fotosBanco = await viewBuscarFotoEventoDAO.getSelectViewEventPhoto(itemEvento.id_evento)
+                // =====================================================
+                // FOTO
+                // =====================================================
 
                 let fotos = []
 
+                let fotosBanco = await fotoDAO.getSelectByIdEvent(itemEvento.id_evento)
+
                 if (fotosBanco && fotosBanco.length > 0) {
-                    fotos = [
-                        {
-                            id_foto: fotosBanco[0].id_foto,
-                            caminho: fotosBanco[0].url_foto
-                        }
-                    ]
+
+                    for (const foto of fotosBanco) {
+
+                        fotos.push({
+                            id_foto: foto.id_foto,
+                            caminho: foto.foto
+                        })
+
+                    }
+
                 }
 
-                itemEvento.fotos = fotos
+                itemEvento.foto = fotos
+
+                // =====================================================
+                // EVENTO ARTISTAS
+                // =====================================================
+
+                let eventoArtistas = []
+
+                let artistasBanco = await artistaDAO.getSelectByIdEvent(itemEvento.id_evento)
+
+                if (artistasBanco && artistasBanco.length > 0) {
+
+                    for (const artista of artistasBanco) {
+
+                        eventoArtistas.push({
+
+                            id_evento_artista: artista.id_evento_artista,
+
+                            ids: {
+                                artista_id: artista.artista_id,
+                                evento_id: artista.evento_id
+                            },
+
+                            cache: {
+                                esperado: artista.cache_esperado,
+                                ofertado: artista.cache_ofertado,
+                                final: artista.cache_final,
+                                contra_proposta: artista.contra_proposta
+                            },
+
+                            informacoes: {
+                                sobre_artista: artista.sobre_artista,
+                                motivo_inscricao: artista.motivo_inscricao
+                            }
+
+                        })
+
+                    }
+
+                }
+
+                itemEvento.evento_artistas = eventoArtistas
+
+                // =====================================================
+                // ENDEREÇO
+                // =====================================================
+
+                itemEvento.endereco = {
+
+                    cep: itemEvento.cep,
+                    logradouro: itemEvento.logradouro,
+                    numero: itemEvento.numero,
+                    complemento: itemEvento.complemento,
+                    bairro: itemEvento.bairro,
+                    cidade: itemEvento.cidade,
+                    estado: itemEvento.estado,
+                    latitude: itemEvento.latitude,
+                    longitude: itemEvento.longitude
+
+                }
+
+                // =====================================================
+                // ORGANIZADOR
+                // =====================================================
+
+                itemEvento.organizador = {
+
+                    id: itemEvento.organizador_id,
+                    nome: itemEvento.organizador_nome,
+                    email: itemEvento.organizador_email
+
+                }
+
+                // =====================================================
+                // STATUS
+                // =====================================================
+
+                itemEvento.status = {
+
+                    atual: itemEvento.status_atual,
+                    data: itemEvento.data_status
+
+                }
+
+                // =====================================================
+                // AVALIAÇÃO
+                // =====================================================
+
+                itemEvento.avaliacao = {
+
+                    media: itemEvento.media_avaliacao,
+                    total: itemEvento.total_avaliacoes
+
+                }
+
+                // =====================================================
+                // REMOVE CAMPOS SOLTOS
+                // =====================================================
+
+                // endereço
+                delete itemEvento.cep
+                delete itemEvento.logradouro
+                delete itemEvento.numero
+                delete itemEvento.complemento
+                delete itemEvento.bairro
+                delete itemEvento.cidade
+                delete itemEvento.estado
+                delete itemEvento.latitude
+                delete itemEvento.longitude
+
+                // organizador
+                delete itemEvento.organizador_nome
+                delete itemEvento.organizador_email
+
+                // status
+                delete itemEvento.status_atual
+                delete itemEvento.data_status
+
+                // avaliação
+                delete itemEvento.media_avaliacao
+                delete itemEvento.total_avaliacoes
+
+                // artista
+                delete itemEvento.id_evento_artista
+                delete itemEvento.artista_id
+                delete itemEvento.evento_id
+                delete itemEvento.cache_esperado
+                delete itemEvento.cache_ofertado
+                delete itemEvento.cache_final
+                delete itemEvento.contra_proposta
+                delete itemEvento.sobre_artista
+                delete itemEvento.motivo_inscricao
+
             }
 
             MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
@@ -48,13 +190,18 @@ const listarEvento = async function () {
             return MESSAGES.HEADER
 
         } else {
+
             return MESSAGES.ERROR_NOT_FOUND
+
         }
 
     } catch (error) {
+
         console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+
     }
+
 }
 
 const buscarEventoId = async function (id) {
@@ -316,7 +463,7 @@ const atualizarEvento = async function (evento, id, contentType) {
         return MESSAGES.HEADER
 
     } catch (error) {
-      
+
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

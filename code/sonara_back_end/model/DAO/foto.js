@@ -30,6 +30,26 @@ const getSelectAllPicture = async function(){
     }
 }
 
+const getSelectByIdEvent = async function(id){
+    try {
+    
+        let sql = `select * from tb_foto where evento_id=${id}`
+        
+       
+        let result = await knexDatabase.raw(sql)
+
+        if(Array.isArray(result[0]))
+            return result[0]
+        else
+            return false
+
+    } catch (error) {
+      
+        return false
+    }
+}
+
+
 //Retorna um filme filtrando pelo ID do banco de dados
 const getSelectByIdPicture = async function(id){
     try {
@@ -135,6 +155,7 @@ module.exports = {
     getSelectAllPicture,
     getSelectByIdPicture,
     setInsertPicture,
+    getSelectByIdEvent,
     setUpdatePicture,
     getSelectLastID,
     setDeletePicture
