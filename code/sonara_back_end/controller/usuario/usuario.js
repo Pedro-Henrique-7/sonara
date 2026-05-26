@@ -1,9 +1,9 @@
 /******************************************************************************
- * Objetivo: Controller de usuário — tratativas de erro melhoradas
- * Data: 19/05/2026
+ * Objetivo: Controller de usuário — alinhado com vw_usuario_completo
+ * Data: 26/05/2026
  * Autor: Davi de Alemida Santos
- * Versão: 1.4
-*****************************************************************************/
+ * Versão: 3.0
+ *****************************************************************************/
 
 const usuarioDAO              = require('../../model/DAO/usuario.js')
 const crypto                  = require('../modulo/crypto-password.js')
@@ -15,14 +15,79 @@ const { uploadImagemAzure }   = require('../modulo/azure_upload.js')
 
 const DEFAULT_MESSAGES = require('../modulo/conf_message.js')
 
-// ─── Utilitário interno ────────────────────────────────────────────────────────
-const gerarErroValidacao = (campo, mensagem) => ({
-    status: false,
-    status_code: 400,
-    message: mensagem || `Campo obrigatório ausente ou inválido [${campo}]`
-})
+// ─── Formata uma linha da vw_usuario_completo em objeto estruturado ────────────
+// A view retorna redes_sociais e generos_musicais como string JSON (MySQL).
+// Esta função faz o parse e monta o objeto final padronizado.
+const formatarUsuario = function (row) {
 
-// ─── Listar ────────────────────────────────────────────────────────────────────
+    // MySQL retorna JSON_ARRAYAGG como string — faz parse seguro
+    const parsearJSON = (valor) => {
+        if (!valor) return []
+        if (typeof valor === 'object') return valor   // já parseado pelo driver
+        try { return JSON.parse(valor) } catch { return [] }
+    }
+
+    const usuario = {
+        id_usuario:          row.id_usuario,
+        nome:                row.nome,
+        email:               row.email,
+        cpf:                 row.cpf,
+        data_nasc:           row.data_nasc,
+        telefone:            row.telefone,
+        foto:                row.foto,
+        criado:              row.criado,
+        ultima_atualizacao:  row.ultima_atualizacao,
+        tipo_usuario:        row.tipo_usuario,
+
+        genero: {
+            id_genero: row.genero_id,
+            nome:      row.genero_nome
+        },
+
+        nacionalidade: {
+            id_nacionalidade: row.nacionalidade_id,
+            nome:             row.nacionalidade_nome
+        },
+
+        endereco: {
+            id_endereco: row.id_endereco,
+            cep:         row.cep,
+            cidade:      row.cidade,
+            estado:      row.estado,
+            logradouro:  row.logradouro,
+            numero:      row.numero,
+            complemento: row.complemento,
+            bairro:      row.bairro,
+            latitude:    row.latitude,
+            longitude:   row.longitude
+        },
+
+        redes_sociais: parsearJSON(row.redes_sociais)
+    }
+
+    // Dados artísticos — só se for Artista
+    if (row.tipo_usuario === 'Artista') {
+        usuario.artista = {
+            id_artista:           row.id_artista,
+            nome_artistico:       row.nome_artistico,
+            descricao:            row.descricao_artista,
+            generos_musicais:     parsearJSON(row.generos_musicais),
+            media_avaliacao:      row.media_avaliacao_artista,
+            total_avaliacoes:     row.total_avaliacoes_artista
+        }
+    }
+
+    // Dados de organizador — só se for Organizador
+    if (row.tipo_usuario === 'Organizador') {
+        usuario.organizador = {
+            id_organizador: row.id_organizador
+        }
+    }
+
+    return usuario
+}
+
+// ─── Listar todos os usuários ──────────────────────────────────────────────────
 const listarUsuarios = async function () {
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -31,262 +96,274 @@ const listarUsuarios = async function () {
 
         let resultUsuarios = await usuarioDAO.getSelectAllUsers()
 
-        if (resultUsuarios && resultUsuarios.length > 0) {
+        if (resultUsuarios) {
+            if (resultUsuarios.length > 0) {
 
-            const usuariosFormatados = resultUsuarios.map(usuario => ({
+                MESSAGES.HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
+                MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+                MESSAGES.HEADER.response.usuarios = resultUsuarios.map(formatarUsuario)
 
-                id_usuario: usuario.id_usuario,
-                nome: usuario.nome,
-                email: usuario.email,
-                senha: usuario.senha,
-                cpf: usuario.cpf,
-                data_nasc: usuario.data_nasc,
-                criado: usuario.criado,
-                ultima_atualizacao: usuario.ultima_atualizacao,
-                telefone: usuario.telefone,
-                foto: usuario.foto,
+                return MESSAGES.HEADER //200
 
-                genero: {
-                    id_genero: usuario.id_genero,
-                    nome: usuario.genero_nome
-                },
-
-                nacionalidade: {
-                    id_nacionalidade: usuario.id_nacionalidade,
-                    nome: usuario.nacionalidade_nome
-                },
-
-                endereco: {
-                    id_endereco: usuario.id_endereco,
-                    cep: usuario.cep,
-                    cidade: usuario.cidade,
-                    estado: usuario.estado,
-                    logradouro: usuario.logradouro,
-                    numero: usuario.numero,
-                    complemento: usuario.complemento,
-                    bairro: usuario.bairro
-                }
-
-            }))
-
-            MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-            MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-            MESSAGES.HEADER.response.usuarios = usuariosFormatados
-
-            return MESSAGES.HEADER
-
+            } else {
+                return MESSAGES.ERROR_NOT_FOUND //404
+            }
         } else {
-            return MESSAGES.ERROR_NOT_FOUND
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
         }
 
     } catch (error) {
-
         console.error('[Controller usuario] listarUsuarios:', error.message)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
 
-// ─── Buscar por ID ─────────────────────────────────────────────────────────────
+// ─── Buscar usuário por ID ─────────────────────────────────────────────────────
 const buscarUsuarioId = async function (id) {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (!isNaN(id) && id != '' && id != null && id > 0) {
-            let resultusuarios = await usuarioDAO.getSelectByIdUsers(Number(id))
 
-            if (resultusuarios) {
-                if (resultusuarios.length > 0) {
-                    MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+        if (!isNaN(id) && id != '' && id != null && id > 0) {
+
+            let resultUsuario = await usuarioDAO.getSelectByIdUsers(Number(id))
+
+            if (resultUsuario) {
+                if (resultUsuario.length > 0) {
+
+                    MESSAGES.HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.HEADER.response.usuarios = resultusuarios[0]
-                    return MESSAGES.HEADER
+                    MESSAGES.HEADER.response.usuario = formatarUsuario(resultUsuario[0])
+
+                    return MESSAGES.HEADER //200
+
                 } else {
-                    return MESSAGES.ERROR_NOT_FOUND
+                    return MESSAGES.ERROR_NOT_FOUND //404
                 }
             } else {
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
+
         } else {
-            return gerarErroValidacao('id', 'O ID informado é inválido.')
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
+
     } catch (error) {
         console.error('[Controller usuario] buscarUsuarioId:', error.message)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
 
-// ─── Buscar organizador por usuario_id ────────────────────────────────────────
+// ─── Buscar organizador pelo usuario_id ───────────────────────────────────────
 const buscarOrganizadorUsuarioId = async function (id) {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (!isNaN(id) && id != '' && id != null && id > 0) {
-            // CORRIGIDO: passa o usuario_id para o DAO
-            let resultusuarios = await usuarioDAO.getSelectByIdUsersOrganizer(Number(id))
 
-            if (resultusuarios && resultusuarios.length > 0) {
-                MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-                MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                MESSAGES.HEADER.response.usuarios = resultusuarios[0]
-                return MESSAGES.HEADER
+        if (!isNaN(id) && id != '' && id != null && id > 0) {
+
+            let resultOrganizador = await usuarioDAO.getSelectByIdUsersOrganizer(Number(id))
+
+            if (resultOrganizador) {
+                if (resultOrganizador.length > 0) {
+
+                    MESSAGES.HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
+                    MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+                    MESSAGES.HEADER.response.usuario = resultOrganizador[0]
+
+                    return MESSAGES.HEADER //200
+
+                } else {
+                    return MESSAGES.ERROR_NOT_FOUND //404
+                }
             } else {
-                return MESSAGES.ERROR_NOT_FOUND
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
+
         } else {
-            return gerarErroValidacao('id', 'O ID informado é inválido.')
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
+
     } catch (error) {
         console.error('[Controller usuario] buscarOrganizadorUsuarioId:', error.message)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
 
-// ─── Buscar por e-mail ─────────────────────────────────────────────────────────
+// ─── Buscar usuário por e-mail ─────────────────────────────────────────────────
 const buscarUsuarioEmail = async function (email) {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
 
         if (email != '' && email != null && email != undefined) {
 
-            let resultUsuario =
-                await usuarioDAO.getUsuarioByUsuarioEmail(email)
+            let resultUsuario = await usuarioDAO.getUsuarioByUsuarioEmail(email)
 
             if (resultUsuario) {
 
-                MESSAGES.HEADER.status =
-                    MESSAGES.SUCCESS_REQUEST.status
+                MESSAGES.HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
+                MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+                MESSAGES.HEADER.response.usuario = formatarUsuario(resultUsuario)
 
-                MESSAGES.HEADER.status_code =
-                    MESSAGES.SUCCESS_REQUEST.status_code
-
-                // Busca gêneros musicais do artista
-                if (resultUsuario.tipo_usuario == 'Artista') {
-
-                    let artistaBanco =
-                        await artistaDAO.getSelectByIdArtistUser(
-                            resultUsuario.id_usuario
-                        )
-
-                    if (artistaBanco && artistaBanco.id_artista) {
-
-                        let resultArtistaGeneroMusical =
-                            await artistaGeneroMusicalDAO
-                                .getSelectByIdArtistGendersSong(
-                                    artistaBanco.id_artista
-                                )
-
-                        resultUsuario.generos_musicais =
-                            resultArtistaGeneroMusical || []
-                    }
-                }
-
-                MESSAGES.HEADER.response.usuario =
-                    resultUsuario
-
-                return MESSAGES.HEADER
+                return MESSAGES.HEADER //200
 
             } else {
-
-                return MESSAGES.ERROR_NOT_FOUND
+                return MESSAGES.ERROR_NOT_FOUND //404
             }
 
         } else {
-
-            return gerarErroValidacao(
-                'email',
-                'O e-mail informado é inválido.'
-            )
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [E-mail incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
     } catch (error) {
-
-        console.error(
-            '[Controller usuario] buscarUsuarioEmail:',
-            error.message
-        )
-
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+        console.error('[Controller usuario] buscarUsuarioEmail:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
-// ─── Inserir ───────────────────────────────────────────────────────────────────
-const inserirUsuario = async function (usuario, arquivo) {
+
+// ─── Login ─────────────────────────────────────────────────────────────────────
+const loginUsuario = async function (usuario) {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
+
+        if (!usuario.email || !usuario.senha) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [E-mail e senha são obrigatórios]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(usuario.email)) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Formato de e-mail inválido]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+        // Busca senha separadamente (a view completa não expõe a senha)
+        let credenciais = await usuarioDAO.getSenhaByEmail(usuario.email)
+
+        if (!credenciais) {
+            return MESSAGES.ERROR_LOGIN //401 — mensagem genérica
+        }
+
+        let senhaVerificada = false
+        try {
+            senhaVerificada = crypto.verifyPassword(usuario.senha, credenciais.senha)
+        } catch (cryptoErr) {
+            console.error('[Controller usuario] loginUsuario — erro ao verificar senha:', cryptoErr.message)
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+        }
+
+        if (!senhaVerificada) {
+            return MESSAGES.ERROR_LOGIN //401
+        }
+
+        // Senha correta — busca todos os dados pela view completa
+        let resultUsuario = await usuarioDAO.getSelectByIdUsers(credenciais.id_usuario)
+
+        if (!resultUsuario || resultUsuario.length === 0) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+        }
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_REQUEST.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+        MESSAGES.HEADER.response.usuario = formatarUsuario(resultUsuario[0])
+
+        return MESSAGES.HEADER //200
+
+    } catch (error) {
+        console.error('[Controller usuario] loginUsuario:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
+
+// ─── Inserir usuário ───────────────────────────────────────────────────────────
+const inserirUsuario = async function (usuario, arquivo) {
+
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+
         if (!usuario.tipo_usuario) {
-            return gerarErroValidacao('tipo_usuario', 'O campo tipo_usuario é obrigatório. Use: artista, organizador ou user.')
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [tipo_usuario obrigatório: artista, organizador ou user]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
         let validar = await validarDadosUsuario(usuario)
-        if (validar) return validar
+        if (validar) return validar //400
 
-        let criptografiaDeSenha = crypto.hashPassword(usuario.senha)
-
+        // ── Insere o usuário base ──
         let usuarioCriptografado = {
             nome:             usuario.nome,
             email:            usuario.email,
-            senha:            criptografiaDeSenha,
+            senha:            crypto.hashPassword(usuario.senha),
             cpf:              usuario.cpf,
             data_nasc:        usuario.data_nasc,
             nacionalidade_id: usuario.nacionalidade_id,
             genero_id:        usuario.genero_id,
-            telefone:         usuario.telefone,
+            telefone:         usuario.telefone
         }
 
         let resultUsuario = await usuarioDAO.setInsertUsers(usuarioCriptografado)
+
         if (!resultUsuario) {
-            return { status: false, status_code: 500, message: 'Erro ao salvar o usuário no banco de dados. Tente novamente.' }
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
         }
 
         let lastIDUsuario = await usuarioDAO.getSelectLastID()
+
         if (!lastIDUsuario) {
-            return { status: false, status_code: 500, message: 'Usuário criado mas não foi possível recuperar o ID. Contate o suporte.' }
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
         }
 
-        // ===== FOTO (opcional no cadastro) =====
+        // ── Upload de foto (opcional) ──
         if (arquivo) {
             try {
                 let urlFoto = await uploadImagemAzure(arquivo.buffer, arquivo.originalname, arquivo.mimetype)
                 if (urlFoto) {
                     await usuarioDAO.setUpdateFotoUsuario(lastIDUsuario.id_usuario, urlFoto)
-                    usuarioCriptografado.foto = urlFoto
-                } else {
-                    console.warn('[Controller usuario] Upload de foto falhou — usuário cadastrado sem foto.')
                 }
             } catch (fotoErr) {
                 console.warn('[Controller usuario] Erro no upload da foto:', fotoErr.message)
-                // Não aborta o cadastro por falha na foto
             }
         }
 
-        // ===== TIPO DE USUÁRIO =====
+        // ── Perfil por tipo de usuário ──
         let tipoUsuario = usuario.tipo_usuario.toLowerCase().trim()
 
         if (tipoUsuario === 'artista') {
 
             if (!usuario.generos_musicais || !Array.isArray(usuario.generos_musicais) || usuario.generos_musicais.length === 0) {
-                return gerarErroValidacao('generos_musicais', 'Artistas devem informar pelo menos um gênero musical.')
+                MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Artistas devem informar pelo menos um gênero musical]'
+                return MESSAGES.ERROR_REQUIRED_FIELDS //400
             }
 
             if (!usuario.nome_artistico || usuario.nome_artistico.trim() === '') {
-                return gerarErroValidacao('nome_artistico', 'O nome artístico é obrigatório para artistas.')
+                MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [nome_artistico obrigatório para artistas]'
+                return MESSAGES.ERROR_REQUIRED_FIELDS //400
             }
 
-            let artista = {
+            let resultArtista = await artistaDAO.setInsertArtist({
                 nome_artistico: usuario.nome_artistico,
                 usuario_id:     lastIDUsuario.id_usuario,
-                descricao:      usuario.descricao || '',
-            }
+                descricao:      usuario.descricao || ''
+            })
 
-            let resultArtista = await artistaDAO.setInsertArtist(artista)
             if (!resultArtista) {
-                return { status: false, status_code: 500, message: 'Usuário criado, mas houve um erro ao cadastrar o perfil de artista.' }
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
 
             let lastIDArtista = await artistaDAO.getSelectLastID()
+
             if (!lastIDArtista) {
-                return { status: false, status_code: 500, message: 'Erro ao recuperar o ID do artista cadastrado.' }
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
 
             for (let generoId of usuario.generos_musicais) {
@@ -295,26 +372,28 @@ const inserirUsuario = async function (usuario, arquivo) {
                     artista_id:        lastIDArtista.id_artista
                 })
                 if (!resultGenero) {
-                    return { status: false, status_code: 500, message: `Erro ao vincular o gênero musical ID ${generoId} ao artista.` }
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
                 }
             }
 
         } else if (tipoUsuario === 'organizador') {
 
             let resultOrganizador = await organizadorDAO.setInsertOrganizer({ usuario_id: lastIDUsuario.id_usuario })
+
             if (!resultOrganizador) {
-                return { status: false, status_code: 500, message: 'Usuário criado, mas houve um erro ao cadastrar o perfil de organizador.' }
+                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
             }
 
         } else if (tipoUsuario === 'user') {
-            // usuário comum — nenhuma ação extra
+            // Usuário comum — nenhuma ação extra
 
         } else {
-            return gerarErroValidacao('tipo_usuario', `Tipo de usuário inválido: "${usuario.tipo_usuario}". Use: artista, organizador ou user.`)
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ` [tipo_usuario inválido: "${usuario.tipo_usuario}". Use: artista, organizador ou user]`
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
 
-        // ===== ENDEREÇO =====
-        let enderecoUsuario = {
+        // ── Insere endereço ──
+        let resultEndereco = await enderecoDAO.setInsertAddress({
             cep:         usuario.cep,
             cidade:      usuario.cidade,
             estado:      usuario.estado,
@@ -323,322 +402,312 @@ const inserirUsuario = async function (usuario, arquivo) {
             complemento: usuario.complemento || '',
             bairro:      usuario.bairro,
             usuario_id:  lastIDUsuario.id_usuario
-        }
+        })
 
-        let resultEndereco = await enderecoDAO.setInsertAddress(enderecoUsuario)
         if (!resultEndereco) {
-            return { status: false, status_code: 500, message: 'Usuário criado, mas houve um erro ao salvar o endereço.' }
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
         }
 
-        delete usuarioCriptografado.senha
-        usuarioCriptografado.id_usuario = lastIDUsuario.id_usuario
+        // ── Retorna dados completos via view ──
+        let resultFinal = await usuarioDAO.getSelectByIdUsers(lastIDUsuario.id_usuario)
+
+        if (!resultFinal || resultFinal.length === 0) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+        }
+
+        const usuarioFormatado = formatarUsuario(resultFinal[0])
+        delete usuarioFormatado.senha  // nunca expõe senha (a view já não inclui)
 
         MESSAGES.HEADER.status      = MESSAGES.SUCCESS_CREATED_ITEM.status
         MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
         MESSAGES.HEADER.message     = MESSAGES.SUCCESS_CREATED_ITEM.message
-        MESSAGES.HEADER.response    = usuarioCriptografado
+        MESSAGES.HEADER.response    = usuarioFormatado
 
-        return MESSAGES.HEADER
+        return MESSAGES.HEADER //201
 
     } catch (error) {
         console.error('[Controller usuario] inserirUsuario:', error.message, error.stack)
-        return { status: false, status_code: 500, message: 'Erro interno ao processar o cadastro. Tente novamente ou contate o suporte.' }
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
 
-// ─── Login ─────────────────────────────────────────────────────────────────────
-const loginUsuario = async function (usuario) {
-    let MESSAGE = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
-    try {
-        if (!usuario.email || !usuario.senha) {
-            return gerarErroValidacao('email/senha', 'E-mail e senha são obrigatórios.')
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(usuario.email)) {
-            return gerarErroValidacao('email', 'Formato de e-mail inválido.')
-        }
-
-        const user = await usuarioDAO.getUsuarioByUsuarioEmail(usuario.email)
-        console.log (user)
-        // Mensagem propositalmente genérica para não revelar se o e-mail existe
-        if (!user || user == undefined) {
-            return { status: false, status_code: 401, message: 'E-mail ou senha incorretos.' }
-        }
-
-        let senhaVerificada = false
-        try {
-            senhaVerificada = crypto.verifyPassword(usuario.senha, user.senha)
-        } catch (cryptoErr) {
-            console.error('[Controller usuario] loginUsuario — erro ao verificar senha:', cryptoErr.message)
-            return { status: false, status_code: 500, message: 'Erro interno ao verificar credenciais. Tente novamente.' }
-        }
-
-        if (senhaVerificada) {
-
-            // Se for artista, busca os gêneros musicais
-            if (user.tipo_usuario == 'Artista') {
-        
-                let artistaBanco =
-                    await artistaDAO.getSelectByIdArtistUser(
-                        user.id_usuario
-                    )
-        
-                if (artistaBanco && artistaBanco.id_artista) {
-        
-                    let resultArtistaGeneroMusical =
-                        await artistaGeneroMusicalDAO
-                            .getSelectByIdArtistGendersSong(
-                                artistaBanco.id_artista
-                            )
-        
-                    user.generos_musicais =
-                        resultArtistaGeneroMusical || []
-                }
-            }
-        
-            MESSAGE.HEADER.status =
-                MESSAGE.SUCCESS_REQUEST.status
-        
-            MESSAGE.HEADER.status_code =
-                MESSAGE.SUCCESS_REQUEST.status_code
-        
-            MESSAGE.HEADER.response.usuario = user
-        
-            return MESSAGE.HEADER
-        }
-
-    } catch (error) {
-        console.error('[Controller usuario] loginUsuario:', error.message)
-        return { status: false, status_code: 500, message: 'Erro interno ao processar o login. Tente novamente.' }
-    }
-}
-
-// ─── Atualizar ─────────────────────────────────────────────────────────────────
+// ─── Atualizar usuário ─────────────────────────────────────────────────────────
 const atualizarUsuario = async function (usuario, id, arquivo) {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        usuario.id_usuario = Number(id)
 
-        let validarID = await buscarUsuarioId(usuario.id_usuario)
-        if (validarID.status_code !== 200) return validarID
-
-        if (arquivo) {
-            try {
-                let urlFoto = await uploadImagemAzure(arquivo.buffer, arquivo.originalname, arquivo.mimetype)
-                if (urlFoto) {
-                    await usuarioDAO.setUpdateFotoUsuario(usuario.id_usuario, urlFoto)
-                    usuario.foto = urlFoto
-                }
-            } catch (fotoErr) {
-                console.warn('[Controller usuario] Erro no upload da foto (atualização):', fotoErr.message)
-            }
-        }
-
-        let dadosUsuario = { id_usuario: usuario.id_usuario }
-
-        if (usuario.nome)             dadosUsuario.nome = usuario.nome
-        if (usuario.email)            dadosUsuario.email = usuario.email
-        if (usuario.senha)            dadosUsuario.senha = usuario.senha
-        if (usuario.cpf)              dadosUsuario.cpf = usuario.cpf
-        if (usuario.data_nasc)        dadosUsuario.data_nasc = usuario.data_nasc
-        if (usuario.nacionalidade_id) dadosUsuario.nacionalidade_id = usuario.nacionalidade_id
-        if (usuario.genero_id)        dadosUsuario.genero_id = usuario.genero_id
-        if (usuario.telefone)         dadosUsuario.telefone = usuario.telefone
-
-        let resultUsuario = await usuarioDAO.setUpdateUsers(dadosUsuario)
-        if (!resultUsuario) {
-            return { status: false, status_code: 500, message: 'Erro ao atualizar os dados do usuário.' }
-        }
-
-        let tipoUsuario = usuario.tipo_usuario?.toLowerCase()
-
-        if (tipoUsuario === 'artista') {
-
-            if (!usuario.generos_musicais || !Array.isArray(usuario.generos_musicais) || usuario.generos_musicais.length === 0) {
-                return gerarErroValidacao('generos_musicais', 'Artistas devem informar pelo menos um gênero musical.')
-            }
-
-            let artistaBanco = await artistaDAO.getSelectByIdArtistUser(usuario.id_usuario)
-
-            if (!artistaBanco || !artistaBanco.id_artista) {
-                let artista = {
-                    nome_artistico: usuario.nome_artistico,
-                    usuario_id: usuario.id_usuario,
-                    descricao: usuario.descricao || '',
-                }
-                await artistaDAO.setInsertArtist(artista)
-                artistaBanco = await artistaDAO.getSelectByIdArtistUser(usuario.id_usuario)
-            } else {
-                let artista = {
-                    nome_artistico: usuario.nome_artistico,
-                    descricao: usuario.descricao || '',
-                    usuario_id: usuario.id_usuario,
-                    id_artista: artistaBanco.id_artista
-                }
-                await artistaDAO.setUpdateArtist(artista)
-            }
-
-            if (artistaBanco && artistaBanco.id_artista) {
-                await artistaGeneroMusicalDAO.setDeleteArtistGendersSong(artistaBanco.id_artista)
-                for (let generoId of usuario.generos_musicais) {
-                    await artistaGeneroMusicalDAO.setInsertArtistGendersSong({
-                        genero_musical_id: generoId,
-                        artista_id: artistaBanco.id_artista
-                    })
-                }
-            }
-
-        } else if (tipoUsuario === 'organizador') {
-            let organizadorBanco = await organizadorDAO.getSelectByUsuarioId(usuario.id_usuario)
-            if (!organizadorBanco) {
-                await organizadorDAO.setInsertOrganizer({ usuario_id: usuario.id_usuario })
-            }
-        }
-
-        let enderecoUsuario = {
-            cep:        usuario.cep,
-            cidade:     usuario.cidade,
-            estado:     usuario.estado,
-            logradouro: usuario.logradouro,
-            numero:     usuario.numero,
-            complemento: usuario.complemento || '',
-            bairro:     usuario.bairro,
-            id_usuario: usuario.id_usuario
-        }
-
-        await enderecoDAO.setUpdateAddress(enderecoUsuario)
-
-        delete usuario.senha
-
-        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
-        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
-        MESSAGES.HEADER.message     = MESSAGES.SUCCESS_UPDATED_ITEM.message
-        MESSAGES.HEADER.response    = usuario
-
-        return MESSAGES.HEADER
-
-    } catch (error) {
-        console.error('[Controller usuario] atualizarUsuario:', error.message)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
-    }
-}
-
-// ─── Excluir ───────────────────────────────────────────────────────────────────
-const excluirUsuario = async function (id) {
-    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
-
-    try {
         if (!isNaN(id) && id != '' && id != null && id > 0) {
-            let validarID = await buscarUsuarioId(id)
+
+            let validarID = await buscarUsuarioId(Number(id))
 
             if (validarID.status_code == 200) {
-                let resultusuarios = await usuarioDAO.setDeleteUsers(Number(id))
 
-                if (resultusuarios) {
-                    MESSAGES.HEADER.status      = MESSAGES.SUCCESS_DELETED_ITEM.status
-                    MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code
-                    MESSAGES.HEADER.message     = MESSAGES.SUCCESS_DELETED_ITEM.message
-                    return MESSAGES.HEADER
-                } else {
-                    return { status: false, status_code: 500, message: 'Erro ao excluir o usuário.' }
+                usuario.id_usuario = Number(id)
+
+                // ── Upload de foto (opcional) ──
+                if (arquivo) {
+                    try {
+                        let urlFoto = await uploadImagemAzure(arquivo.buffer, arquivo.originalname, arquivo.mimetype)
+                        if (urlFoto) {
+                            await usuarioDAO.setUpdateFotoUsuario(usuario.id_usuario, urlFoto)
+                        }
+                    } catch (fotoErr) {
+                        console.warn('[Controller usuario] Erro no upload da foto (atualização):', fotoErr.message)
+                    }
                 }
-            } else {
-                return MESSAGES.ERROR_NOT_FOUND
-            }
-        } else {
-            return gerarErroValidacao('id', 'O ID informado é inválido.')
-        }
-    } catch (error) {
-        console.error('[Controller usuario] excluirUsuario:', error.message)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
-    }
-}
 
-// ─── Atualizar foto ────────────────────────────────────────────────────────────
-const atualizarFotoUsuario = async function (id, fileBuffer, originalName, mimeType) {
-    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+                // ── Monta apenas os campos enviados ──
+                let dadosUsuario = { id_usuario: usuario.id_usuario }
 
-    try {
-        if (!isNaN(id) && id != '' && id != null && id > 0) {
-            let validarID = await buscarUsuarioId(id)
-            if (validarID.status_code !== 200) return validarID
+                if (usuario.nome)             dadosUsuario.nome             = usuario.nome
+                if (usuario.email)            dadosUsuario.email            = usuario.email
+                if (usuario.cpf)              dadosUsuario.cpf              = usuario.cpf
+                if (usuario.data_nasc)        dadosUsuario.data_nasc        = usuario.data_nasc
+                if (usuario.nacionalidade_id) dadosUsuario.nacionalidade_id = usuario.nacionalidade_id
+                if (usuario.genero_id)        dadosUsuario.genero_id        = usuario.genero_id
+                if (usuario.telefone)         dadosUsuario.telefone         = usuario.telefone
 
-            let urlFoto = await uploadImagemAzure(fileBuffer, originalName, mimeType)
-            if (!urlFoto) {
-                return { status: false, status_code: 502, message: 'Falha ao enviar a imagem para o servidor de armazenamento.' }
-            }
+                let resultUsuario = await usuarioDAO.setUpdateUsers(dadosUsuario)
 
-            let result = await usuarioDAO.setUpdateFotoUsuario(Number(id), urlFoto)
+                if (!resultUsuario) {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
 
-            if (result) {
+                // ── Atualiza perfil de artista (se aplicável) ──
+                let tipoUsuario = usuario.tipo_usuario?.toLowerCase()
+
+                if (tipoUsuario === 'artista') {
+
+                    if (!usuario.generos_musicais || !Array.isArray(usuario.generos_musicais) || usuario.generos_musicais.length === 0) {
+                        MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Artistas devem informar pelo menos um gênero musical]'
+                        return MESSAGES.ERROR_REQUIRED_FIELDS //400
+                    }
+
+                    let artistaBanco = await artistaDAO.getSelectByIdArtistUser(usuario.id_usuario)
+
+                    if (!artistaBanco || !artistaBanco.id_artista) {
+                        await artistaDAO.setInsertArtist({
+                            nome_artistico: usuario.nome_artistico,
+                            usuario_id:     usuario.id_usuario,
+                            descricao:      usuario.descricao || ''
+                        })
+                        artistaBanco = await artistaDAO.getSelectByIdArtistUser(usuario.id_usuario)
+                    } else {
+                        await artistaDAO.setUpdateArtist({
+                            nome_artistico: usuario.nome_artistico,
+                            descricao:      usuario.descricao || '',
+                            usuario_id:     usuario.id_usuario,
+                            id_artista:     artistaBanco.id_artista
+                        })
+                    }
+
+                    if (artistaBanco && artistaBanco.id_artista) {
+                        await artistaGeneroMusicalDAO.setDeleteArtistGendersSong(artistaBanco.id_artista)
+                        for (let generoId of usuario.generos_musicais) {
+                            await artistaGeneroMusicalDAO.setInsertArtistGendersSong({
+                                genero_musical_id: generoId,
+                                artista_id:        artistaBanco.id_artista
+                            })
+                        }
+                    }
+
+                } else if (tipoUsuario === 'organizador') {
+
+                    let organizadorBanco = await organizadorDAO.getSelectByIdOrganizerUser(usuario.id_usuario)
+                    if (!organizadorBanco || !organizadorBanco.id_organizador) {
+                        await organizadorDAO.setInsertOrganizer({ usuario_id: usuario.id_usuario })
+                    }
+                }
+
+                // ── Atualiza endereço ──
+                await enderecoDAO.setUpdateAddress({
+                    cep:         usuario.cep,
+                    cidade:      usuario.cidade,
+                    estado:      usuario.estado,
+                    logradouro:  usuario.logradouro,
+                    numero:      usuario.numero,
+                    complemento: usuario.complemento || '',
+                    bairro:      usuario.bairro,
+                    usuario_id:  usuario.id_usuario
+                })
+
+                // ── Retorna dados completos via view ──
+                let resultFinal = await usuarioDAO.getSelectByIdUsers(usuario.id_usuario)
+
+                if (!resultFinal || resultFinal.length === 0) {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+
                 MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
                 MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
                 MESSAGES.HEADER.message     = MESSAGES.SUCCESS_UPDATED_ITEM.message
-                MESSAGES.HEADER.response    = { id_usuario: Number(id), foto: urlFoto }
-                return MESSAGES.HEADER
+                MESSAGES.HEADER.response.usuario = formatarUsuario(resultFinal[0])
+
+                return MESSAGES.HEADER //200
+
             } else {
-                return { status: false, status_code: 500, message: 'Imagem enviada, mas houve erro ao atualizar no banco de dados.' }
+                return validarID // 400 | 404 | 500
             }
 
         } else {
-            return gerarErroValidacao('id', 'O ID informado é inválido.')
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
         }
+
+    } catch (error) {
+        console.error('[Controller usuario] atualizarUsuario:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
+
+// ─── Excluir usuário ───────────────────────────────────────────────────────────
+const excluirUsuario = async function (id) {
+
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+
+        if (!isNaN(id) && id != '' && id != null && id > 0) {
+
+            let validarID = await buscarUsuarioId(id)
+
+            if (validarID.status_code == 200) {
+
+                let resultUsuario = await usuarioDAO.setDeleteUsers(Number(id))
+
+                if (resultUsuario) {
+
+                    MESSAGES.HEADER.status      = MESSAGES.SUCCESS_DELETED_ITEM.status
+                    MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code
+                    MESSAGES.HEADER.message     = MESSAGES.SUCCESS_DELETED_ITEM.message
+                    delete MESSAGES.HEADER.response
+
+                    return MESSAGES.HEADER //200
+
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+
+            } else {
+                return MESSAGES.ERROR_NOT_FOUND //404
+            }
+
+        } else {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
+    } catch (error) {
+        console.error('[Controller usuario] excluirUsuario:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+    }
+}
+
+// ─── Atualizar foto do usuário ─────────────────────────────────────────────────
+const atualizarFotoUsuario = async function (id, fileBuffer, originalName, mimeType) {
+
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+
+        if (!isNaN(id) && id != '' && id != null && id > 0) {
+
+            let validarID = await buscarUsuarioId(id)
+
+            if (validarID.status_code == 200) {
+
+                let urlFoto = await uploadImagemAzure(fileBuffer, originalName, mimeType)
+
+                if (!urlFoto) {
+                    return MESSAGES.ERROR_UPLOAD_AZURE //404
+                }
+
+                let resultFoto = await usuarioDAO.setUpdateFotoUsuario(Number(id), urlFoto)
+
+                if (resultFoto) {
+
+                    MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
+                    MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
+                    MESSAGES.HEADER.message     = MESSAGES.SUCCESS_UPDATED_ITEM.message
+                    MESSAGES.HEADER.response    = { id_usuario: Number(id), foto: urlFoto }
+
+                    return MESSAGES.HEADER //200
+
+                } else {
+                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+                }
+
+            } else {
+                return validarID // 400 | 404 | 500
+            }
+
+        } else {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+        }
+
     } catch (error) {
         console.error('[Controller usuario] atualizarFotoUsuario:', error.message)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
     }
 }
 
 // ─── Validação dos dados de cadastro ──────────────────────────────────────────
 const validarDadosUsuario = async function (usuario) {
 
-    if (!usuario.nome || usuario.nome.trim() === '' || usuario.nome.length > 100)
-        return gerarErroValidacao('nome', 'O nome é obrigatório e deve ter até 100 caracteres.')
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    const gerarErro = (detalhe) => {
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ` [${detalhe}]`
+        return MESSAGES.ERROR_REQUIRED_FIELDS
+    }
+
+    if (!usuario.nome || usuario.nome.trim() === '' || usuario.nome.length > 150)
+        return gerarErro('nome inválido — máximo 150 caracteres')
 
     if (!usuario.email || usuario.email.length > 150)
-        return gerarErroValidacao('email', 'O e-mail é obrigatório e deve ter até 150 caracteres.')
+        return gerarErro('e-mail inválido — máximo 150 caracteres')
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(usuario.email))
-        return gerarErroValidacao('email', 'O formato do e-mail é inválido.')
+        return gerarErro('formato de e-mail inválido')
 
     if (!usuario.senha || usuario.senha.length > 100)
-        return gerarErroValidacao('senha', 'A senha é obrigatória e deve ter até 100 caracteres.')
+        return gerarErro('senha inválida — máximo 100 caracteres')
 
     const senhaRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/
     if (!senhaRegex.test(usuario.senha))
-        return gerarErroValidacao('senha', 'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, um número e um caractere especial (!@#$%^&*).')
+        return gerarErro('senha deve ter mínimo 8 caracteres, uma maiúscula, um número e um especial (!@#$%^&*)')
 
-    if (!usuario.cpf || usuario.cpf.length > 14)
-        return gerarErroValidacao('cpf', 'O CPF é obrigatório.')
+    if (!usuario.cpf || usuario.cpf.length > 20)
+        return gerarErro('CPF obrigatório — máximo 20 caracteres')
 
-    if (!usuario.data_nasc || usuario.data_nasc.length > 12)
-        return gerarErroValidacao('data_nasc', 'A data de nascimento é obrigatória.')
+    if (!usuario.data_nasc)
+        return gerarErro('data_nasc obrigatória')
 
     if (!usuario.nacionalidade_id || isNaN(usuario.nacionalidade_id))
-        return gerarErroValidacao('nacionalidade_id', 'Selecione uma nacionalidade válida.')
+        return gerarErro('nacionalidade_id inválido')
 
     if (!usuario.genero_id || isNaN(usuario.genero_id))
-        return gerarErroValidacao('genero_id', 'Selecione um gênero válido.')
+        return gerarErro('genero_id inválido')
 
-    if (!usuario.telefone || usuario.telefone.length > 20)
-        return gerarErroValidacao('telefone', 'O telefone é obrigatório.')
+    if (!usuario.telefone || usuario.telefone.length > 45)
+        return gerarErro('telefone obrigatório — máximo 45 caracteres')
 
     if (!usuario.cep || !usuario.cidade || !usuario.estado || !usuario.logradouro || !usuario.numero || !usuario.bairro)
-        return gerarErroValidacao('endereco', 'Todos os campos de endereço são obrigatórios (CEP, cidade, estado, logradouro, número, bairro).')
+        return gerarErro('campos de endereço obrigatórios: cep, cidade, estado, logradouro, numero, bairro')
 
     // Verifica duplicidade de e-mail
     const emailExistente = await usuarioDAO.getUsuarioByUsuarioEmail(usuario.email)
     if (emailExistente)
-        return gerarErroValidacao('email', 'Este e-mail já está cadastrado. Faça login ou use outro e-mail.')
+        return gerarErro('e-mail já cadastrado')
 
     // Verifica duplicidade de CPF
     const cpfExistente = await usuarioDAO.getUsuarioByUsuarioCPF(usuario.cpf)
     if (cpfExistente)
-        return gerarErroValidacao('cpf', 'Este CPF já está cadastrado.')
+        return gerarErro('CPF já cadastrado')
 
     return false
 }
