@@ -24,20 +24,63 @@ const gerarErroValidacao = (campo, mensagem) => ({
 
 // ─── Listar ────────────────────────────────────────────────────────────────────
 const listarUsuarios = async function () {
+
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
+
         let resultUsuarios = await usuarioDAO.getSelectAllUsers()
 
         if (resultUsuarios && resultUsuarios.length > 0) {
+
+            const usuariosFormatados = resultUsuarios.map(usuario => ({
+
+                id_usuario: usuario.id_usuario,
+                nome: usuario.nome,
+                email: usuario.email,
+                senha: usuario.senha,
+                cpf: usuario.cpf,
+                data_nasc: usuario.data_nasc,
+                criado: usuario.criado,
+                ultima_atualizacao: usuario.ultima_atualizacao,
+                telefone: usuario.telefone,
+                foto: usuario.foto,
+
+                genero: {
+                    id_genero: usuario.id_genero,
+                    nome: usuario.genero_nome
+                },
+
+                nacionalidade: {
+                    id_nacionalidade: usuario.id_nacionalidade,
+                    nome: usuario.nacionalidade_nome
+                },
+
+                endereco: {
+                    id_endereco: usuario.id_endereco,
+                    cep: usuario.cep,
+                    cidade: usuario.cidade,
+                    estado: usuario.estado,
+                    logradouro: usuario.logradouro,
+                    numero: usuario.numero,
+                    complemento: usuario.complemento,
+                    bairro: usuario.bairro
+                }
+
+            }))
+
             MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
             MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-            MESSAGES.HEADER.response.usuarios = resultUsuarios
+            MESSAGES.HEADER.response.usuarios = usuariosFormatados
+
             return MESSAGES.HEADER
+
         } else {
             return MESSAGES.ERROR_NOT_FOUND
         }
+
     } catch (error) {
+
         console.error('[Controller usuario] listarUsuarios:', error.message)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
