@@ -103,26 +103,69 @@ const buscarUsuarioEmail = async function (email) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-        if (email != '' && email != null && email != undefined) {
-            let resultusuarios = await usuarioDAO.getUsuarioByUsuarioEmail(email)
 
-            if (resultusuarios) {
-                MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-                MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                MESSAGES.HEADER.response.usuarios = resultusuarios
+        if (email != '' && email != null && email != undefined) {
+
+            let resultUsuario =
+                await usuarioDAO.getUsuarioByUsuarioEmail(email)
+
+            if (resultUsuario) {
+
+                MESSAGES.HEADER.status =
+                    MESSAGES.SUCCESS_REQUEST.status
+
+                MESSAGES.HEADER.status_code =
+                    MESSAGES.SUCCESS_REQUEST.status_code
+
+                // Busca gêneros musicais do artista
+                if (resultUsuario.tipo_usuario == 'Artista') {
+
+                    let artistaBanco =
+                        await artistaDAO.getSelectByIdArtistUser(
+                            resultUsuario.id_usuario
+                        )
+
+                    if (artistaBanco && artistaBanco.id_artista) {
+
+                        let resultArtistaGeneroMusical =
+                            await artistaGeneroMusicalDAO
+                                .getSelectByIdArtistGendersSong(
+                                    artistaBanco.id_artista
+                                )
+
+                        resultUsuario.generos_musicais =
+                            resultArtistaGeneroMusical || []
+                    }
+                }
+
+                MESSAGES.HEADER.response.usuario =
+                    resultUsuario
+
                 return MESSAGES.HEADER
+
             } else {
+
                 return MESSAGES.ERROR_NOT_FOUND
             }
+
         } else {
-            return gerarErroValidacao('email', 'O e-mail informado é inválido.')
+
+            return gerarErroValidacao(
+                'email',
+                'O e-mail informado é inválido.'
+            )
         }
+
     } catch (error) {
-        console.error('[Controller usuario] buscarUsuarioEmail:', error.message)
+
+        console.error(
+            '[Controller usuario] buscarUsuarioEmail:',
+            error.message
+        )
+
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
-
 // ─── Inserir ───────────────────────────────────────────────────────────────────
 const inserirUsuario = async function (usuario, arquivo) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -275,9 +318,9 @@ const loginUsuario = async function (usuario) {
         }
 
         const user = await usuarioDAO.getUsuarioByUsuarioEmail(usuario.email)
-
+        console.log (user)
         // Mensagem propositalmente genérica para não revelar se o e-mail existe
-        if (!user) {
+        if (!user || user == undefined) {
             return { status: false, status_code: 401, message: 'E-mail ou senha incorretos.' }
         }
 
@@ -290,12 +333,37 @@ const loginUsuario = async function (usuario) {
         }
 
         if (senhaVerificada) {
-            MESSAGE.HEADER.status           = MESSAGE.SUCCESS_REQUEST.status
-            MESSAGE.HEADER.status_code      = MESSAGE.SUCCESS_REQUEST.status_code
+
+            // Se for artista, busca os gêneros musicais
+            if (user.tipo_usuario == 'Artista') {
+        
+                let artistaBanco =
+                    await artistaDAO.getSelectByIdArtistUser(
+                        user.id_usuario
+                    )
+        
+                if (artistaBanco && artistaBanco.id_artista) {
+        
+                    let resultArtistaGeneroMusical =
+                        await artistaGeneroMusicalDAO
+                            .getSelectByIdArtistGendersSong(
+                                artistaBanco.id_artista
+                            )
+        
+                    user.generos_musicais =
+                        resultArtistaGeneroMusical || []
+                }
+            }
+        
+            MESSAGE.HEADER.status =
+                MESSAGE.SUCCESS_REQUEST.status
+        
+            MESSAGE.HEADER.status_code =
+                MESSAGE.SUCCESS_REQUEST.status_code
+        
             MESSAGE.HEADER.response.usuario = user
+        
             return MESSAGE.HEADER
-        } else {
-            return { status: false, status_code: 401, message: 'E-mail ou senha incorretos.' }
         }
 
     } catch (error) {

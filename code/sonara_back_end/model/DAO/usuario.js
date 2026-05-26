@@ -104,6 +104,7 @@ const getUsuarioByUsuarioCPF = async function (cpf) {
 
 const setInsertUsers = async function (usuario) {
     try {
+
         let sql = `
         INSERT INTO tb_usuario (
             nome,
@@ -126,7 +127,9 @@ const setInsertUsers = async function (usuario) {
         );`
 
         let result = await knexDatabase.raw(sql)
+
         return !!result
+
     } catch (error) {
         console.error('[DAO usuario] setInsertUsers:', error.message)
         return false
@@ -139,7 +142,6 @@ const setUpdateUsers = async function (usuario) {
             UPDATE tb_usuario SET
                 nome = '${usuario.nome}',
                 email = '${usuario.email}',
-                senha = '${usuario.senha}',
                 telefone = '${usuario.telefone}',
                 cpf = '${usuario.cpf}',
                 data_nasc = '${usuario.data_nasc}',
