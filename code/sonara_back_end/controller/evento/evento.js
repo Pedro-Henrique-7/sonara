@@ -1,256 +1,111 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexão de casa de show com cantores
- * Data: 25/04/2026
+ * Objetivo: Controller de evento
+ * Data: 26/05/2026
  * Autor: Davi de Alemida Santos
- * Versão: 1.1
-*****************************************************************************/
+ * Versão: 2.1
+ *****************************************************************************/
 
 const eventoDAO = require('../../model/DAO/evento.js')
 const enderecoEventoDAO = require('../../model/DAO/endereco_evento.js')
 const eventoOrganizadorDAO = require('../../model/DAO/evento_organizador.js')
-const usuarioDao = require('../../model/DAO/usuario.js')
+const usuarioDAO = require('../../model/DAO/usuario.js')
+const fotoDAO = require('../../model/DAO/foto.js')
+
 const DEFAULT_MESSAGES = require('../modulo/conf_message.js')
-const artistaDAO = require("../../model/DAO/artista.js")
-const fotoDAO = require("../../model/DAO/foto.js")
 
+const parseJSON = (valor, padrao = []) => {
+    if (!valor) return padrao
+    if (typeof valor === 'object') return valor
 
+    try {
+        return JSON.parse(valor)
+    } catch {
+        return padrao
+    }
+}
+
+const formatarEvento = function (row) {
+    return {
+        id_evento: row.id_evento,
+        nome: row.evento_nome || row.nome,
+        descricao: row.evento_descricao || row.descricao,
+        local: row.local,
+        data: row.data,
+        hora_inicio: row.hora_inicio,
+        hora_fim: row.hora_fim,
+
+        endereco: parseJSON(row.endereco, {}),
+
+        fotos: parseJSON(row.fotos),
+
+        organizador: {
+            id_organizador: row.id_organizador || null,
+            id_usuario: row.organizador_usuario_id || null,
+            nome: row.organizador_nome || null,
+            email: row.organizador_email || null,
+            telefone: row.organizador_telefone || null,
+            foto: row.organizador_foto || null
+        },
+
+        status: parseJSON(row.status_evento, {}),
+
+        avaliacao: {
+            media: Number(row.media_avaliacao_evento || 0),
+            total: Number(row.total_avaliacoes_evento || 0)
+        },
+
+        artistas: parseJSON(row.evento_artistas)
+    }
+}
 
 const listarEvento = async function () {
-
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
+        const resultEvento = await eventoDAO.getSelectAllEvent()
 
-        let resultEvento = await eventoDAO.getSelectAllEvent()
-
-        if (resultEvento && resultEvento.length > 0) {
-
-            for (let itemEvento of resultEvento) {
-
-                // =====================================================
-                // FOTO
-                // =====================================================
-
-                let fotos = []
-
-                let fotosBanco = await fotoDAO.getSelectByIdEvent(itemEvento.id_evento)
-
-                if (fotosBanco && fotosBanco.length > 0) {
-
-                    for (const foto of fotosBanco) {
-
-                        fotos.push({
-                            id_foto: foto.id_foto,
-                            caminho: foto.foto
-                        })
-
-                    }
-
-                }
-
-                itemEvento.foto = fotos
-
-                // =====================================================
-                // EVENTO ARTISTAS
-                // =====================================================
-
-                let eventoArtistas = []
-
-                let artistasBanco = await artistaDAO.getSelectByIdEvent(itemEvento.id_evento)
-
-                if (artistasBanco && artistasBanco.length > 0) {
-
-                    for (const artista of artistasBanco) {
-
-                        eventoArtistas.push({
-
-                            id_evento_artista: artista.id_evento_artista,
-
-                            ids: {
-                                artista_id: artista.artista_id,
-                                evento_id: artista.evento_id
-                            },
-
-                            cache: {
-                                esperado: artista.cache_esperado,
-                                ofertado: artista.cache_ofertado,
-                                final: artista.cache_final,
-                                contra_proposta: artista.contra_proposta
-                            },
-
-                            informacoes: {
-                                sobre_artista: artista.sobre_artista,
-                                motivo_inscricao: artista.motivo_inscricao
-                            }
-
-                        })
-
-                    }
-
-                }
-
-                itemEvento.evento_artistas = eventoArtistas
-
-                // =====================================================
-                // ENDEREÇO
-                // =====================================================
-
-                itemEvento.endereco = {
-
-                    cep: itemEvento.cep,
-                    logradouro: itemEvento.logradouro,
-                    numero: itemEvento.numero,
-                    complemento: itemEvento.complemento,
-                    bairro: itemEvento.bairro,
-                    cidade: itemEvento.cidade,
-                    estado: itemEvento.estado,
-                    latitude: itemEvento.latitude,
-                    longitude: itemEvento.longitude
-
-                }
-
-                // =====================================================
-                // ORGANIZADOR
-                // =====================================================
-
-                itemEvento.organizador = {
-
-                    id: itemEvento.organizador_id,
-                    nome: itemEvento.organizador_nome,
-                    email: itemEvento.organizador_email
-
-                }
-
-                // =====================================================
-                // STATUS
-                // =====================================================
-
-                itemEvento.status = {
-
-                    atual: itemEvento.status_atual,
-                    data: itemEvento.data_status
-
-                }
-
-                // =====================================================
-                // AVALIAÇÃO
-                // =====================================================
-
-                itemEvento.avaliacao = {
-
-                    media: itemEvento.media_avaliacao,
-                    total: itemEvento.total_avaliacoes
-
-                }
-
-                // =====================================================
-                // REMOVE CAMPOS SOLTOS
-                // =====================================================
-
-                // endereço
-                delete itemEvento.cep
-                delete itemEvento.logradouro
-                delete itemEvento.numero
-                delete itemEvento.complemento
-                delete itemEvento.bairro
-                delete itemEvento.cidade
-                delete itemEvento.estado
-                delete itemEvento.latitude
-                delete itemEvento.longitude
-
-                // organizador
-                delete itemEvento.organizador_nome
-                delete itemEvento.organizador_email
-
-                // status
-                delete itemEvento.status_atual
-                delete itemEvento.data_status
-
-                // avaliação
-                delete itemEvento.media_avaliacao
-                delete itemEvento.total_avaliacoes
-
-                // artista
-                delete itemEvento.id_evento_artista
-                delete itemEvento.artista_id
-                delete itemEvento.evento_id
-                delete itemEvento.cache_esperado
-                delete itemEvento.cache_ofertado
-                delete itemEvento.cache_final
-                delete itemEvento.contra_proposta
-                delete itemEvento.sobre_artista
-                delete itemEvento.motivo_inscricao
-
-            }
-
-            MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-            MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-            MESSAGES.HEADER.response.eventos = resultEvento
-
-            return MESSAGES.HEADER
-
-        } else {
-
+        if (!resultEvento || resultEvento.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
-
         }
 
+        MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+        MESSAGES.HEADER.response.eventos = resultEvento.map(formatarEvento)
+
+        return MESSAGES.HEADER
+
     } catch (error) {
-
-        console.log(error)
+        console.error('[Controller evento] listarEvento:', error.message)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
-
     }
-
 }
-
 const buscarEventoId = async function (id) {
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-
-        if (!isNaN(id) && id != '' && id != null && id > 0) {
-
-            let resultEvento = await eventoDAO.getSelectByIdEvent(Number(id))
-
-            if (resultEvento && resultEvento.length > 0) {
-
-                for (let itemEvento of resultEvento) {
-
-                    let fotosBanco = await viewBuscarFotoEventoDAO.getSelectViewEventPhoto(itemEvento.id_evento)
-
-                    let fotos = []
-
-                    if (fotosBanco && fotosBanco.length > 0) {
-                        fotos = [
-                            {
-                                id_foto: fotosBanco[0].id_foto,
-                                caminho: fotosBanco[0].url_foto
-                            }
-                        ]
-                    }
-
-                    itemEvento.fotos = fotos
-                }
-
-                MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
-                MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                MESSAGES.HEADER.response.Evento = resultEvento[0]
-                return MESSAGES.HEADER //200
-
-            } else {
-                return MESSAGES.ERROR_NOT_FOUND //404
-            }
-
-        } else {
+        if (isNaN(id) || id === '' || id === null || Number(id) <= 0) {
             MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
-            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+            return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
+        const resultEvento = await eventoDAO.getSelectByIdEvent(Number(id))
+
+        if (!resultEvento || resultEvento.length === 0) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const eventoFormatado = await formatarEvento(resultEvento[0])
+
+        MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+        MESSAGES.HEADER.response.evento = eventoFormatado
+
+        return MESSAGES.HEADER
+
     } catch (error) {
-        console.log(error)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+        console.error('[Controller evento] buscarEventoId:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -259,123 +114,80 @@ const inserirEvento = async function (evento, contentType) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-
         if (!String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
-            return MESSAGES.ERROR_CONTENT_TYPE //415
+            return MESSAGES.ERROR_CONTENT_TYPE
         }
 
-        // ================= VALIDA EVENTO =================
-        let validarEvento = await validarDadosEvento(evento)
+        const validarEvento = validarDadosEvento(evento)
+        if (validarEvento) return validarEvento
 
-        if (validarEvento) {
-            return validarEvento //400
+        const idEvento = await eventoDAO.setInsertEvent(evento)
+
+        if (!idEvento) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
-        // ================= INSERE EVENTO =================
-        let resultEvento = await eventoDAO.setInsertEvent(evento)
-
-        if (!resultEvento) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-        }
-
-        let lastIDEvento = await eventoDAO.getSelectLastID()
-
-        if (!lastIDEvento) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-        }
-
-        evento.id_evento = lastIDEvento.id_evento
-
-        // ================= ENDEREÇO =================
-        let enderecoEvento = {
+        const enderecoEvento = {
             cep: evento.cep,
             cidade: evento.cidade,
             estado: evento.estado,
             logradouro: evento.logradouro,
             numero: evento.numero,
-            complemento: evento.complemento,
+            complemento: evento.complemento || '',
             bairro: evento.bairro,
-            evento_id: lastIDEvento.id_evento
+            evento_id: idEvento
         }
 
-        let validarEndereco = validarDadosEvento(enderecoEvento)
-
-        if (validarEndereco) {
-            return validarEndereco //400
-        }
-
-        let resultEndereco = await enderecoEventoDAO.setInsertAddressEvent(enderecoEvento)
+        const resultEndereco = await enderecoEventoDAO.setInsertAddressEvent(enderecoEvento)
 
         if (!resultEndereco) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
-        // ================= EVENTO ORGANIZADOR =================
-
-        // FIX: busca o registro do organizador pelo usuario_id para obter o id_organizador real
-        let resultOrganizador = await usuarioDao.getSelectByIdUsersOrganizer(evento.organizador_id)
+        const resultOrganizador = await usuarioDAO.getSelectByIdUsersOrganizer(evento.organizador_id)
 
         if (!resultOrganizador || resultOrganizador.length === 0) {
             MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Organizador não encontrado]'
-            return MESSAGES.ERROR_REQUIRED_FIELDS //400
+            return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        // FIX: usa o id_organizador da tb_organizador, não o id_usuario
-        let eventoOrganizador = {
-            evento_id: evento.id_evento,
+        const eventoOrganizador = {
+            evento_id: idEvento,
             organizador_id: resultOrganizador[0].id_organizador
         }
 
-        let validarEventoOrg = validarDadosEvento(eventoOrganizador)
-
-        if (validarEventoOrg) {
-            return validarEventoOrg //400
-        }
-
-        let resultEventoOrg = await eventoOrganizadorDAO.setInsertOrganizerEvent(eventoOrganizador)
+        const resultEventoOrg = await eventoOrganizadorDAO.setInsertOrganizerEvent(eventoOrganizador)
 
         if (!resultEventoOrg) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
-        let lastIDOrg = await eventoOrganizadorDAO.getSelectLastID()
+        const resultFinal = await eventoDAO.getSelectByIdEvent(idEvento)
 
-        if (!lastIDOrg) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-        }
-
-        eventoOrganizador.id_evento_organizador = lastIDOrg.id_evento_organizador
-
-        // ================= BUSCA FOTOS =================
-        let fotos = []
-        let fotosBanco = await viewBuscarFotoEventoDAO.getSelectViewEventPhoto(evento.id_evento)
-
-        // FIX: variável era 'fotos' mas checava 'fotosBanco' sem atribuir — corrigido
-        if (fotosBanco && fotosBanco.length > 0) {
-            fotos = [
-                {
-                    id_foto: fotosBanco[0].id_foto,
-                    caminho: fotosBanco[0].url_foto
-                }
-            ]
-        }
-
-        // ================= RETORNO FINAL =================
         MESSAGES.HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status
         MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
         MESSAGES.HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message
-        MESSAGES.HEADER.response = {
-            evento,
-            endereco: enderecoEvento,
-            evento_organizador: eventoOrganizador,
-            fotos
-        }
+        MESSAGES.HEADER.response.evento = resultFinal && resultFinal.length > 0
+            ? await formatarEvento(resultFinal[0])
+            : {
+                id_evento: idEvento,
+                nome: evento.nome,
+                descricao: evento.descricao,
+                local: evento.local,
+                data: evento.data,
+                hora_inicio: evento.hora_inicio,
+                hora_fim: evento.hora_fim,
+                endereco: enderecoEvento,
+                organizador: eventoOrganizador,
+                fotos: [],
+                artistas: []
+            }
 
-        return MESSAGES.HEADER //201
+        return MESSAGES.HEADER
 
     } catch (error) {
-        console.log(error)
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+        console.error('[Controller evento] inserirEvento:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
@@ -384,12 +196,11 @@ const atualizarEvento = async function (evento, id, contentType) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-
         if (!String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
             return MESSAGES.ERROR_CONTENT_TYPE
         }
 
-        let validarID = await buscarEventoId(id)
+        const validarID = await buscarEventoId(id)
 
         if (validarID.status_code !== 200) {
             return validarID
@@ -397,73 +208,56 @@ const atualizarEvento = async function (evento, id, contentType) {
 
         evento.id_evento = Number(id)
 
-        // ================= ATUALIZA EVENTO =================
-        let resultEvento = await eventoDAO.setUpdateEvent(evento)
+        const resultEvento = await eventoDAO.setUpdateEvent(evento)
 
         if (!resultEvento) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
-        // ================= ATUALIZA ENDEREÇO =================
-        let enderecoEvento = {
+        const enderecoEvento = {
             cep: evento.cep,
             cidade: evento.cidade,
             estado: evento.estado,
             logradouro: evento.logradouro,
             numero: evento.numero,
-            complemento: evento.complemento,
+            complemento: evento.complemento || '',
             bairro: evento.bairro,
             evento_id: evento.id_evento
         }
 
         await enderecoEventoDAO.setUpdateAddressEvent(enderecoEvento)
 
-        // ================= ATUALIZA EVENTO ORGANIZADOR =================
+        if (evento.organizador_id) {
+            const resultOrganizador = await usuarioDAO.getSelectByIdUsersOrganizer(evento.organizador_id)
 
-        // FIX: mesma correção do insert — busca o id_organizador real
-        let resultOrganizador = await usuarioDao.getSelectByIdUsersOrganizer(evento.organizador_id)
+            if (!resultOrganizador || resultOrganizador.length === 0) {
+                MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Organizador não encontrado]'
+                return MESSAGES.ERROR_REQUIRED_FIELDS
+            }
 
-        if (!resultOrganizador || resultOrganizador.length === 0) {
-            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Organizador não encontrado]'
-            return MESSAGES.ERROR_REQUIRED_FIELDS
+            const eventoOrganizador = {
+                evento_id: evento.id_evento,
+                organizador_id: resultOrganizador[0].id_organizador
+            }
+
+            await eventoOrganizadorDAO.setUpdateOrganizerEvent(eventoOrganizador)
         }
 
-        let eventoOrganizador = {
-            evento_id: evento.id_evento,
-            organizador_id: resultOrganizador[0].id_organizador // FIX
+        const resultFinal = await eventoDAO.getSelectByIdEvent(evento.id_evento)
+
+        if (!resultFinal || resultFinal.length === 0) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
-        await eventoOrganizadorDAO.setUpdateOrganizerEvent(eventoOrganizador)
-
-        // ================= BUSCA FOTOS =================
-        let fotos = []
-        let fotosBanco = await viewBuscarFotoEventoDAO.getSelectViewEventPhoto(evento.id_evento)
-
-        // FIX: mesma correção do insert
-        if (fotosBanco && fotosBanco.length > 0) {
-            fotos = [
-                {
-                    id_foto: fotosBanco[0].id_foto,
-                    caminho: fotosBanco[0].url_foto
-                }
-            ]
-        }
-
-        // ================= RETORNO =================
         MESSAGES.HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status
         MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
         MESSAGES.HEADER.message = MESSAGES.SUCCESS_UPDATED_ITEM.message
-        MESSAGES.HEADER.response = {
-            evento,
-            endereco: enderecoEvento,
-            evento_organizador: eventoOrganizador,
-            fotos
-        }
+        MESSAGES.HEADER.response.evento = await formatarEvento(resultFinal[0])
 
         return MESSAGES.HEADER
 
     } catch (error) {
-
+        console.error('[Controller evento] atualizarEvento:', error.message)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -473,39 +267,32 @@ const excluirEvento = async function (id) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
-
-        if (!isNaN(id) && id != '' && id != null && id > 0) {
-
-            let validarID = await buscarEventoId(id)
-
-            if (validarID.status_code == 200) {
-
-                let resultEvento = await eventoDAO.setDeleteEvent(Number(id))
-
-                if (resultEvento) {
-
-                    MESSAGES.HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status
-                    MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code
-                    MESSAGES.HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message
-                    // FIX: removia o response antes de atribuir, ordem corrigida
-                    delete MESSAGES.HEADER.response
-                    return MESSAGES.HEADER
-
-                } else {
-                    return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
-                }
-
-            } else {
-                return MESSAGES.ERROR_NOT_FOUND
-            }
-
-        } else {
+        if (isNaN(id) || id === '' || id === null || Number(id) <= 0) {
             MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
+        const validarID = await buscarEventoId(id)
+
+        if (validarID.status_code !== 200) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const resultEvento = await eventoDAO.setDeleteEvent(Number(id))
+
+        if (!resultEvento) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        MESSAGES.HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code
+        MESSAGES.HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message
+        delete MESSAGES.HEADER.response
+
+        return MESSAGES.HEADER
+
     } catch (error) {
-        console.log(error)
+        console.error('[Controller evento] excluirEvento:', error.message)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -517,89 +304,47 @@ const validarDadosEvento = function (evento) {
         message: `${DEFAULT_MESSAGES.ERROR_REQUIRED_FIELDS.message} [Campo: ${campo}]`
     })
 
-    if (evento.nome !== undefined) {
-        if (!evento.nome || evento.nome.length > 100)
-            return gerarErro('nome')
-    }
+    if (!evento.nome || evento.nome.length > 150)
+        return gerarErro('nome')
 
-    if (evento.descricao !== undefined) {
-        if (!evento.descricao || evento.descricao.length > 500)
-            return gerarErro('descricao')
-    }
+    if (!evento.descricao || evento.descricao.length > 500)
+        return gerarErro('descricao')
 
-    if (evento.local !== undefined) {
-        if (!evento.local || evento.local.length > 255)
-            return gerarErro('local')
-    }
+    if (!evento.local || evento.local.length > 255)
+        return gerarErro('local')
 
-    if (evento.data !== undefined) {
-        if (!evento.data || evento.data.length > 20)
-            return gerarErro('data')
-    }
+    if (!evento.data || evento.data.length > 20)
+        return gerarErro('data')
 
-    if (evento.hora_inicio !== undefined) {
-        if (!evento.hora_inicio || evento.hora_inicio.length > 20)
-            return gerarErro('hora_inicio')
-    }
+    if (!evento.hora_inicio || evento.hora_inicio.length > 20)
+        return gerarErro('hora_inicio')
 
-    if (evento.hora_fim !== undefined) {
-        if (!evento.hora_fim || evento.hora_fim.length > 80)
-            return gerarErro('hora_fim')
-    }
+    if (!evento.hora_fim || evento.hora_fim.length > 20)
+        return gerarErro('hora_fim')
 
-    if (evento.usuario_id !== undefined) {
-        if (!evento.usuario_id || isNaN(evento.usuario_id))
-            return gerarErro('usuario_id')
-    }
+    if (!evento.cep || evento.cep.length > 11)
+        return gerarErro('cep')
 
-    if (evento.cep !== undefined) {
-        if (!evento.cep || evento.cep.length > 11)
-            return gerarErro('cep')
-    }
+    if (!evento.cidade || evento.cidade.length > 100)
+        return gerarErro('cidade')
 
-    if (evento.cidade !== undefined) {
-        if (!evento.cidade || evento.cidade.length > 170)
-            return gerarErro('cidade')
-    }
+    if (!evento.estado || evento.estado.length > 2)
+        return gerarErro('estado')
 
-    if (evento.estado !== undefined) {
-        if (!evento.estado || evento.estado.length > 25)
-            return gerarErro('estado')
-    }
+    if (!evento.logradouro || evento.logradouro.length > 255)
+        return gerarErro('logradouro')
 
-    if (evento.logradouro !== undefined) {
-        if (!evento.logradouro || evento.logradouro.length > 255)
-            return gerarErro('logradouro')
-    }
+    if (!evento.numero || String(evento.numero).length > 20)
+        return gerarErro('numero')
 
-    if (evento.numero !== undefined) {
-        if (!evento.numero || isNaN(evento.numero))
-            return gerarErro('numero')
-    }
+    if (!evento.bairro || evento.bairro.length > 45)
+        return gerarErro('bairro')
 
-    if (evento.complemento !== undefined) {
-        if (!evento.complemento || evento.complemento.length > 100)
-            return gerarErro('complemento')
-    }
-
-    if (evento.bairro !== undefined) {
-        if (!evento.bairro || evento.bairro.length > 100)
-            return gerarErro('bairro')
-    }
-
-    if (evento.evento_id !== undefined) {
-        if (isNaN(evento.evento_id) || evento.evento_id <= 0)
-            return gerarErro('evento_id')
-    }
-
-    if (evento.organizador_id !== undefined) {
-        if (isNaN(evento.organizador_id) || evento.organizador_id <= 0)
-            return gerarErro('organizador_id')
-    }
+    if (!evento.organizador_id || isNaN(evento.organizador_id))
+        return gerarErro('organizador_id')
 
     return false
 }
-
 
 module.exports = {
     listarEvento,

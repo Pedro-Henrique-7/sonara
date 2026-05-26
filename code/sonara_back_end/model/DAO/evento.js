@@ -1,137 +1,97 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
- * Data: 25/04/2026
+ * Objetivo: DAO de evento
+ * Data: 26/05/2026
  * Autor: Davi de Alemida Santos
- * Versão: 1.0
-*****************************************************************************/
+ * Versão: 2.0
+ *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllEvent = async function(){
+const getSelectAllEvent = async function () {
     try {
-      
-        let sql = `select * from vw_evento`
-    
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
-
+        return await knexDatabase('vw_evento_artista_completo')
     } catch (error) {
-       
+        console.error('[DAO evento] getSelectAllEvent:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdEvent = async function(id){
+const getSelectByIdEvent = async function (id_evento) {
     try {
-        let sql = `select * from vw_evento where id_evento=${id}`
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('vw_evento_artista_completo')
+            .where({ id_evento })
 
-        if(Array.isArray(result[0]))
-            return result[0]  
-        else
-            return false
+        return result.length > 0 ? result : false
     } catch (error) {
+        console.error('[DAO evento] getSelectByIdEvent:', error.message)
         return false
     }
 }
 
-
-const getSelectLastID = async function(){
+const setInsertEvent = async function (evento, trx = null) {
     try {
-        let sql = `select id_evento from tb_evento order by id_evento desc limit 1`
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_evento').insert({
+            nome: evento.nome,
+            descricao: evento.descricao,
+            local: evento.local,
+            data: evento.data,
+            hora_inicio: evento.hora_inicio,
+            hora_fim: evento.hora_fim
+        })
 
-        if(Array.isArray(result[0]))
-            return result[0][0] 
-        else
-            return false
+        return result[0]
     } catch (error) {
-        console.log(error)
-    }
-}
-
-
-const setInsertEvent = async function(evento){
-    try {
-        let sql = `insert into tb_evento (nome, descricao, local, data, hora_inicio, hora_fim)
-                    values( "${evento.nome}",
-                            "${evento.descricao}", 
-                            "${evento.local}", 
-                            "${evento.data}",
-                            "${evento.hora_inicio}",
-                            "${evento.hora_fim}")`
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
-const setUpdateEvent = async function(evento){
-    try {
-        let sql = `update tb_evento set 
-                        nome               = "${evento.nome}",
-                        descricao          = "${evento.descricao}",
-                        local              = "${evento.local}",
-                        data               = "${evento.data}",
-                        hora_inicio        = "${evento.hora_inicio}",
-                        hora_fim           = "${evento.hora_fim}"
-                        
-                    
-                    where id_evento = ${evento.id_evento}`
-console.log(sql)
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-
-    } catch (error) {
+        console.error('[DAO evento] setInsertEvent:', error.message)
         return false
     }
 }
 
-const setDeleteEvent = async function(id){
+const setUpdateEvent = async function (evento, trx = null) {
     try {
-      
-        let sql = `delete from tb_evento where id_evento=${id}`
-        
-        
-       
-        let result = await knexDatabase.raw(sql)
+        const dados = {}
 
-        if(Array.isArray(result))
-            return result
-        else
-            return false
+        if (evento.nome !== undefined) dados.nome = evento.nome
+        if (evento.descricao !== undefined) dados.descricao = evento.descricao
+        if (evento.local !== undefined) dados.local = evento.local
+        if (evento.data !== undefined) dados.data = evento.data
+        if (evento.hora_inicio !== undefined) dados.hora_inicio = evento.hora_inicio
+        if (evento.hora_fim !== undefined) dados.hora_fim = evento.hora_fim
 
+        if (Object.keys(dados).length === 0) return true
+
+        const result = await db(trx)('tb_evento')
+            .where({ id_evento: evento.id_evento })
+            .update(dados)
+
+        return result > 0
     } catch (error) {
-       
+        console.error('[DAO evento] setUpdateEvent:', error.message)
+        return false
+    }
+}
+
+const setDeleteEvent = async function (id_evento, trx = null) {
+    try {
+        const result = await db(trx)('tb_evento')
+            .where({ id_evento })
+            .del()
+
+        return result > 0
+    } catch (error) {
+        console.error('[DAO evento] setDeleteEvent:', error.message)
         return false
     }
 }
 
 module.exports = {
+    knexDatabase,
     getSelectAllEvent,
     getSelectByIdEvent,
     setInsertEvent,
     setUpdateEvent,
-    getSelectLastID,
     setDeleteEvent
-} 
+}
