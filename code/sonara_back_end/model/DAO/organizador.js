@@ -1,156 +1,81 @@
-/******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
- * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
-*****************************************************************************/
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-const knexDatabase = knex(knexConfig.development);
-
-
-
-const getSelectAllOrganizer = async function(){
+const getSelectAllOrganizer = async function () {
     try {
-      
-        let sql = `select * from tb_organizador order by id_organizador desc `
-
-        let result = await knexDatabase.raw(sql)
-   
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
-
+        return await knexDatabase('tb_organizador')
+            .orderBy('id_organizador', 'desc')
     } catch (error) {
-       
+        console.error('[DAO organizador] getSelectAllOrganizer:', error.message)
         return false
     }
 }
 
-
-
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdOrganizerUser = async function (id) {
-
+const getSelectByIdOrganizerUser = async function (usuario_id, trx = null) {
     try {
+        const result = await db(trx)('tb_organizador')
+            .where({ usuario_id })
+            .first()
 
-        let sql = `SELECT * FROM tb_organizador WHERE id_usuario = ?`
-
-        let result = await knexDatabase.raw(sql, [id])
-
-        const rows = result?.[0]
-
-        if (Array.isArray(rows) && rows.length > 0) {
-            return rows[0]   
-        }
-
-        return {}
-
+        return result || {}
     } catch (error) {
-        console.log(error)
+        console.error('[DAO organizador] getSelectByIdOrganizerUser:', error.message)
         return {}
     }
 }
 
-const getSelectByIdOrganizer = async function(id){
+const getSelectByIdOrganizer = async function (id_organizador) {
     try {
-    
-        let sql = `select * from tb_organizador where id_organizador=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('tb_organizador')
+            .where({ id_organizador })
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
-
+        return result.length > 0 ? result : false
     } catch (error) {
-      
+        console.error('[DAO organizador] getSelectByIdOrganizer:', error.message)
         return false
     }
 }
 
-
-
-const getSelectLastID = async function(){
+const setInsertOrganizer = async function (organizador, trx = null) {
     try {
-        
-        let sql = `select id_organizador from tb_organizador order by id_organizador desc limit 1`
+        const result = await db(trx)('tb_organizador').insert({
+            usuario_id: organizador.usuario_id
+        })
 
-      
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_organizador)
-        else
-            return false
-
+        return result[0]
     } catch (error) {
-
+        console.error('[DAO organizador] setInsertOrganizer:', error.message)
         return false
     }
 }
 
-
-const setInsertOrganizer = async function(organizador){
+const setUpdateOrganizer = async function (organizador, trx = null) {
     try {
-  let sql = `insert into tb_organizador (
-    usuario_id
-) values (
-    ${organizador.usuario_id}
-);`
+        const result = await db(trx)('tb_organizador')
+            .where({ id_organizador: organizador.id_organizador })
+            .update({
+                usuario_id: organizador.usuario_id
+            })
 
- 
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-
+        return result > 0
     } catch (error) {
+        console.error('[DAO organizador] setUpdateOrganizer:', error.message)
         return false
     }
 }
 
-
-const setUpdateOrganizer = async function(organizador){
+const setDeleteOrganizer = async function (id_organizador, trx = null) {
     try {
-      let sql = `update tb_organizador set 
-    usuario_id = ${organizador.usuario_id}
-where id_organizador = ${organizador.id_organizador}`;
+        const result = await db(trx)('tb_organizador')
+            .where({ id_organizador })
+            .del()
 
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-
+        return result > 0
     } catch (error) {
-        return false
-    }
-}
-
-const setDeleteOrganizer = async function(id){
-    try {
-      
-        let sql = `delete from tb_organizador where id_organizador=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO organizador] setDeleteOrganizer:', error.message)
         return false
     }
 }
@@ -160,7 +85,6 @@ module.exports = {
     getSelectByIdOrganizer,
     setInsertOrganizer,
     setUpdateOrganizer,
-    getSelectLastID,
     getSelectByIdOrganizerUser,
     setDeleteOrganizer
-} 
+}

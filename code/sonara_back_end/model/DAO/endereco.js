@@ -1,170 +1,106 @@
-/******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
- * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
-*****************************************************************************/
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-const knexDatabase = knex(knexConfig.development);
-
-
-
-const getSelectAllAddress = async function(){
+const getSelectAllAddress = async function () {
     try {
-      
-        let sql = `select * from tb_endereco order by id_endereco desc`
-    
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
-
+        return await knexDatabase('tb_endereco').orderBy('id_endereco', 'desc')
     } catch (error) {
-       
+        console.error('[DAO endereco] getSelectAllAddress:', error.message)
         return false
     }
 }
 
-
-
-const getSelectByIdAddress = async function(id){
+const getSelectByIdAddress = async function (id_endereco) {
     try {
-        let sql = `select * from tb_endereco where id_endereco=${id}`
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('tb_endereco')
+            .where({ id_endereco })
 
-        if(Array.isArray(result[0]))
-            return result[0]  
-        else
-            return false
+        return result.length > 0 ? result : false
     } catch (error) {
+        console.error('[DAO endereco] getSelectByIdAddress:', error.message)
         return false
     }
 }
 
-
-const getSelectByIdAddressUser = async (id) => {
-
+const getSelectByIdAddressUser = async function (usuario_id, trx = null) {
     try {
+        const result = await db(trx)('tb_endereco')
+            .where({ usuario_id })
+            .first()
 
-        let sql = `SELECT * FROM tb_endereco WHERE usuario_id = ?`
+        return result || {}
+    } catch (error) {
+        console.error('[DAO endereco] getSelectByIdAddressUser:', error.message)
+        return {}
+    }
+}
 
-        let result = await knexDatabase.raw(sql, [id])
+const setInsertAddress = async function (endereco, trx = null) {
+    try {
+        const result = await db(trx)('tb_endereco').insert({
+            cep: endereco.cep,
+            cidade: endereco.cidade,
+            estado: endereco.estado,
+            logradouro: endereco.logradouro,
+            numero: endereco.numero,
+            complemento: endereco.complemento || '',
+            bairro: endereco.bairro,
+            usuario_id: endereco.usuario_id
+        })
 
-        const rows = result?.[0]
+        return result[0]
+    } catch (error) {
+        console.error('[DAO endereco] setInsertAddress:', error.message)
+        return false
+    }
+}
 
-        if (Array.isArray(rows) && rows.length > 0) {
-            return rows[0]   
+const setUpdateAddress = async function (endereco, trx = null) {
+    try {
+        const dados = {}
+
+        if (endereco.cep !== undefined) dados.cep = endereco.cep
+        if (endereco.cidade !== undefined) dados.cidade = endereco.cidade
+        if (endereco.estado !== undefined) dados.estado = endereco.estado
+        if (endereco.logradouro !== undefined) dados.logradouro = endereco.logradouro
+        if (endereco.numero !== undefined) dados.numero = endereco.numero
+        if (endereco.complemento !== undefined) dados.complemento = endereco.complemento || ''
+        if (endereco.bairro !== undefined) dados.bairro = endereco.bairro
+        if (endereco.usuario_id !== undefined) dados.usuario_id = endereco.usuario_id
+
+        if (Object.keys(dados).length === 0) return true
+
+        let query = db(trx)('tb_endereco')
+
+        if (endereco.id_endereco) {
+            query = query.where({ id_endereco: endereco.id_endereco })
+        } else if (endereco.usuario_id) {
+            query = query.where({ usuario_id: endereco.usuario_id })
+        } else {
+            return false
         }
 
-        return {}
+        const result = await query.update(dados)
 
+        return result > 0
     } catch (error) {
-        console.log(error)
-        return {}
+        console.error('[DAO endereco] setUpdateAddress:', error.message)
+        return false
     }
 }
 
-const getSelectLastID = async function(){
+const setDeleteAddress = async function (id_endereco, trx = null) {
     try {
-        
-        let sql = `select id_endereco from tb_endereco order by id_endereco desc limit 1`
+        const result = await db(trx)('tb_endereco')
+            .where({ id_endereco })
+            .del()
 
-       
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_endereco)
-        else
-            return false
-
+        return result > 0
     } catch (error) {
-
-        console.log(error)
-    }
-}
-
-
-const setInsertAddress = async function(endereco){
-    try {
-  let sql = `insert into tb_endereco (
-    cep,
-    cidade,
-    estado,
-    logradouro,
-    numero,
-    complemento,
-    bairro,
-    usuario_id
-) values (
-    "${endereco.cep}",
-    "${endereco.cidade}",
-    "${endereco.estado}",
-    "${endereco.logradouro}",
-    ${endereco.numero},
-    "${endereco.complemento}",
-    "${endereco.bairro}",
-    ${endereco.usuario_id}
-);`
-
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-
-
-const setUpdateAddress = async function(endereco){
-    try {
-      let sql = `update tb_endereco set 
-    cep = "${endereco.cep}",
-    cidade = "${endereco.cidade}",
-    estado = "${endereco.estado}",
-    logradouro = "${endereco.logradouro}",
-    numero = ${endereco.numero},
-    complemento = "${endereco.complemento}",
-    bairro      =  "${endereco.bairro}",
-    usuario_id     = ${endereco.usuario_id}
-where id_endereco = ${endereco.id_endereco}`
-console.log(sql)
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-
-    } catch (error) {
-       return false
-    }
-}
-
-const setDeleteAddress = async function(id){
-    try {
-      
-        let sql = `delete from tb_endereco where id_endereco=${id}`
-  
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO endereco] setDeleteAddress:', error.message)
         return false
     }
 }
@@ -174,7 +110,6 @@ module.exports = {
     getSelectByIdAddress,
     setInsertAddress,
     setUpdateAddress,
-    getSelectLastID,
     setDeleteAddress,
     getSelectByIdAddressUser
-} 
+}

@@ -1,129 +1,86 @@
-/******************************************************************************
- * Objetivo: DAO de artista — corrigido typo usaurio_id → usuario_id
- * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.1
-*****************************************************************************/
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
-
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
 const getSelectAllArtist = async function () {
     try {
-        let sql = `select * from tb_artista order by id_artista desc`
-        let result = await knexDatabase.raw(sql)
-
-        if (Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_artista').orderBy('id_artista', 'desc')
     } catch (error) {
         console.error('[DAO artista] getSelectAllArtist:', error.message)
         return false
     }
 }
 
-const getSelectByIdArtistUser = async function (id) {
+const getSelectByIdArtistUser = async function (usuario_id, trx = null) {
     try {
-        let sql = `SELECT * FROM tb_artista WHERE usuario_id = ?`
-        let result = await knexDatabase.raw(sql, [id])
-        const rows = result?.[0]
+        const result = await db(trx)('tb_artista')
+            .where({ usuario_id })
+            .first()
 
-        if (Array.isArray(rows) && rows.length > 0)
-            return rows[0]
-
-        return null
+        return result || null
     } catch (error) {
         console.error('[DAO artista] getSelectByIdArtistUser:', error.message)
         return null
     }
 }
 
-const getSelectByIdArtist = async function (id) {
+const getSelectByIdArtist = async function (id_artista) {
     try {
-        let sql = `select * from tb_artista where id_artista=${id}`
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('tb_artista')
+            .where({ id_artista })
 
-        if (Array.isArray(result[0]))
-            return result
-        else
-            return false
+        return result.length > 0 ? result : false
     } catch (error) {
         console.error('[DAO artista] getSelectByIdArtist:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function () {
+const setInsertArtist = async function (artista, trx = null) {
     try {
-        let result = await knexDatabase('tb_artista')
-            .max('id_artista as id_artista')
-            .first()
-        return result
-    } catch (error) {
-        console.error('[DAO artista] getSelectLastID:', error.message)
-        return false
-    }
-}
+        const result = await db(trx)('tb_artista').insert({
+            nome_artistico: artista.nome_artistico,
+            usuario_id: artista.usuario_id,
+            descricao: artista.descricao || ''
+        })
 
-const setInsertArtist = async function (artista) {
-    try {
-        // CORRIGIDO: era "usaurio_id" (typo) → "usuario_id"
-        let sql = `
-            INSERT INTO tb_artista (
-                nome_artistico,
-                usuario_id,
-                descricao
-            ) VALUES (
-                "${artista.nome_artistico}",
-                ${artista.usuario_id},
-                "${artista.descricao}"
-            )
-        `
-        let result = await knexDatabase.raw(sql)
-
-        if (result)
-            return true
-        else
-            return false
+        return result[0]
     } catch (error) {
         console.error('[DAO artista] setInsertArtist:', error.message)
         return false
     }
 }
 
-const setUpdateArtist = async function (artista) {
+const setUpdateArtist = async function (artista, trx = null) {
     try {
-        let sql = `
-            UPDATE tb_artista SET
-                nome_artistico = "${artista.nome_artistico}",
-                usuario_id = ${artista.usuario_id},
-                descricao = "${artista.descricao}"
-            WHERE id_artista = ${artista.id_artista}
-        `
-        let result = await knexDatabase.raw(sql)
+        const dados = {}
 
-        if (result)
-            return true
-        else
-            return false
+        if (artista.nome_artistico !== undefined) dados.nome_artistico = artista.nome_artistico
+        if (artista.usuario_id !== undefined) dados.usuario_id = artista.usuario_id
+        if (artista.descricao !== undefined) dados.descricao = artista.descricao
+
+        if (Object.keys(dados).length === 0) return true
+
+        const result = await db(trx)('tb_artista')
+            .where({ id_artista: artista.id_artista })
+            .update(dados)
+
+        return result > 0
     } catch (error) {
         console.error('[DAO artista] setUpdateArtist:', error.message)
         return false
     }
 }
 
-const setDeleteArtist = async function (id) {
+const setDeleteArtist = async function (id_artista, trx = null) {
     try {
-        let sql = `delete from tb_artista where id_artista=${id}`
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_artista')
+            .where({ id_artista })
+            .del()
 
-        if (Array.isArray(result))
-            return result
-        else
-            return false
+        return result > 0
     } catch (error) {
         console.error('[DAO artista] setDeleteArtist:', error.message)
         return false
@@ -135,7 +92,6 @@ module.exports = {
     getSelectByIdArtist,
     setInsertArtist,
     setUpdateArtist,
-    getSelectLastID,
     getSelectByIdArtistUser,
     setDeleteArtist
 }

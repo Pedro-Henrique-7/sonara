@@ -1,135 +1,80 @@
-/******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
- * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
-*****************************************************************************/
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-const knexDatabase = knex(knexConfig.development);
-
-
-
-const getSelectAllArtistGendersSong = async function(){
+const getSelectAllArtistGendersSong = async function () {
     try {
-      
-        let sql = `select * from tb_artista_genero_musical order by id_artista_genero_musical desc `
-
-        let result = await knexDatabase.raw(sql)
-   
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
-
+        return await knexDatabase('tb_artista_genero_musical')
+            .orderBy('id_artista_genero_musical', 'desc')
     } catch (error) {
-       
+        console.error('[DAO artista_genero_musical] getSelectAllArtistGendersSong:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdArtistGendersSong = async function(id){
+const getSelectByIdArtistGendersSong = async function (id_artista_genero_musical) {
     try {
-    
-        let sql = `select * from tb_artista_genero_musical where id_artista_genero_musical=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('tb_artista_genero_musical')
+            .where({ id_artista_genero_musical })
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
-
+        return result.length > 0 ? result : false
     } catch (error) {
-      
+        console.error('[DAO artista_genero_musical] getSelectByIdArtistGendersSong:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+const setInsertArtistGendersSong = async function (artista_genero_musical, trx = null) {
     try {
-        
-        let sql = `select id_artista_genero_musical from tb_artista_genero_musical order by id_artista_genero_musical desc limit 1`
+        const result = await db(trx)('tb_artista_genero_musical').insert({
+            genero_musical_id: artista_genero_musical.genero_musical_id,
+            artista_id: artista_genero_musical.artista_id
+        })
 
-      
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_artista_genero_musical)
-        else
-            return false
-
+        return result[0]
     } catch (error) {
-
+        console.error('[DAO artista_genero_musical] setInsertArtistGendersSong:', error.message)
         return false
     }
 }
 
-
-const setInsertArtistGendersSong = async function(artista_genero_musical){
+const setUpdateArtistGendersSong = async function (artista_genero_musical, trx = null) {
     try {
-let sql = `insert into tb_artista_genero_musical (
-    genero_musical_id,
-    artista_id
-) values (
-    ${artista_genero_musical.genero_musical_id},
-    ${artista_genero_musical.artista_id}
- 
-)`;
+        const dados = {}
 
- 
+        if (artista_genero_musical.genero_musical_id !== undefined)
+            dados.genero_musical_id = artista_genero_musical.genero_musical_id
 
-        let result = await knexDatabase.raw(sql)
+        if (artista_genero_musical.artista_id !== undefined)
+            dados.artista_id = artista_genero_musical.artista_id
 
-        if(result)
-            return true
-        else
-            return false
+        if (Object.keys(dados).length === 0) return true
 
+        const result = await db(trx)('tb_artista_genero_musical')
+            .where({
+                id_artista_genero_musical: artista_genero_musical.id_artista_genero_musical
+            })
+            .update(dados)
+
+        return result > 0
     } catch (error) {
- 
-    }
-}
-
-
-const setUpdateArtistGendersSong = async function(artista_genero_musical){
-    try {
-      let sql = `update tb_artista_genero_musical set 
-    genero_musical_id = "${artista_genero_musical.genero_musical_id}",
-    artista_id = "${artista_genero_musical.artista_id}"
-where id_artista_genero_musical = ${artista_genero_musical.id_artista_genero_musical}`;
-
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
-
-    } catch (error) {
+        console.error('[DAO artista_genero_musical] setUpdateArtistGendersSong:', error.message)
         return false
     }
 }
 
-const setDeleteArtistGendersSong = async function(id){
+// Deleta todos os gêneros de um artista pelo artista_id
+const setDeleteArtistGendersSong = async function (artista_id, trx = null) {
     try {
-      
-        let sql = `delete from tb_artista_genero_musical where id_artista_genero_musical=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_artista_genero_musical')
+            .where({ artista_id })
+            .del()
 
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
+        return result >= 0
     } catch (error) {
-       
+        console.error('[DAO artista_genero_musical] setDeleteArtistGendersSong:', error.message)
         return false
     }
 }
@@ -139,6 +84,5 @@ module.exports = {
     getSelectByIdArtistGendersSong,
     setInsertArtistGendersSong,
     setUpdateArtistGendersSong,
-    getSelectLastID,
     setDeleteArtistGendersSong
-} 
+}
