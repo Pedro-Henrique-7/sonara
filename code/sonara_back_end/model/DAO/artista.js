@@ -41,6 +41,25 @@ const getSelectByIdArtistUser = async function (id) {
     }
 }
 
+const getSelectByIdEvent = async function(id){
+    try {
+    
+        let sql = `select * from tb_evento_artista where evento_id=${id}`
+        
+       
+        let result = await knexDatabase.raw(sql)
+
+        if(Array.isArray(result[0]))
+            return result[0]
+        else
+            return false
+
+    } catch (error) {
+      
+        return false
+    }
+}
+
 const getSelectByIdArtist = async function (id) {
     try {
         let sql = `select * from tb_artista where id_artista=${id}`
@@ -136,6 +155,7 @@ module.exports = {
     setInsertArtist,
     setUpdateArtist,
     getSelectLastID,
+    getSelectByIdEvent,
     getSelectByIdArtistUser,
     setDeleteArtist
 }
