@@ -22,8 +22,6 @@
   justify-content: center;
   align-items: flex-start;
 
-  background: linear-gradient(180deg, #000000 0%, #160000 25%, #ff3c00 100%);
-
   font-family: "Poppins", sans-serif;
 }
 
@@ -33,17 +31,15 @@
 
 .sonaraSobreArtistaContainer {
   width: 100%;
-  max-width: 1050px;
+  max-width: 1300px;
 
-  padding: 2.5rem;
+  padding: 2rem;
 
-  border-radius: 1.8rem;
+  border-radius: 2rem;
 
   background: linear-gradient(180deg, #b70000 0%, #ff2d00 100%);
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-
-  margin-left: 50vh;
 }
 
 /* =========================================================
@@ -54,9 +50,11 @@
   color: white;
 
   font-size: 2rem;
-  font-weight: 500;
+  font-weight: 600;
 
   margin-bottom: 2rem;
+
+  text-align: center;
 }
 
 /* =========================================================
@@ -68,9 +66,9 @@
 
   padding: 3rem;
 
-  border-radius: 2.5rem;
+  border-radius: 2rem;
 
-  background: linear-gradient(180deg, #000000 0%, #737373 100%);
+  background: linear-gradient(180deg, #111111 0%, #5e5e5e 100%);
 
   display: flex;
   flex-direction: column;
@@ -84,12 +82,11 @@
 .sonaraSobreArtistaTopo {
   width: 100%;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8rem;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 3rem;
 
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 /* =========================================================
@@ -106,15 +103,15 @@
   width: 230px;
   height: 230px;
 
-  border-radius: 50%;
+  border-radius: 24px;
 
   object-fit: cover;
 
-  border: 6px solid rgba(255, 255, 255, 0.12);
-}
+  border: 5px solid rgba(255, 255, 255, 0.15);
 
-.sonaraSobreArtistaFotoArea img {
-  margin-right: 200px;
+  background: #ffe600;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
 }
 
 /* =========================================================
@@ -124,23 +121,26 @@
 .sonaraSobreArtistaInfo {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 1rem;
 
   color: white;
 }
 
 .sonaraSobreArtistaInfo h2 {
-  font-size: 2.3rem;
-  font-weight: 500;
+  font-size: 2.4rem;
+  font-weight: 600;
 }
 
 .sonaraSobreArtistaInfo span {
-  font-size: 1.7rem;
+  font-size: 1.3rem;
+  opacity: 0.9;
+  margin-right: 60vh;
+  width: 12vh;
 }
 
 .sonaraSobreArtistaInfo p {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
+  opacity: 0.95;
 }
 
 /* =========================================================
@@ -149,15 +149,16 @@
 
 .sonaraSobreArtistaAvaliacao {
   display: flex;
-  gap: 0.7rem;
+  align-items: center;
+  gap: 0.5rem;
 
-  font-size: 2rem;
+  font-size: 1.8rem;
 
   color: #ffe600;
 }
 
 .sonaraSobreArtistaStarOff {
-  color: white;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* =========================================================
@@ -165,22 +166,21 @@
 ========================================================= */
 
 .sonaraSobreArtistaLocal {
-  width: 100%;
-
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.8rem;
+
+  margin-top: 0.5rem;
 
   color: white;
 }
 
 .sonaraSobreArtistaLocalIcone {
-  font-size: 3rem;
+  font-size: 1.7rem;
 }
 
 .sonaraSobreArtistaLocal p {
-  font-size: 1.8rem;
+  font-size: 1.1rem;
 }
 
 /* =========================================================
@@ -192,19 +192,18 @@
 
   display: flex;
   justify-content: center;
-
-  text-align: center;
 }
 
 .sonaraSobreArtistaDescricao p {
-  max-width: 850px;
+  max-width: 950px;
 
   color: white;
 
-  font-size: 1.8rem;
-  line-height: 1.8;
-}
+  text-align: center;
 
+  font-size: 1.1rem;
+  line-height: 1.9;
+}
 /* =========================================================
    RODAPÉ INFO
 ========================================================= */
@@ -216,6 +215,10 @@
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+
+  padding-top: 1rem;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 
   flex-wrap: wrap;
 }
@@ -233,12 +236,15 @@
 }
 
 .sonaraSobreArtistaCache h3 {
-  font-size: 2rem;
-  font-weight: 500;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .sonaraSobreArtistaCache span {
   font-size: 1.8rem;
+  font-weight: 500;
+
+  color: #ffe600;
 }
 
 /* =========================================================
@@ -247,16 +253,18 @@
 
 .sonaraSobreArtistaRedes {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
+
+  flex-wrap: wrap;
 }
 
 .sonaraSobreArtistaRedes a {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
 
   border-radius: 50%;
 
-  background: black;
+  background: rgba(0, 0, 0, 0.8);
 
   display: flex;
   justify-content: center;
@@ -266,13 +274,15 @@
 
   color: white;
 
-  font-size: 2rem;
+  font-size: 1.7rem;
 
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .sonaraSobreArtistaRedes a:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px) scale(1.05);
+
+  background: #000;
 }
 
 /* =========================================================
@@ -284,46 +294,150 @@
 
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+
+  gap: 1.5rem;
 }
 
 .sonaraSobreArtistaBtn {
   width: 100%;
 
-  padding: 1.3rem 1rem;
+  padding: 1.2rem;
 
   border: none;
   border-radius: 999px;
 
-  background: #ef620c;
+  background: linear-gradient(90deg, #ef620c 0%, #ff7a00 100%);
 
   color: white;
 
-  font-size: 1.7rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 600;
 
   cursor: pointer;
+
+  transition: 0.1s ease;
+}
+
+.sonaraSobreArtistaBtn:hover {
+  transform: translateY(-1px);
+
+  filter: brightness(1.08);
+}
+
+/* =========================
+   Contra Oferta
+========================= */
+
+.sonaraModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.7);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+
+  backdrop-filter: blur(4px);
+}
+
+.sonaraModal {
+  width: 90%;
+  max-width: 500px;
+
+  background: linear-gradient(180deg, #b70000 0%, #ff2d00 100%);
+
+  border-radius: 20px;
+
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  color: white;
+
+  animation: aparecerModal 0.25s ease;
+}
+
+.sonaraModal h2 {
+  font-size: 1.5rem;
+}
+
+.sonaraModalInput,
+.sonaraModalTextarea {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  border-radius: 12px;
+
+  padding: 15px;
+
+  background: aliceblue;
+
+  color: rgb(0, 0, 0);
+
+  font-size: 1.2rem;
+}
+
+.sonaraModalTextarea {
+  min-height: 120px;
+  resize: none;
+  background-color: aliceblue;
+}
+
+.sonaraModalBotoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.sonaraModalCancelar,
+.sonaraModalEnviar {
+  border: none;
+
+  padding: 12px 20px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-weight: bold;
 
   transition: 0.3s;
 }
 
-.sonaraSobreArtistaBtn:hover {
-  transform: scale(1.03);
-
-  background: #ff7300;
+.sonaraModalCancelar {
+  background: #444;
+  color: white;
 }
 
-/* =========================================================
-   RESPONSIVIDADE EXTRA LARGE
-========================================================= */
+.sonaraModalEnviar {
+  background: #c86100;
+  color: white;
+}
 
-@media (max-width: 1200px) {
-  .sonaraSobreArtistaContainer {
-    max-width: 95%;
+.sonaraModalEnviar:hover {
+  transform: scale(1.05);
+}
+
+@keyframes aparecerModal {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
   }
 
-  .sonaraSobreArtistaCard {
-    padding: 2.5rem;
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -338,89 +452,34 @@
 
   .sonaraSobreArtistaContainer {
     padding: 1.5rem;
-    border-radius: 1.5rem;
-  }
-
-  .sonaraSobreArtistaTitulo {
-    font-size: 1.8rem;
-    text-align: center;
   }
 
   .sonaraSobreArtistaCard {
     padding: 2rem;
-    border-radius: 2rem;
-    gap: 2.5rem;
   }
 
   .sonaraSobreArtistaTopo {
-    flex-direction: column;
-    gap: 2rem;
+    grid-template-columns: 1fr;
+
     text-align: center;
   }
 
-  .sonaraSobreArtistaFoto {
-    width: 190px;
-    height: 190px;
-  }
-
-  .sonaraSobreArtistaInfo h2 {
-    font-size: 2rem;
-  }
-
-  .sonaraSobreArtistaInfo span {
-    font-size: 1.3rem;
-  }
-
-  .sonaraSobreArtistaInfo p {
-    font-size: 1.2rem;
-  }
-
-  .sonaraSobreArtistaAvaliacao {
-    font-size: 1.7rem;
+  .sonaraSobreArtistaInfo {
+    align-items: center;
   }
 
   .sonaraSobreArtistaLocal {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .sonaraSobreArtistaLocal p {
-    font-size: 1.3rem;
-  }
-
-  .sonaraSobreArtistaDescricao p {
-    font-size: 1.2rem;
-    line-height: 1.7;
+    justify-content: center;
   }
 
   .sonaraSobreArtistaRodapeInfo {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
     text-align: center;
-    gap: 2rem;
-  }
-
-  .sonaraSobreArtistaCache h3 {
-    font-size: 1.6rem;
-  }
-
-  .sonaraSobreArtistaCache span {
-    font-size: 1.4rem;
-  }
-
-  .sonaraSobreArtistaRedes {
-    justify-content: center;
-    flex-wrap: wrap;
   }
 
   .sonaraSobreArtistaBotoes {
     grid-template-columns: 1fr;
-  }
-
-  .sonaraSobreArtistaBtn {
-    font-size: 1.3rem;
   }
 }
 
@@ -430,83 +489,49 @@
 
 @media (max-width: 600px) {
   .sonaraSobreArtistaPagina {
-    padding: 1.2rem 0.7rem;
+    padding: 1rem 0.7rem;
   }
 
   .sonaraSobreArtistaContainer {
     padding: 1rem;
-    border-radius: 1rem;
+
+    border-radius: 1.2rem;
+  }
+
+  .sonaraSobreArtistaCard {
+    padding: 1.5rem;
+
+    border-radius: 1.5rem;
   }
 
   .sonaraSobreArtistaTitulo {
     font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .sonaraSobreArtistaCard {
-    padding: 1.3rem;
-    border-radius: 1.5rem;
-    gap: 2rem;
   }
 
   .sonaraSobreArtistaFoto {
-    width: 150px;
-    height: 150px;
+    width: 170px;
+    height: 170px;
   }
 
   .sonaraSobreArtistaInfo h2 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
 
-  .sonaraSobreArtistaInfo span {
-    font-size: 1rem;
-  }
-
-  .sonaraSobreArtistaInfo p {
-    font-size: 1rem;
-  }
-
-  .sonaraSobreArtistaAvaliacao {
-    font-size: 1.3rem;
-    gap: 0.4rem;
-  }
-
-  .sonaraSobreArtistaLocalIcone {
-    font-size: 2.2rem;
-  }
-
+  .sonaraSobreArtistaInfo span,
+  .sonaraSobreArtistaInfo p,
+  .sonaraSobreArtistaDescricao p,
   .sonaraSobreArtistaLocal p {
     font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  .sonaraSobreArtistaDescricao p {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  .sonaraSobreArtistaCache h3 {
-    font-size: 1.2rem;
-  }
-
-  .sonaraSobreArtistaCache span {
-    font-size: 1rem;
-  }
-
-  .sonaraSobreArtistaRedes {
-    gap: 1rem;
   }
 
   .sonaraSobreArtistaRedes a {
-    width: 55px;
-    height: 55px;
+    width: 52px;
+    height: 52px;
 
     font-size: 1.4rem;
   }
 
   .sonaraSobreArtistaBtn {
-    padding: 1rem;
-
     font-size: 1rem;
   }
 }
@@ -516,17 +541,13 @@
 ========================================================= */
 
 @media (max-width: 400px) {
-  .sonaraSobreArtistaCard {
-    padding: 1rem;
-  }
-
   .sonaraSobreArtistaFoto {
-    width: 120px;
-    height: 120px;
+    width: 130px;
+    height: 130px;
   }
 
   .sonaraSobreArtistaInfo h2 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   .sonaraSobreArtistaDescricao p {
@@ -534,14 +555,8 @@
   }
 
   .sonaraSobreArtistaBtn {
+    padding: 1rem;
+
     font-size: 0.95rem;
-    padding: 0.9rem;
-  }
-
-  .sonaraSobreArtistaRedes a {
-    width: 48px;
-    height: 48px;
-
-    font-size: 1.2rem;
   }
 }

@@ -26,6 +26,11 @@ import SobreEventoCasaShow from "./Casa_Show/sobreEventoCasaShow.jsx";
 // NOVA TELA
 import EditarEvento from "./Casa_Show/sobreEventoCasaShow.jsx";
 
+//Usuario padrão
+import TelaUsuario from "./Usuario/telaUsuario.jsx";
+import SobreEventoUsuario from "./Usuario/sobreEventoUsuario.jsx";
+import MapaEvento from "./Usuario/telaMapa.jsx";
+
 export default function RouterApp() {
   return (
     <BrowserRouter>
@@ -55,6 +60,14 @@ export default function RouterApp() {
 
         {/* EDITAR EVENTO */}
         <Route path="/editarEvento/:id" element={<EditarEvento />} />
+
+        {/* Usuario */}
+        <Route path="/telaDeUsuario" element={<TelaUsuario />} />
+        <Route
+          path="/sobreEventoUsuario/:id"
+          element={<SobreEventoUsuario />}
+        />
+        <Route path="/mapaDoEvento" element={<MapaEvento />} />
       </Routes>
     </BrowserRouter>
   );

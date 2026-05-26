@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import fotoPerfil from "../img/fotoPerfil.jpg";
-import "./header.css";
+import "./headerUsuario.css";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -35,7 +35,10 @@ export default function Header() {
       <div className="content-limit">
         <div className="header-top">
           <nav className="nav">
-            <span className="nav-item" onClick={() => navigate("/shows")}>
+            <span
+              className="nav-item"
+              onClick={() => navigate("/telaDeUsuario")}
+            >
               Home
             </span>
 
@@ -43,9 +46,9 @@ export default function Header() {
 
             <span
               className="nav-item"
-              onClick={() => navigate("/listaEventos")}
+              onClick={() => navigate("/mapaDoEvento")}
             >
-              Meus Eventos
+              Mapa
             </span>
           </nav>
 

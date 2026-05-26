@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./telaShows.css";
+import "./telaUsuario.css";
 import { Search, MapPin, Clock, Calendar } from "lucide-react";
-import FooterSonara from "./footer";
-import Header from "./header";
+// import FooterSonara from "../footer";
+import Header from "./headerUsuario";
 
-import { buscarEventos } from "../services/eventoService"; // ajuste o caminho se necessário
+import { buscarEventos } from "../services/eventoService";
 
-// Placeholder para eventos sem foto
 const PLACEHOLDER_IMG =
   "https://placehold.co/600x300/1a1a2e/ffffff?text=Sem+Foto";
 
@@ -33,7 +32,7 @@ function obterImagem(fotos) {
   return PLACEHOLDER_IMG;
 }
 
-export default function Shows() {
+export default function TelaUsuario() {
   const navigate = useNavigate();
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +40,6 @@ export default function Shows() {
   const [sliderIndex, setSliderIndex] = useState(0);
   const [busca, setBusca] = useState("");
 
-  // Busca os eventos da API
   useEffect(() => {
     buscarEventos()
       .then((json) => {
@@ -55,7 +53,6 @@ export default function Shows() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Avança o slider automaticamente
   useEffect(() => {
     if (eventos.length === 0) return;
     const interval = setInterval(() => {
@@ -64,7 +61,6 @@ export default function Shows() {
     return () => clearInterval(interval);
   }, [eventos]);
 
-  // Filtra pelo campo de busca (nome ou cidade)
   const eventosFiltrados = eventos.filter((ev) => {
     const termo = busca.toLowerCase();
     return (
@@ -74,7 +70,6 @@ export default function Shows() {
     );
   });
 
-  // Primeiros eventos para o slider (máx 5)
   const sliderEventos = eventos.slice(0, 5);
 
   return (
@@ -96,19 +91,21 @@ export default function Shows() {
           </div>
         </div>
 
-        {/* Estado de loading */}
+        {/* Loading */}
         {loading && (
           <div className="loading-state">
             <p>Carregando eventos...</p>
           </div>
         )}
 
+        {/* Erro */}
         {erro && (
           <div className="error-state">
             <p>{erro}</p>
           </div>
         )}
 
+        {/* Slider — só aparece quando não há busca ativa */}
         {!loading && !erro && busca === "" && sliderEventos.length > 0 && (
           <>
             <h3 className="titulo">Eventos Próximos</h3>
@@ -134,7 +131,9 @@ export default function Shows() {
                     </div>
                     <div className="btn-slide">
                       <button
-                        onClick={() => navigate(`/sobreEvento/${ev.id_evento}`)}
+                        onClick={() =>
+                          navigate(`/sobreEventoUsuario/${ev.id_evento}`)
+                        }
                       >
                         Ver Mais
                       </button>
@@ -156,6 +155,7 @@ export default function Shows() {
           </>
         )}
 
+        {/* Grid de eventos */}
         {!loading && !erro && (
           <>
             <h3 className="titulo">
@@ -204,7 +204,9 @@ export default function Shows() {
 
                     <button
                       className="card-btn"
-                      onClick={() => navigate(`/sobreEvento/${ev.id_evento}`)}
+                      onClick={() =>
+                        navigate(`/sobreEventoUsuario/${ev.id_evento}`)
+                      }
                     >
                       Ver Mais
                     </button>
@@ -215,8 +217,6 @@ export default function Shows() {
           </>
         )}
       </div>
-
-      <FooterSonara />
     </div>
   );
 }
