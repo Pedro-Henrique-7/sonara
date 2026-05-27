@@ -68,8 +68,9 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response) {
 
 router.delete('/:id', cors(), async function(request, response) {
     let idGenero = request.params.id
-
+    console.log(idGenero)
     let genero = await controllerGenero.excluirGenero(idGenero)
+
     response.status(genero.status_code)
     response.json(genero)
 })

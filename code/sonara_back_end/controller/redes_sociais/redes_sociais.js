@@ -88,7 +88,7 @@ const inserirRedesSociais = async function(RedesSociais, contentType){
             
                 //Processamento
                 //Chama a função para inserir um novo RedesSociais no BD
-                let resultRedesSociais = await RedesSociaisDAO.setInserSocialMidia(RedesSociais)
+                let resultRedesSociais = await RedesSociaisDAO.setInsertSocialMidia(RedesSociais)
 
                 if(resultRedesSociais){
                     //Chama a função para receber o ID gerado no BD

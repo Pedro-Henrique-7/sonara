@@ -26,6 +26,26 @@ const getSelectByIdArtistUser = async function (usuario_id, trx = null) {
     }
 }
 
+const getSelectLastID = async function () {
+    try {
+
+        const result = await knexDatabase('tb_artista')
+            .select('id_artista')
+            .orderBy('id_artista', 'desc')
+            .first()
+
+        return result
+            ? result.id_artista
+            : false
+
+    } catch (error) {
+
+        console.error('[DAO artista] getSelectLastID:', error.message)
+        return false
+    }
+}
+
+
 const getSelectByIdArtist = async function (id_artista) {
     try {
         const result = await knexDatabase('tb_artista')
@@ -93,5 +113,6 @@ module.exports = {
     setInsertArtist,
     setUpdateArtist,
     getSelectByIdArtistUser,
-    setDeleteArtist
+    setDeleteArtist,
+    getSelectLastID
 }

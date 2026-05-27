@@ -39,6 +39,30 @@ const getSelectByIdOrganizer = async function (id_organizador) {
     }
 }
 
+
+const getSelectLastID = async function () {
+    try {
+
+        const result = await knexDatabase('tb_organizador')
+            .select('id_organizador')
+            .orderBy('id_organizador', 'desc')
+            .first()
+
+        return result
+            ? result.id_organizador
+            : false
+
+    } catch (error) {
+
+        console.error('[DAO organizador] getSelectLastID:', error.message)
+        return false
+    }
+}
+
+
+
+
+
 const setInsertOrganizer = async function (organizador, trx = null) {
     try {
         const result = await db(trx)('tb_organizador').insert({
@@ -86,5 +110,6 @@ module.exports = {
     setInsertOrganizer,
     setUpdateOrganizer,
     getSelectByIdOrganizerUser,
+    getSelectLastID,
     setDeleteOrganizer
 }

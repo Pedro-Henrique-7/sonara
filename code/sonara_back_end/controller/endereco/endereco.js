@@ -89,7 +89,7 @@ const inserirEndereco = async function(endereco, contentType){
                 //Processamento
                 //Chama a função para inserir um novo endereco no BD
                 let resultEnderecos = await enderecoDAO.setInsertAddress(endereco)
-
+console.log(resultEnderecos)
                 if(resultEnderecos){
                     //Chama a função para receber o ID gerado no BD
                     let lastID = await enderecoDAO.getSelectLastID()

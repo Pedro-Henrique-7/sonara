@@ -58,6 +58,8 @@ const getSelectLastID = async function () {
     }
 }
 
+
+
 // Insere novo status
 const setInsertArtistEventStatus = async function (evento_artista_status, trx = null) {
     try {

@@ -151,3 +151,4 @@ app.use('/v1/sonara/eventosDoOrganizador', eventosDoOrganizador)
 app.listen(PORT, function(){
   console.log('API aguardando resposta ;)')
 })
+    

@@ -38,6 +38,25 @@ const getSelectByIdAddressUser = async function (usuario_id, trx = null) {
     }
 }
 
+const getSelectLastID = async function () {
+    try {
+
+        const result = await knexDatabase('tb_endereco')
+            .select('id_endereco')
+            .orderBy('id_endereco', 'desc')
+            .first()
+
+        return result
+            ? result.id_endereco
+            : false
+
+    } catch (error) {
+
+        console.error('[DAO endereco] getSelectLastID:', error.message)
+        return false
+    }
+}
+
 const setInsertAddress = async function (endereco, trx = null) {
     try {
         const result = await db(trx)('tb_endereco').insert({
@@ -111,5 +130,6 @@ module.exports = {
     setInsertAddress,
     setUpdateAddress,
     setDeleteAddress,
+    getSelectLastID,
     getSelectByIdAddressUser
 }
