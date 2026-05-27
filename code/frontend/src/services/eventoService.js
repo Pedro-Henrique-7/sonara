@@ -2,6 +2,7 @@ const URL_BASE = `${import.meta.env.VITE_API_URL}/evento`;
 
 export async function buscarEventos() {
   const response = await fetch(URL_BASE);
+
   if (response.ok) {
     const json = await response.json();
 
@@ -14,7 +15,6 @@ export async function buscarEventosPorId(id) {
   const response = await fetch(`${URL_BASE}/${id}`);
   const json = await response.json();
   if (response.ok) {
-
     return json;
   }
   throw new Error(json.message ?? "Erro ao buscar Eventos");

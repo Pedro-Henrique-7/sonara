@@ -48,7 +48,7 @@ export default function SobreEvento() {
 
     buscarEventosPorId(id)
       .then((json) => {
-        const ev = json?.response?.Evento ?? null;
+        const ev = json?.response?.evento ?? null;
         if (!ev) throw new Error("Evento não encontrado.");
         setEvento(ev);
       })
@@ -82,7 +82,7 @@ export default function SobreEvento() {
     );
   }
 
-  const imagemPrincipal = obterImagem(evento.fotos);
+  const imagemPrincipal = obterImagem(evento.fotos[0]);
 
   const enderecoCompleto = evento.logradouro
     ? `${evento.logradouro}, ${evento.numero}${evento.complemento ? ` – ${evento.complemento}` : ""}, ${evento.bairro} – ${evento.cidade}/${evento.estado}`
@@ -97,7 +97,7 @@ export default function SobreEvento() {
         <div className="left">
           <img
             src={imagemPrincipal}
-            alt={evento.evento_nome}
+            alt={evento.nome}
             className="main-img"
             onError={(e) => { e.target.src = PLACEHOLDER_IMG; }}
           />
@@ -122,7 +122,7 @@ export default function SobreEvento() {
 
             <section className="evento-nome">
               <label>Nome do evento</label>
-              <p>{evento.evento_nome}</p>
+              <p>{evento.nome}</p>
             </section>
 
             <section className="evento-descricao">

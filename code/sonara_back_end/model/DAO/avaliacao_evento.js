@@ -15,11 +15,10 @@ const db = (trx) => trx || knexDatabase
 const getSelectAllEventReview = async function () {
     try {
 
-        return await knexDatabase('tb_avaliacao_evento')
+         return await knexDatabase('tb_avaliacao_evento')
             .orderBy('id_avaliacao_evento', 'desc')
 
     } catch (error) {
-        console.error('[DAO eventReview] getSelectAllEventReview:', error.message)
         return false
     }
 }

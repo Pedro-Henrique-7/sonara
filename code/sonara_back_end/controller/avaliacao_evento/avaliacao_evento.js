@@ -18,6 +18,7 @@ const listarAvaliacaoEvento = async function(){
     try {
        
         let resultAvaliacaoEvento = await avaliacaoEventoDAO.getSelectAllEventReview()
+        console.log(resultAvaliacaoEvento)
       
         if(resultAvaliacaoEvento){
             if(resultAvaliacaoEvento.length > 0){
@@ -26,6 +27,8 @@ const listarAvaliacaoEvento = async function(){
             MESSAGES.HEADER.response.avaliacaoEvento = resultAvaliacaoEvento
 
             return MESSAGES.HEADER
+                
+            }else{
                 return MESSAGES.ERROR_NOT_FOUND //404
             }
         }else{

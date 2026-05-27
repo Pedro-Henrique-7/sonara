@@ -5,7 +5,7 @@ import { Search, MapPin, Clock, Calendar } from "lucide-react";
 import FooterSonara from "./footer";
 import Header from "./header";
 
-import { buscarEventos } from "../services/eventoService"; // ajuste o caminho se necessário
+import { buscarEventos } from "../services/eventoService"; 
 
 // Placeholder para eventos sem foto
 const PLACEHOLDER_IMG =
@@ -27,8 +27,8 @@ function formatarHora(hora) {
 }
 
 function obterImagem(fotos) {
-  if (fotos && fotos.length > 0 && fotos[0].caminho) {
-    return fotos[0].caminho;
+  if (fotos && fotos.length > 0 && fotos[0].url) {
+    return fotos[0].url;
   }
   return PLACEHOLDER_IMG;
 }
@@ -68,7 +68,7 @@ export default function Shows() {
   const eventosFiltrados = eventos.filter((ev) => {
     const termo = busca.toLowerCase();
     return (
-      ev.evento_nome?.toLowerCase().includes(termo) ||
+      ev.nome?.toLowerCase().includes(termo) ||
       ev.cidade?.toLowerCase().includes(termo) ||
       ev.local?.toLowerCase().includes(termo)
     );
@@ -121,13 +121,13 @@ export default function Shows() {
                   <div className="slide" key={ev.id_evento ?? i}>
                     <img
                       src={obterImagem(ev.fotos)}
-                      alt={ev.evento_nome}
+                      alt={ev.nome}
                       onError={(e) => {
                         e.target.src = PLACEHOLDER_IMG;
                       }}
                     />
                     <div className="slide-info">
-                      <h4>{ev.evento_nome}</h4>
+                      <h4>{ev.nome}</h4>
                       <span>
                         <Calendar size={13} /> {formatarData(ev.data)}
                       </span>
@@ -170,13 +170,13 @@ export default function Shows() {
                   <div className="card" key={ev.id_evento ?? i}>
                     <img
                       src={obterImagem(ev.fotos)}
-                      alt={ev.evento_nome}
+                      alt={ev.nome}
                       onError={(e) => {
                         e.target.src = PLACEHOLDER_IMG;
                       }}
                     />
                     <div className="card-body">
-                      <h4 className="card-titulo">{ev.evento_nome}</h4>
+                      <h4 className="card-titulo">{ev.nome}</h4>
 
                       {ev.cidade && (
                         <p className="card-detalhe">
