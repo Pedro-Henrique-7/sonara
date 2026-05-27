@@ -20,7 +20,7 @@ export default function Header() {
       window.removeEventListener("usuarioAtualizado", carregarUsuario);
   }, []);
 
-  const fotoUrl = usuarioObj?.foto_url || fotoPerfil;
+  const fotoUrl = usuarioObj?.foto || fotoPerfil;
   const tipoUsuario = usuarioObj?.tipo_usuario || "";
 
   function rotaPerfil() {
@@ -55,7 +55,7 @@ export default function Header() {
                 className="user-name"
                 onClick={() => navigate(rotaPerfil())}
               >
-                {usuarioObj?.nome_artistico || "Usuário"}
+                {usuarioObj?.artista.nome_artistico || "Usuário"}
               </span>
               <span className="user-role">{tipoUsuario}</span>
             </div>

@@ -9,7 +9,6 @@ import {
 } from "../services/usuarioService";
 import { buscarGeneros } from "../services/generoService";
 import { buscarNacionalidades } from "../services/nacionalidadeService";
-
 import { buscarGeneroMusical } from "../services/generoMusicalService";
 import Header from "./header";
 import FooterSonara from "./footer";
@@ -76,39 +75,66 @@ export default function PerfilArtista() {
     const u = JSON.parse(usuarioSalvo);
     setIdUsuario(u.id_usuario);
     setTipoUsuario(u.tipo_usuario || "");
-    if (u.foto_url) setFotoPerfilUrl(u.foto_url);
+
+    // ── FOTO ──────────────────────────────────────────────────────────────
+    // A foto vem direto em u.foto (campo da vw_usuario_completo)
+    if (u.foto) setFotoPerfilUrl(u.foto);
+
+    // ── ENDEREÇO ──────────────────────────────────────────────────────────
+    // O backend retorna u.endereco como objeto aninhado
+    const end = u.endereco || {};
+
+    // ── ARTISTA ───────────────────────────────────────────────────────────
+    // Dados artísticos ficam em u.artista
+    const artista = u.artista || {};
+
+    // Os gêneros musicais do artista têm chave "id" (não id_genero_musical)
+    // Exemplo: [{ id: 41, nome: "Trap" }, { id: 40, nome: "Hard Rock" }]
+    const generosMusicalIds = artista.generos_musicais?.map((g) => g.id) ?? [];
+
+    // ── GENERO / NACIONALIDADE ─────────────────────────────────────────────
+    // Chegam como objetos: u.genero = { id_genero, nome }
+    //                      u.nacionalidade = { id_nacionalidade, nome }
+    const generoId = u.genero?.id_genero ?? "";
+    const nacionalidadeId = u.nacionalidade?.id_nacionalidade ?? "";
 
     setForm({
       nome: u.nome || "",
       data_nasc: u.data_nasc?.split("T")[0] || "",
       email: u.email || "",
       telefone: u.telefone || "",
-      nacionalidade_id: u.nacionalidade_id || "",
-      genero_id: u.genero_id || "",
       cpf: u.cpf || "",
-      cep: u.cep || "",
-      logradouro: u.logradouro || "",
-      numero: u.numero || "",
-      complemento: u.complemento || "",
-      bairro: u.bairro || "",
-      cidade: u.cidade || "",
-      estado: u.estado || "",
-      nome_artistico: u.nome_artistico || "",
-      descricao: u.descricao || "",
-      generos_musicais: u.generos_musicais?.map((g) => g.id_genero_musical) ?? [],
+      nacionalidade_id: nacionalidadeId,
+      genero_id: generoId,
+      // Endereço aninhado
+      cep: end.cep || "",
+      logradouro: end.logradouro || "",
+      numero: end.numero || "",
+      complemento: end.complemento || "",
+      bairro: end.bairro || "",
+      cidade: end.cidade || "",
+      estado: end.estado || "",
+      // Artista aninhado
+      nome_artistico: artista.nome_artistico || "",
+      descricao: artista.descricao || "",
+      generos_musicais: generosMusicalIds,
     });
 
+    // Eventos do artista (se houver)
+    if (artista.eventos && artista.eventos.length > 0) {
+      setMeusEventos(artista.eventos);
+    }
+
     buscarGeneros()
-      .then((data) => setGeneros(data.response.generos ?? []))
+      .then((data) => setGeneros(data.response?.generos ?? []))
       .catch(() => {});
 
     buscarNacionalidades()
-      .then((data) => setNacionalidades(data.response.nacionalidades ?? []))
+      .then((data) => setNacionalidades(data.response?.nacionalidades ?? []))
       .catch(() => {});
 
     buscarGeneroMusical()
-      .then((data) => setGenerosMusicais(data.response.GeneroMusical ?? []))
-      .catch(() => {})
+      .then((data) => setGenerosMusicais(data.response?.GeneroMusical ?? []))
       .catch(() => {});
   }, [navigate]);
 
@@ -118,16 +144,18 @@ export default function PerfilArtista() {
     setForm({ ...form, [e.target.id]: e.target.value });
   }
 
-  function handleToggleGeneroMusical(id) {
+  // Os gêneros musicais da lista da API têm id_genero_musical
+  // mas os já salvos no perfil têm apenas "id" — normalizamos para id_genero_musical
+  function handleToggleGeneroMusical(idGeneroMusical) {
     setErro("");
     setSucesso("");
     setForm((prev) => {
-      const jaSelecionado = prev.generos_musicais.includes(id);
+      const jaSelecionado = prev.generos_musicais.includes(idGeneroMusical);
       return {
         ...prev,
         generos_musicais: jaSelecionado
-          ? prev.generos_musicais.filter((gid) => gid !== id)
-          : [...prev.generos_musicais, id],
+          ? prev.generos_musicais.filter((gid) => gid !== idGeneroMusical)
+          : [...prev.generos_musicais, idGeneroMusical],
       };
     });
   }
@@ -150,7 +178,8 @@ export default function PerfilArtista() {
       const resultado = await atualizarFotoUsuario(idUsuario, file);
       if (resultado.status_code === 200) {
         const u = JSON.parse(sessionStorage.getItem("usuario"));
-        u.foto_url = resultado.response.foto;
+        // A resposta do PATCH /:id/foto retorna response.foto
+        u.foto = resultado.response.foto;
         sessionStorage.setItem("usuario", JSON.stringify(u));
         setFotoPerfilUrl(resultado.response.foto);
         setSucesso("Foto atualizada com sucesso!");
@@ -194,16 +223,40 @@ export default function PerfilArtista() {
     try {
       const u = JSON.parse(sessionStorage.getItem("usuario"));
 
+      // O backend espera os campos "planos" (sem aninhamento) no PUT /usuario/:id
+      // conforme o controller atualizarUsuario
       const payload = {
-        ...form,
+        nome: form.nome,
+        email: form.email,
+        telefone: form.telefone,
+        cpf: form.cpf,
+        data_nasc: form.data_nasc,
+        nacionalidade_id: Number(form.nacionalidade_id),
+        genero_id: Number(form.genero_id),
+        // Endereço
+        cep: form.cep,
+        logradouro: form.logradouro,
+        numero: form.numero,
+        complemento: form.complemento || "",
+        bairro: form.bairro,
+        cidade: form.cidade,
+        estado: form.estado,
+        // Tipo de usuário (necessário para o controller saber se é artista)
         tipo_usuario: u.tipo_usuario,
+        // Campos de artista (só usados se tipo_usuario === 'artista')
+        nome_artistico: form.nome_artistico,
+        descricao: form.descricao,
+        generos_musicais: form.generos_musicais,
       };
 
       const resultado = await atualizarUsuario(idUsuario, payload);
 
       if (resultado.status_code === 200) {
         setSucesso("Dados atualizados com sucesso!");
-        sessionStorage.setItem("usuario", JSON.stringify({ ...u, ...payload }));
+
+        // Atualiza o sessionStorage mantendo a estrutura aninhada
+        const usuarioAtualizado = resultado.response?.usuario || u;
+        sessionStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
         window.dispatchEvent(new Event("usuarioAtualizado"));
       } else {
         setErro(resultado.message || "Erro ao atualizar.");
@@ -246,26 +299,33 @@ export default function PerfilArtista() {
   function handleCancelar() {
     const u = JSON.parse(sessionStorage.getItem("usuario"));
     if (!u) return;
-    if (u.foto_url) setFotoPerfilUrl(u.foto_url);
+
+    if (u.foto) setFotoPerfilUrl(u.foto);
+
+    const end = u.endereco || {};
+    const artista = u.artista || {};
+    const generosMusicalIds = artista.generos_musicais?.map((g) => g.id) ?? [];
+
     setForm({
       nome: u.nome || "",
       data_nasc: u.data_nasc?.split("T")[0] || "",
       email: u.email || "",
       telefone: u.telefone || "",
-      nacionalidade_id: u.nacionalidade_id || "",
-      genero_id: u.genero_id || "",
       cpf: u.cpf || "",
-      cep: u.cep || "",
-      logradouro: u.logradouro || "",
-      numero: u.numero || "",
-      complemento: u.complemento || "",
-      bairro: u.bairro || "",
-      cidade: u.cidade || "",
-      estado: u.estado || "",
-      nome_artistico: u.nome_artistico || "",
-      descricao: u.descricao || "",
-      generos_musicais: u.generos_musicais?.map((g) => g.id_genero_musical) ?? [],
+      nacionalidade_id: u.nacionalidade?.id_nacionalidade ?? "",
+      genero_id: u.genero?.id_genero ?? "",
+      cep: end.cep || "",
+      logradouro: end.logradouro || "",
+      numero: end.numero || "",
+      complemento: end.complemento || "",
+      bairro: end.bairro || "",
+      cidade: end.cidade || "",
+      estado: end.estado || "",
+      nome_artistico: artista.nome_artistico || "",
+      descricao: artista.descricao || "",
+      generos_musicais: generosMusicalIds,
     });
+
     setDropdownAberto(false);
     setErro("");
     setSucesso("");
@@ -390,7 +450,7 @@ export default function PerfilArtista() {
                     >
                       <img
                         src={ev.fotos?.[0]?.caminho || PLACEHOLDER_IMG}
-                        alt={ev.evento_nome}
+                        alt={ev.evento_nome || ev.nome}
                         onError={(e) => {
                           e.target.src = PLACEHOLDER_IMG;
                         }}
@@ -573,7 +633,6 @@ export default function PerfilArtista() {
                 <div className="pa-generos-section">
                   <h3 className="pa-card-title">Gêneros Musicais</h3>
                   <div className="pa-generos-dropdown" ref={dropdownRef}>
-                    {/* Botão que abre/fecha */}
                     <button
                       type="button"
                       className="pa-generos-trigger"
@@ -591,13 +650,13 @@ export default function PerfilArtista() {
                       </svg>
                     </button>
 
-                    {/* Lista de opções */}
                     {dropdownAberto && (
                       <div className="pa-generos-lista">
                         {generoMusical.length === 0 ? (
                           <p className="pa-generos-vazio">Carregando...</p>
                         ) : (
                           generoMusical.map((g) => {
+                            // A lista da API usa id_genero_musical
                             const selecionado = form.generos_musicais.includes(
                               g.id_genero_musical,
                             );
