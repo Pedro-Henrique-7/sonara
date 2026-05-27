@@ -136,34 +136,34 @@ const inserirFoto = async function(Foto, file){
 }
 
 //Atualiza um Foto buscando pelo ID
-const atualizarFoto = async function(Foto, file, id){
+const atualizarFoto = async function (Foto, file, id) {
 
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
     try {
 
-        //Força os IDs como number
+        // FORÇA os IDs corretamente
+        Foto.id = Number(id)
         Foto.evento_id = Number(Foto.evento_id)
-        Foto.id_foto = Number(id)
 
-        if (!file) {
-
-            MESSAGES.HEADER.status = false
-            MESSAGES.HEADER.status_code = 400
-            MESSAGES.HEADER.message = "Arquivo da foto não enviado."
-
-            return MESSAGES.HEADER
-        }
-
-        let validarID = await buscarFotoId(id)
-
-        if(validarID.status_code != 200){
+        // Verifica se existe
+        let validarID = await buscarFotoId(Foto.id)
+console.log(validarID)
+        if (validarID.status_code != 200) {
             return validarID
         }
 
+        // Valida os dados
+        let validar = await validarDadosFoto(Foto, file)
+
+        if (validar) {
+            return validar
+        }
+
+        // Upload da nova imagem
         let urlFotoAzure = await uploadFiles(file)
 
-        if(!urlFotoAzure){
+        if (!urlFotoAzure) {
 
             MESSAGES.HEADER.status = false
             MESSAGES.HEADER.status_code = 502
@@ -172,14 +172,15 @@ const atualizarFoto = async function(Foto, file, id){
             return MESSAGES.HEADER
         }
 
-        //Salva nova URL
+        // Atualiza URL da foto
         Foto.foto = urlFotoAzure
 
         console.log(Foto)
 
+        // Atualiza no banco
         let result = await FotoDAO.setUpdatePicture(Foto)
 
-        if(result){
+        if (result) {
 
             MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
             MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
@@ -188,7 +189,8 @@ const atualizarFoto = async function(Foto, file, id){
 
             return MESSAGES.HEADER
 
-        }else{
+        } else {
+
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 

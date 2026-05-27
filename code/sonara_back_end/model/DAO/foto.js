@@ -99,26 +99,19 @@ const setInsertPicture = async function (foto, trx = null) {
 const setUpdatePicture = async function (foto, trx = null) {
     try {
 
-        const dados = {}
-
-        if (foto.foto !== undefined)
-            dados.foto = foto.foto
-
-        if (foto.evento_id !== undefined)
-            dados.evento_id = foto.evento_id
-
-        if (Object.keys(dados).length === 0)
-            return true
-
         const result = await db(trx)('tb_foto')
             .where({
-                id_foto: foto.id_foto
+                id_foto: foto.id
             })
-            .update(dados)
+            .update({
+                foto: foto.foto,
+                evento_id: foto.evento_id
+            })
 
         return result > 0
 
     } catch (error) {
+
         console.error('[DAO picture] setUpdatePicture:', error.message)
         return false
     }
