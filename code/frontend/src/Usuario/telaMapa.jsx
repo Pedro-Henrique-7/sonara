@@ -7,7 +7,6 @@ export default function MapaEvento() {
   const mapInstanceRef = useRef(null);
 
   useEffect(() => {
-    // CSS do Leaflet
     if (!document.getElementById("leaflet-css")) {
       const link = document.createElement("link");
       link.id = "leaflet-css";
@@ -21,8 +20,8 @@ export default function MapaEvento() {
 
       mapInstanceRef.current = window.L.map(mapRef.current, {
         center: [-23.5505, -46.6333],
-        zoom: 13,
-        zoomControl: true,
+        zoom: 14,
+        zoomControl: false,
         scrollWheelZoom: true,
       });
 
@@ -51,7 +50,13 @@ export default function MapaEvento() {
   return (
     <div className="main-wrapper">
       <HeaderUsuario />
-      <div ref={mapRef} className="mapa-container" />
+
+      <div className="mapa-page">
+        <div className="mapa-card">
+          {/* Mapa */}
+          <div ref={mapRef} className="mapa-container" />
+        </div>
+      </div>
     </div>
   );
 }
