@@ -25,8 +25,8 @@ function formatarHora(hora) {
 }
 
 function obterImagem(fotos) {
-  if (fotos && fotos.length > 0 && fotos[0].caminho) {
-    return fotos[0].caminho;
+  if (fotos && fotos.length > 0 ) {
+    return fotos;
   }
   return PLACEHOLDER_IMG;
 }
@@ -82,12 +82,14 @@ export default function SobreEvento() {
     );
   }
 
-  const imagemPrincipal = obterImagem(evento.fotos[0]);
+  const imagens = obterImagem(evento.fotos);
+  console.log(imagens)
 
   const enderecoCompleto = evento.logradouro
     ? `${evento.logradouro}, ${evento.numero}${evento.complemento ? ` – ${evento.complemento}` : ""}, ${evento.bairro} – ${evento.cidade}/${evento.estado}`
     : null;
 
+    console.log(imagens[0].url)
   return (
     <div className="main-wrapper">
       <Header />
@@ -96,7 +98,7 @@ export default function SobreEvento() {
         {/* ESQUERDA */}
         <div className="left">
           <img
-            src={imagemPrincipal}
+            src={imagens[0].url}
             alt={evento.nome}
             className="main-img"
             onError={(e) => { e.target.src = PLACEHOLDER_IMG; }}
@@ -105,10 +107,10 @@ export default function SobreEvento() {
           <div className="stars">★★★★★</div>
 
           <div className="thumbs">
-            {[1, 2, 3, 4, 5].map((i) => (
+            {imagens.map((foto, i) => (
               <img
                 key={i}
-                src={imagemPrincipal}
+                src={foto.url}
                 alt=""
                 onError={(e) => { e.target.src = PLACEHOLDER_IMG; }}
               />
