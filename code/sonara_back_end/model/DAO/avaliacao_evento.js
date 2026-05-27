@@ -1,140 +1,128 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de avaliações de eventos
  * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllEventReview = async function(){
+// Retorna todas as avaliações de eventos
+const getSelectAllEventReview = async function () {
     try {
-      
-        let sql = `select * from tb_avaliacao_evento order by id_avaliacao_evento desc `
 
-        let result = await knexDatabase.raw(sql)
-   
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_avaliacao_evento')
+            .orderBy('id_avaliacao_evento', 'desc')
 
     } catch (error) {
-       
+        console.error('[DAO eventReview] getSelectAllEventReview:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdEventReview = async function(id){
+// Retorna avaliação pelo ID
+const getSelectByIdEventReview = async function (id_avaliacao_evento) {
     try {
-    
-        let sql = `select * from tb_avaliacao_evento where id_avaliacao_evento=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_avaliacao_evento')
+            .where({ id_avaliacao_evento })
+
+        return result.length > 0 ? result : false
 
     } catch (error) {
-      
+        console.error('[DAO eventReview] getSelectByIdEventReview:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-        
-        let sql = `select id_avaliacao_evento from tb_avaliacao_evento order by id_avaliacao_evento desc limit 1`
 
-      
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_avaliacao_evento)
-        else
-            return false
+        const result = await knexDatabase('tb_avaliacao_evento')
+            .select('id_avaliacao_evento')
+            .orderBy('id_avaliacao_evento', 'desc')
+            .first()
+
+        return result ? result.id_avaliacao_evento : false
 
     } catch (error) {
-
+        console.error('[DAO eventReview] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInsertEventReview = async function(evento){
+// Insere nova avaliação
+const setInsertEventReview = async function (evento, trx = null) {
     try {
-  let sql = `insert into tb_avaliacao_evento(
-    numero_estrelas,
-    usuario_id,
-    evento_id,
-    data_avaliacao
-) values (
-    ${evento.numero_estrelas},
-    ${evento.usuario_id},
-    ${evento.evento_id},
-    "${evento.data_avaliacao}"
 
-);`
- 
+        const result = await db(trx)('tb_avaliacao_evento')
+            .insert({
+                numero_estrelas: evento.numero_estrelas,
+                usuario_id: evento.usuario_id,
+                evento_id: evento.evento_id,
+                data_avaliacao: evento.data_avaliacao
+            })
 
-        let result = await knexDatabase.raw(sql)
+        return result[0]
 
-        if(result)
+    } catch (error) {
+        console.error('[DAO eventReview] setInsertEventReview:', error.message)
+        return false
+    }
+}
+
+// Atualiza avaliação
+const setUpdateEventReview = async function (evento, trx = null) {
+    try {
+
+        const dados = {}
+
+        if (evento.numero_estrelas !== undefined)
+            dados.numero_estrelas = evento.numero_estrelas
+
+        if (evento.usuario_id !== undefined)
+            dados.usuario_id = evento.usuario_id
+
+        if (evento.evento_id !== undefined)
+            dados.evento_id = evento.evento_id
+
+        if (evento.data_avaliacao !== undefined)
+            dados.data_avaliacao = evento.data_avaliacao
+
+        if (Object.keys(dados).length === 0)
             return true
-        else
-            return false
+
+        const result = await db(trx)('tb_avaliacao_evento')
+            .where({
+                id_avaliacao_evento: evento.id_avaliacao_evento
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO eventReview] setUpdateEventReview:', error.message)
         return false
     }
 }
 
-
-const setUpdateEventReview= async function(evento){
+// Deleta avaliação
+const setDeleteEventReview = async function (id_avaliacao_evento, trx = null) {
     try {
-      let sql = `update tb_avaliacao_evento set 
-    numero_estrelas = ${evento.numero_estrelas},
-    usuario_id = ${evento.usuario_id},
-    evento_id = ${evento.evento_id}
-where id_avaliacao_evento = ${evento.id_avaliacao_evento}`;
 
+        const result = await db(trx)('tb_avaliacao_evento')
+            .where({ id_avaliacao_evento })
+            .del()
 
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
+        return result > 0
 
     } catch (error) {
-        return false
-    }
-}
-
-const setDeleteEventReview = async function(id){
-    try {
-      
-        let sql = `delete from tb_avaliacao_evento where id_avaliacao_evento=${id}`
-     
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO eventReview] setDeleteEventReview:', error.message)
         return false
     }
 }
@@ -142,8 +130,8 @@ const setDeleteEventReview = async function(id){
 module.exports = {
     getSelectAllEventReview,
     getSelectByIdEventReview,
+    getSelectLastID,
     setInsertEventReview,
     setUpdateEventReview,
-    getSelectLastID,
     setDeleteEventReview
-} 
+}

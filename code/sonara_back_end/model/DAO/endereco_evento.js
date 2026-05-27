@@ -1,162 +1,161 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de endereço dos eventos
  * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllAddressEvent = async function(){
+// Retorna todos os endereços dos eventos
+const getSelectAllAddressEvent = async function () {
     try {
-      
-        let sql = `select * from tb_endereco_evento order by id_endereco_evento desc`
-    
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_endereco_evento')
+            .orderBy('id_endereco_evento', 'desc')
 
     } catch (error) {
-       
-        return false
-    }
-}
-const getSelectByIdAddressEventEvent = async (id) => {
-
-    let sql = `SELECT * FROM tb_endereco_evento WHERE evento_id = ?`
-
-    let result = await knexDatabase.raw(sql, [id])
-
-    const rows = result?.[0]
-
-    if (Array.isArray(rows) && rows.length > 0) {
-        return rows[0]   
-    }
-
-    return {}
-}
-
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdAddressEvent = async (id) => {
-
-    let sql =  `select * from tb_endereco_evento where id_endereco_evento=${id}`
-
-    let result = await knexDatabase.raw(sql, [id])
-
-    const rows = result?.[0]
-
-    if (Array.isArray(rows) && rows.length > 0) {
-        return rows[0]   
-    }
-
-    return {}
-}
-
-
-const getSelectLastID = async function(){
-    try {
-        
-        let sql = `select id_endereco_evento from tb_endereco_evento order by id_endereco_evento desc limit 1`
-
-       
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_endereco_evento)
-        else
-            return false
-
-    } catch (error) {
-
+        console.error('[DAO addressEvent] getSelectAllAddressEvent:', error.message)
         return false
     }
 }
 
-
-const setInsertAddressEvent = async function(enderco_evento){
+// Retorna endereço pelo ID do evento
+const getSelectByIdAddressEventEvent = async function (evento_id) {
     try {
-  let sql = `insert into tb_endereco_evento (
-    cep,
-    cidade,
-    estado,
-    logradouro,
-    numero,
-    complemento,
-    bairro,
-    evento_id
-) values (
-    "${enderco_evento.cep}",
-    "${enderco_evento.cidade}",
-    "${enderco_evento.estado}",
-    "${enderco_evento.logradouro}",
-    ${enderco_evento.numero},
-    "${enderco_evento.complemento}",
-    "${enderco_evento.bairro}",
-    ${enderco_evento.evento_id}
-);`
 
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('tb_endereco_evento')
+            .where({ evento_id })
+            .first()
 
-        if(result)
-            return true
-        else
-            return false
+        return result || {}
 
     } catch (error) {
-        console.log(error)
+        console.error('[DAO addressEvent] getSelectByIdAddressEventEvent:', error.message)
+        return {}
     }
 }
 
-
-
-const setUpdateAddressEvent = async function(enderco_evento){
+// Retorna endereço pelo ID do endereço
+const getSelectByIdAddressEvent = async function (id_endereco_evento) {
     try {
-      let sql = `update tb_endereco_evento set 
-    cep = "${enderco_evento.cep}",
-    cidade = "${enderco_evento.cidade}",
-    estado = "${enderco_evento.estado}",
-    logradouro = "${enderco_evento.logradouro}",
-    numero = ${enderco_evento.numero},
-    complemento = "${enderco_evento.complemento}",
-    bairro      =  "${enderco_evento.bairro}",
-    evento_id     = ${enderco_evento.evento_id}
-where id_endereco_evento = ${enderco_evento.evento_id}`
 
-        let result = await knexDatabase.raw(sql)
+        const result = await knexDatabase('tb_endereco_evento')
+            .where({ id_endereco_evento })
+            .first()
 
-        if(result)
-            return true
-        else
-            return false
+        return result || {}
 
     } catch (error) {
-        console.log(error)
+        console.error('[DAO addressEvent] getSelectByIdAddressEvent:', error.message)
+        return {}
     }
 }
 
-const setDeleteAddressEvent = async function(id){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-      
-        let sql = `delete from tb_endereco_evento where id_endereco_evento=${id}`
-  
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_endereco_evento')
+            .select('id_endereco_evento')
+            .orderBy('id_endereco_evento', 'desc')
+            .first()
+
+        return result ? result.id_endereco_evento : false
 
     } catch (error) {
-       
+        console.error('[DAO addressEvent] getSelectLastID:', error.message)
+        return false
+    }
+}
+
+// Insere novo endereço
+const setInsertAddressEvent = async function (endereco_evento, trx = null) {
+    try {
+
+        const result = await db(trx)('tb_endereco_evento')
+            .insert({
+                cep: endereco_evento.cep,
+                cidade: endereco_evento.cidade,
+                estado: endereco_evento.estado,
+                logradouro: endereco_evento.logradouro,
+                numero: endereco_evento.numero,
+                complemento: endereco_evento.complemento,
+                bairro: endereco_evento.bairro,
+                evento_id: endereco_evento.evento_id
+            })
+
+        return result[0]
+
+    } catch (error) {
+        console.error('[DAO addressEvent] setInsertAddressEvent:', error.message)
+        return false
+    }
+}
+
+// Atualiza endereço
+const setUpdateAddressEvent = async function (endereco_evento, trx = null) {
+    try {
+
+        const dados = {}
+
+        if (endereco_evento.cep !== undefined)
+            dados.cep = endereco_evento.cep
+
+        if (endereco_evento.cidade !== undefined)
+            dados.cidade = endereco_evento.cidade
+
+        if (endereco_evento.estado !== undefined)
+            dados.estado = endereco_evento.estado
+
+        if (endereco_evento.logradouro !== undefined)
+            dados.logradouro = endereco_evento.logradouro
+
+        if (endereco_evento.numero !== undefined)
+            dados.numero = endereco_evento.numero
+
+        if (endereco_evento.complemento !== undefined)
+            dados.complemento = endereco_evento.complemento
+
+        if (endereco_evento.bairro !== undefined)
+            dados.bairro = endereco_evento.bairro
+
+        if (endereco_evento.evento_id !== undefined)
+            dados.evento_id = endereco_evento.evento_id
+
+        if (Object.keys(dados).length === 0)
+            return true
+
+        const result = await db(trx)('tb_endereco_evento')
+            .where({
+                id_endereco_evento: endereco_evento.id_endereco_evento
+            })
+            .update(dados)
+
+        return result > 0
+
+    } catch (error) {
+        console.error('[DAO addressEvent] setUpdateAddressEvent:', error.message)
+        return false
+    }
+}
+
+// Deleta endereço
+const setDeleteAddressEvent = async function (id_endereco_evento, trx = null) {
+    try {
+
+        const result = await db(trx)('tb_endereco_evento')
+            .where({ id_endereco_evento })
+            .del()
+
+        return result > 0
+
+    } catch (error) {
+        console.error('[DAO addressEvent] setDeleteAddressEvent:', error.message)
         return false
     }
 }
@@ -164,9 +163,9 @@ const setDeleteAddressEvent = async function(id){
 module.exports = {
     getSelectAllAddressEvent,
     getSelectByIdAddressEvent,
+    getSelectByIdAddressEventEvent,
+    getSelectLastID,
     setInsertAddressEvent,
     setUpdateAddressEvent,
-    getSelectLastID,
-    setDeleteAddressEvent,
-    getSelectByIdAddressEventEvent
-} 
+    setDeleteAddressEvent
+}

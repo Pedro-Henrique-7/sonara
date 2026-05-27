@@ -1,165 +1,180 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de organizadores em eventos
  * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
+// Retorna todos os vínculos organizador/evento
 const getSelectAllOrganizerEvent = async function () {
     try {
 
-        let sql = `select * from tb_evento_organizador order by id_evento_organizador desc `
-
-        let result = await knexDatabase.raw(sql)
-
-        if (Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_evento_organizador')
+            .orderBy('id_evento_organizador', 'desc')
 
     } catch (error) {
-
-        console.log(error)
-    }
-}
-
-const getSelectByIdOrganizerEvent = async function(id){
-    try {
-        let sql = `select * from tb_evento_organizador where id_evento_organizador=${id}`
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result[0]))
-            return result[0]  
-        else
-            return false
-    } catch (error) {
+        console.error('[DAO organizerEvent] getSelectAllOrganizerEvent:', error.message)
         return false
     }
 }
 
-
-const getSelectViewEventOrganizer = async function(id){
+// Retorna vínculo pelo ID
+const getSelectByIdOrganizerEvent = async function (
+    id_evento_organizador
+) {
     try {
-        let sql = `
-            SELECT * FROM vw_evento 
-            WHERE id_evento IN (
-                SELECT evento_id FROM tb_evento_organizador eo
-                INNER JOIN tb_organizador org ON org.id_organizador = eo.organizador_id
-                WHERE org.usuario_id = ${id}
+
+        const result = await knexDatabase('tb_evento_organizador')
+            .where({ id_evento_organizador })
+
+        return result.length > 0
+            ? result
+            : false
+
+    } catch (error) {
+        console.error('[DAO organizerEvent] getSelectByIdOrganizerEvent:', error.message)
+        return false
+    }
+}
+
+// Retorna eventos do organizador pelo usuário
+const getSelectViewEventOrganizer = async function (usuario_id) {
+    try {
+
+        const result = await knexDatabase('vw_evento')
+            .whereIn(
+                'id_evento',
+                knexDatabase('tb_evento_organizador as eo')
+                    .join(
+                        'tb_organizador as org',
+                        'org.id_organizador',
+                        'eo.organizador_id'
+                    )
+                    .select('eo.evento_id')
+                    .where('org.usuario_id', usuario_id)
             )
-        `
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return result.length > 0
+            ? result
+            : false
+
     } catch (error) {
+        console.error('[DAO organizerEvent] getSelectViewEventOrganizer:', error.message)
         return false
     }
 }
 
-
-
-const getSelectOrganizerEventByIdEvent = async function (id) {
+// Retorna vínculo pelo ID do evento
+const getSelectOrganizerEventByIdEvent = async function (evento_id) {
     try {
-        let sql = `select * from tb_evento_organizador where evento_id=${id}`
-        let result = await knexDatabase.raw(sql)
 
-        if (Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        const result = await knexDatabase('tb_evento_organizador')
+            .where({ evento_id })
+
+        return result.length > 0
+            ? result
+            : false
+
     } catch (error) {
+        console.error('[DAO organizerEvent] getSelectOrganizerEventByIdEvent:', error.message)
         return false
     }
 }
 
-
-
+// Retorna último ID cadastrado
 const getSelectLastID = async function () {
     try {
-        let sql = `select id_evento_organizador from tb_evento_organizador order by id_evento_organizador desc limit 1`
-        let result = await knexDatabase.raw(sql)
 
-        if (Array.isArray(result[0]))
-            return result[0][0]
-        else
-            return false
+        const result = await knexDatabase('tb_evento_organizador')
+            .select('id_evento_organizador')
+            .orderBy('id_evento_organizador', 'desc')
+            .first()
+
+        return result
+            ? result.id_evento_organizador
+            : false
+
     } catch (error) {
+        console.error('[DAO organizerEvent] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInsertOrganizerEvent = async function (evento_organizador) {
+// Insere vínculo organizador/evento
+const setInsertOrganizerEvent = async function (
+    evento_organizador,
+    trx = null
+) {
     try {
-        let sql = `
-INSERT INTO tb_evento_organizador (
-  evento_id,
-  organizador_id
-) VALUES (
-  ${evento_organizador.evento_id},
-  ${evento_organizador.organizador_id}
-)`
-        let result = await knexDatabase.raw(sql)
 
-        if (result)
-            return true
-        else
-            return false
+        const result = await db(trx)('tb_evento_organizador')
+            .insert({
+                evento_id: evento_organizador.evento_id,
+                organizador_id: evento_organizador.organizador_id
+            })
+
+        return result[0]
 
     } catch (error) {
-        console.log(error)
-    }
-}
-
-
-const setUpdateOrganizerEvent = async function (evento_organizador) {
-    try {
-        let sql = `
-UPDATE tb_evento_organizador SET
-  evento_id = ${evento_organizador.evento_id},
-  organizador_id = ${evento_organizador.organizador_id}
-WHERE id_evento_organizador = ${evento_organizador.id_evento_organizador};
-`
-
-
-
-        let result = await knexDatabase.raw(sql)
-
-        if (result)
-            return true
-        else
-            return false
-
-    } catch (error) {
+        console.error('[DAO organizerEvent] setInsertOrganizerEvent:', error.message)
         return false
     }
 }
 
-const setDeleteOrganizerEvent = async function (id) {
+// Atualiza vínculo organizador/evento
+const setUpdateOrganizerEvent = async function (
+    evento_organizador,
+    trx = null
+) {
     try {
 
-        let sql = `delete from tb_evento_organizador where id_evento_organizador=${id}`
+        const dados = {}
 
+        if (evento_organizador.evento_id !== undefined)
+            dados.evento_id = evento_organizador.evento_id
 
-        let result = await knexDatabase.raw(sql)
+        if (evento_organizador.organizador_id !== undefined)
+            dados.organizador_id = evento_organizador.organizador_id
 
-        if (Array.isArray(result))
-            return result
-        else
-            return false
+        if (Object.keys(dados).length === 0)
+            return true
+
+        const result = await db(trx)('tb_evento_organizador')
+            .where({
+                id_evento_organizador:
+                    evento_organizador.id_evento_organizador
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO organizerEvent] setUpdateOrganizerEvent:', error.message)
+        return false
+    }
+}
 
+// Remove vínculo organizador/evento
+const setDeleteOrganizerEvent = async function (
+    id_evento_organizador,
+    trx = null
+) {
+    try {
+
+        const result = await db(trx)('tb_evento_organizador')
+            .where({ id_evento_organizador })
+            .del()
+
+        return result > 0
+
+    } catch (error) {
+        console.error('[DAO organizerEvent] setDeleteOrganizerEvent:', error.message)
         return false
     }
 }
@@ -167,9 +182,10 @@ const setDeleteOrganizerEvent = async function (id) {
 module.exports = {
     getSelectAllOrganizerEvent,
     getSelectByIdOrganizerEvent,
+    getSelectViewEventOrganizer,
+    getSelectOrganizerEventByIdEvent,
     setInsertOrganizerEvent,
     setUpdateOrganizerEvent,
     setDeleteOrganizerEvent,
-    getSelectLastID,
-    getSelectOrganizerEventByIdEvent
-} 
+    getSelectLastID
+}

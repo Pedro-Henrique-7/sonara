@@ -1,142 +1,127 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de avaliação de artistas
  * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllArtistReview = async function(){
+// Retorna todas as avaliações
+const getSelectAllArtistReview = async function () {
     try {
-      
-        let sql = `select * from tb_avaliacao_artista order by id_avaliacao_artista desc `
-
-        let result = await knexDatabase.raw(sql)
-   
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_avaliacao_artista')
+            .orderBy('id_avaliacao_artista', 'desc')
 
     } catch (error) {
-       
+        console.error('[DAO artistReview] getSelectAllArtistReview:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdArtistReview= async function(id){
+// Retorna avaliação pelo ID
+const getSelectByIdArtistReview = async function (id_avaliacao_artista) {
     try {
-    
-        let sql = `select * from tb_avaliacao_artista where id_avaliacao_artista=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_avaliacao_artista')
+            .where({ id_avaliacao_artista })
+
+        return result.length > 0 ? result : false
 
     } catch (error) {
-      
+        console.error('[DAO artistReview] getSelectByIdArtistReview:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-        
-        let sql = `select id_avaliacao_artista from tb_avaliacao_artista order by id_avaliacao_artista desc limit 1`
 
-      
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_avaliacao_artista)
-        else
-            return false
+        const result = await knexDatabase('tb_avaliacao_artista')
+            .select('id_avaliacao_artista')
+            .orderBy('id_avaliacao_artista', 'desc')
+            .first()
+
+        return result ? result.id_avaliacao_artista : false
 
     } catch (error) {
-
+        console.error('[DAO artistReview] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInsertArtistReview = async function(artista){
+// Insere nova avaliação
+const setInsertArtistReview = async function (artista, trx = null) {
     try {
-  let sql = `insert into tb_avaliacao_artista (
-    numero_estrelas,
-    usuario_id,
-    artista_id,
-    data_avaliacao
-) values (
-    "${artista.numero_estrelas}",
-    ${artista.usuario_id},
-    ${artista.artista_id},
-    "${artista.data_avaliacao}"
 
-);`
+        const result = await db(trx)('tb_avaliacao_artista')
+            .insert({
+                numero_estrelas: artista.numero_estrelas,
+                usuario_id: artista.usuario_id,
+                artista_id: artista.artista_id,
+                data_avaliacao: artista.data_avaliacao
+            })
 
-console.log(sql)
- 
+        return result[0]
 
-        let result = await knexDatabase.raw(sql)
+    } catch (error) {
+        console.error('[DAO artistReview] setInsertArtistReview:', error.message)
+        return false
+    }
+}
 
-        if(result)
+// Atualiza avaliação
+const setUpdateArtistReview = async function (artista, trx = null) {
+    try {
+
+        const dados = {}
+
+        if (artista.numero_estrelas !== undefined)
+            dados.numero_estrelas = artista.numero_estrelas
+
+        if (artista.usuario_id !== undefined)
+            dados.usuario_id = artista.usuario_id
+
+        if (artista.artista_id !== undefined)
+            dados.artista_id = artista.artista_id
+
+        if (artista.data_avaliacao !== undefined)
+            dados.data_avaliacao = artista.data_avaliacao
+
+        if (Object.keys(dados).length === 0)
             return true
-        else
-            return false
+
+        const result = await db(trx)('tb_avaliacao_artista')
+            .where({
+                id_avaliacao_artista: artista.id_avaliacao_artista
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO artistReview] setUpdateArtistReview:', error.message)
         return false
     }
 }
 
-
-const setUpdateArtistReview = async function(artista){
+// Deleta avaliação
+const setDeleteArtistReview = async function (id_avaliacao_artista, trx = null) {
     try {
-      let sql = `update tb_avaliacao_artista set 
-    numero_estrelas = ${artista.numero_estrelas},
-    usuario_id = ${artista.usuario_id},
-    artista_id = ${artista.artista_id}
-where id_avaliacao_artista = ${artista.id_avaliacao_artista}`;
 
+        const result = await db(trx)('tb_avaliacao_artista')
+            .where({ id_avaliacao_artista })
+            .del()
 
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
+        return result > 0
 
     } catch (error) {
-     
-    }
-}
-
-const setDeleteArtistReview = async function(id){
-    try {
-      
-        let sql = `delete from tb_avaliacao_artista where id_avaliacao_artista=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO artistReview] setDeleteArtistReview:', error.message)
         return false
     }
 }
@@ -144,8 +129,8 @@ const setDeleteArtistReview = async function(id){
 module.exports = {
     getSelectAllArtistReview,
     getSelectByIdArtistReview,
+    getSelectLastID,
     setInsertArtistReview,
     setUpdateArtistReview,
-    getSelectLastID,
     setDeleteArtistReview
-} 
+}

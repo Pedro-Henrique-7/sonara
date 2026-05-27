@@ -1,142 +1,139 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de status dos eventos
  * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllStatusEvent = async function(){
+// Retorna todos os status dos eventos
+const getSelectAllStatusEvent = async function () {
     try {
-      
-        let sql = `select * from tb_evento_status order by id_evento_status desc `
 
-        let result = await knexDatabase.raw(sql)
-   
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_evento_status')
+            .orderBy('id_evento_status', 'desc')
 
     } catch (error) {
-       
+        console.error('[DAO statusEvent] getSelectAllStatusEvent:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdStatusEvent = async function(id){
+// Retorna status pelo ID
+const getSelectByIdStatusEvent = async function (
+    id_evento_status
+) {
     try {
-    
-        let sql = `select * from tb_evento_status where id_evento_status=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_evento_status')
+            .where({ id_evento_status })
+
+        return result.length > 0
+            ? result
+            : false
 
     } catch (error) {
-      
+        console.error('[DAO statusEvent] getSelectByIdStatusEvent:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-        
-        let sql = `select id_evento_status from tb_evento_status order by id_evento_status desc limit 1`
 
-      
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_evento_status)
-        else
-            return false
+        const result = await knexDatabase('tb_evento_status')
+            .select('id_evento_status')
+            .orderBy('id_evento_status', 'desc')
+            .first()
+
+        return result
+            ? result.id_evento_status
+            : false
 
     } catch (error) {
-
+        console.error('[DAO statusEvent] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInsertStatusEvent = async function(evento_status){
+// Insere novo status do evento
+const setInsertStatusEvent = async function (
+    evento_status,
+    trx = null
+) {
     try {
- let sql = `
-INSERT INTO tb_evento_status (
-  evento_id,
-  status_id,
-  data_hora
-) VALUES (
-  ${evento_status.evento_id},
-  ${evento_status.status_id},
-   ${evento_status.data_hora ? `'${evento_status.data_hora}'` : null}
-)`
 
- 
+        const result = await db(trx)('tb_evento_status')
+            .insert({
+                evento_id: evento_status.evento_id,
+                status_id: evento_status.status_id,
+                data_hora: evento_status.data_hora || null
+            })
 
-        let result = await knexDatabase.raw(sql)
+        return result[0]
 
-        if(result)
+    } catch (error) {
+        console.error('[DAO statusEvent] setInsertStatusEvent:', error.message)
+        return false
+    }
+}
+
+// Atualiza status do evento
+const setUpdateStatusEvent = async function (
+    evento_status,
+    trx = null
+) {
+    try {
+
+        const dados = {}
+
+        if (evento_status.evento_id !== undefined)
+            dados.evento_id = evento_status.evento_id
+
+        if (evento_status.status_id !== undefined)
+            dados.status_id = evento_status.status_id
+
+        if (evento_status.data_hora !== undefined)
+            dados.data_hora = evento_status.data_hora
+
+        if (Object.keys(dados).length === 0)
             return true
-        else
-            return false
+
+        const result = await db(trx)('tb_evento_status')
+            .where({
+                id_evento_status: evento_status.id_evento_status
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO statusEvent] setUpdateStatusEvent:', error.message)
         return false
     }
 }
 
-
-const setUpdateStatusEvent = async function(evento_status){
+// Remove status do evento
+const setDeleteStatusEvent = async function (
+    id_evento_status,
+    trx = null
+) {
     try {
-    let sql = `
-UPDATE tb_evento_status SET
-  evento_id = ${evento_status.evento_id},
-  status_id = ${evento_status.status_id},
- data_hora = ${evento_status.data_hora ? `'${evento_status.data_hora}'` : null}
-WHERE id_evento_status = ${evento_status.id_evento_status};
-`
 
+        const result = await db(trx)('tb_evento_status')
+            .where({ id_evento_status })
+            .del()
 
-
-        let result = await knexDatabase.raw(sql)
-
-        if(result)
-            return true
-        else
-            return false
+        return result > 0
 
     } catch (error) {
-        return false
-    }
-}
-
-const setDeleteStatusEvent = async function(id){
-    try {
-      
-        let sql = `delete from tb_evento_status where id_evento_status=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO statusEvent] setDeleteStatusEvent:', error.message)
         return false
     }
 }
@@ -148,4 +145,4 @@ module.exports = {
     setUpdateStatusEvent,
     setDeleteStatusEvent,
     getSelectLastID
-} 
+}

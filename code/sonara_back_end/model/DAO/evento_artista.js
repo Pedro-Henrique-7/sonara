@@ -1,153 +1,149 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de artistas em eventos
  * Data: 25/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllArtistEvent = async function(){
+// Retorna todos os vínculos artista/evento
+const getSelectAllArtistEvent = async function () {
     try {
-      
-        let sql = `select * from tb_evento_artista order by id_evento_artista desc `
 
-        let result = await knexDatabase.raw(sql)
-   
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_evento_artista')
+            .orderBy('id_evento_artista', 'desc')
 
     } catch (error) {
-       
+        console.error('[DAO artistEvent] getSelectAllArtistEvent:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdArtistEvent  = async function(id){
+// Retorna vínculo pelo ID
+const getSelectByIdArtistEvent = async function (id_evento_artista) {
     try {
-    
-        let sql = `select * from tb_evento_artista where id_evento_artista=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_evento_artista')
+            .where({ id_evento_artista })
+
+        return result.length > 0 ? result : false
 
     } catch (error) {
-      
+        console.error('[DAO artistEvent] getSelectByIdArtistEvent:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-        
-        let sql = `select id_evento_artista from tb_evento_artista order by id_evento_artista desc limit 1`
 
-      
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_evento_artista)
-        else
-            return false
+        const result = await knexDatabase('tb_evento_artista')
+            .select('id_evento_artista')
+            .orderBy('id_evento_artista', 'desc')
+            .first()
+
+        return result
+            ? result.id_evento_artista
+            : false
 
     } catch (error) {
-
+        console.error('[DAO artistEvent] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInsertArtistEvent  = async function(evento_artista){
+// Insere vínculo artista/evento
+const setInsertArtistEvent = async function (evento_artista, trx = null) {
     try {
-let sql = `
-INSERT INTO tb_evento_artista (
-  artista_id,
-  evento_id,
-  cache_esperado,
-  cache_ofertado,
-  cache_final,
-  contra_proposta,
-  sobre_artista,
-  motivo_inscricao
-) VALUES (
-  ${evento_artista.artista_id},
-  ${evento_artista.evento_id},
-  ${evento_artista.cache_esperado},
-  ${evento_artista.cache_ofertado},
-  ${evento_artista.cache_final},
-  ${evento_artista.contra_proposta ?? 'null'},
-  ${evento_artista.sobre_artista ? `"${evento_artista.sobre_artista}"` : 'null'},
-  ${evento_artista.motivo_inscricao ? `"${evento_artista.motivo_inscricao}"` : 'null'}
-)
-`
-        let result = await knexDatabase.raw(sql)
 
-        if(result)
+        const result = await db(trx)('tb_evento_artista')
+            .insert({
+                artista_id: evento_artista.artista_id,
+                evento_id: evento_artista.evento_id,
+                cache_esperado: evento_artista.cache_esperado,
+                cache_ofertado: evento_artista.cache_ofertado,
+                cache_final: evento_artista.cache_final,
+                contra_proposta: evento_artista.contra_proposta || null,
+                sobre_artista: evento_artista.sobre_artista || null,
+                motivo_inscricao: evento_artista.motivo_inscricao || null
+            })
+
+        return result[0]
+
+    } catch (error) {
+        console.error('[DAO artistEvent] setInsertArtistEvent:', error.message)
+        return false
+    }
+}
+
+// Atualiza vínculo artista/evento
+const setUpdateArtistEvent = async function (evento_artista, trx = null) {
+    try {
+
+        const dados = {}
+
+        if (evento_artista.artista_id !== undefined)
+            dados.artista_id = evento_artista.artista_id
+
+        if (evento_artista.evento_id !== undefined)
+            dados.evento_id = evento_artista.evento_id
+
+        if (evento_artista.cache_esperado !== undefined)
+            dados.cache_esperado = evento_artista.cache_esperado
+
+        if (evento_artista.cache_ofertado !== undefined)
+            dados.cache_ofertado = evento_artista.cache_ofertado
+
+        if (evento_artista.cache_final !== undefined)
+            dados.cache_final = evento_artista.cache_final
+
+        if (evento_artista.contra_proposta !== undefined)
+            dados.contra_proposta = evento_artista.contra_proposta
+
+        if (evento_artista.sobre_artista !== undefined)
+            dados.sobre_artista = evento_artista.sobre_artista
+
+        if (evento_artista.motivo_inscricao !== undefined)
+            dados.motivo_inscricao = evento_artista.motivo_inscricao
+
+        if (Object.keys(dados).length === 0)
             return true
-        else
-            return false
+
+        const result = await db(trx)('tb_evento_artista')
+            .where({
+                id_evento_artista: evento_artista.id_evento_artista
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO artistEvent] setUpdateArtistEvent:', error.message)
         return false
     }
 }
 
-
-const setUpdateArtistEvent = async function(evento_artista){
+// Remove vínculo artista/evento
+const setDeleteArtistEvent = async function (
+    id_evento_artista,
+    trx = null
+) {
     try {
-   let sql = `
-UPDATE tb_evento_artista SET
-  artista_id = ${evento_artista.artista_id},
-  evento_id = ${evento_artista.evento_id},
-  cache_esperado = ${evento_artista.cache_esperado},
-  cache_ofertado = ${evento_artista.cache_ofertado},
-  cache_final = ${evento_artista.cache_final},
-  contra_proposta = ${evento_artista.contra_proposta ?? 'null'},
-  sobre_artista = ${evento_artista.sobre_artista ? `"${evento_artista.sobre_artista}"` : 'null'},
-  motivo_inscricao = ${evento_artista.motivo_inscricao ? `"${evento_artista.motivo_inscricao}"` : 'null'}
-WHERE id_evento_artista = ${evento_artista.id_evento_artista};
-`
 
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_evento_artista')
+            .where({ id_evento_artista })
+            .del()
 
-        if(result)
-            return true
-        else
-            return false
+        return result > 0
 
     } catch (error) {
-        return false
-    }
-}
-
-const setDeleteArtistEvent = async function(id){
-    try {
-      
-        let sql = `delete from tb_evento_artista where id_evento_artista=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO artistEvent] setDeleteArtistEvent:', error.message)
         return false
     }
 }
@@ -159,4 +155,4 @@ module.exports = {
     setUpdateArtistEvent,
     setDeleteArtistEvent,
     getSelectLastID
-} 
+}
