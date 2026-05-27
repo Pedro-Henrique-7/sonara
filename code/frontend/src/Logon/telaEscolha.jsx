@@ -16,14 +16,11 @@ export default function TelaEscolha() {
       <main className="main-escolha">
         <div className="mensagem-escolha">
           <h2>BEM-VINDO A SONARA</h2>{" "}
-          <p>UNIFICANDO IDEIAS, REALIZANDO SONHOS</p> <h2>O QUE VOCÊ BUSCA?</h2>{" "}
+          <p>UNIFICANDO IDEIAS, REALIZANDO SONHOS</p> <h2>O QUE VOCÊ BUSCA?</h2>
           <div className="botao-escolha">
-            <button onClick={() => navigate("/login")}>Fazer Login</button>{" "}
-            <button onClick={() => navigate("/shows")}>
-              Continuar sem Login
-            </button>
+            <button onClick={() => navigate("/login")}>Fazer Login</button>
             <button onClick={() => navigate("/telaDeUsuario")}>
-              entrar como usuario
+              Entrar sem Login
             </button>
           </div>
         </div>
