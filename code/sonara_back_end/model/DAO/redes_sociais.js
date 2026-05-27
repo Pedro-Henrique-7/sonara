@@ -1,131 +1,128 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de redes sociais
  * Data: 29/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllSocialMidia= async function(){
+// Retorna todas as redes sociais
+const getSelectAllSocialMidia = async function () {
     try {
-      
-        let sql = `select * from tb_redes_sociais order by id_redes_sociais desc`
-    
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_redes_sociais')
+            .orderBy('id_redes_sociais', 'desc')
 
     } catch (error) {
-       
+        console.error('[DAO socialMidia] getSelectAllSocialMidia:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdSocialMidia = async function(id){
+// Retorna rede social por ID
+const getSelectByIdSocialMidia = async function (id_redes_sociais) {
     try {
-    
-        let sql = `select * from tb_redes_sociais where id_redes_sociais=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_redes_sociais')
+            .where({ id_redes_sociais })
+
+        return result.length > 0
+            ? result
+            : false
 
     } catch (error) {
-      
+        console.error('[DAO socialMidia] getSelectByIdSocialMidia:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-        
-        let sql = `select id_redes_sociais from tb_redes_sociais order by id_redes_sociais desc limit 1`
 
-       
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_redes_sociais)
-        else
-            return false
+        const result = await knexDatabase('tb_redes_sociais')
+            .select('id_redes_sociais')
+            .orderBy('id_redes_sociais', 'desc')
+            .first()
+
+        return result
+            ? result.id_redes_sociais
+            : false
 
     } catch (error) {
-
+        console.error('[DAO socialMidia] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInserSocialMidia= async function(redes_sociais){
+// Insere rede social
+const setInsertSocialMidia = async function (redes_sociais, trx = null) {
     try {
-       let sql = `insert into tb_redes_sociais 
-            (link, tipo_id, usuario_id)
-           values
-            ("${redes_sociais.link}", ${redes_sociais.tipo_id}, ${redes_sociais.usuario_id})`
 
-               
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_redes_sociais')
+            .insert({
+                link: redes_sociais.link,
+                tipo_id: redes_sociais.tipo_id,
+                usuario_id: redes_sociais.usuario_id
+            })
 
-        if(result)
+        return result[0]
+
+    } catch (error) {
+        console.error('[DAO socialMidia] setInsertSocialMidia:', error.message)
+        return false
+    }
+}
+
+// Atualiza rede social
+const setUpdateSocialMidia = async function (redes_sociais, trx = null) {
+    try {
+
+        const dados = {}
+
+        if (redes_sociais.link !== undefined)
+            dados.link = redes_sociais.link
+
+        if (redes_sociais.tipo_id !== undefined)
+            dados.tipo_id = redes_sociais.tipo_id
+
+        if (redes_sociais.usuario_id !== undefined)
+            dados.usuario_id = redes_sociais.usuario_id
+
+        if (Object.keys(dados).length === 0)
             return true
-        else
-            return false
+
+        const result = await db(trx)('tb_redes_sociais')
+            .where({
+                id_redes_sociais: redes_sociais.id_redes_sociais
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO socialMidia] setUpdateSocialMidia:', error.message)
         return false
     }
 }
 
-
-const setUpdateSocialMidia = async function(redes_sociais){
+// Deleta rede social
+const setDeleteSocialMidia = async function (id_redes_sociais, trx = null) {
     try {
-      let sql = `update tb_redes_sociais set
-                link       = "${redes_sociais.link}",
-                tipo_id    = ${redes_sociais.tipo_id},
-                usuario_id = ${redes_sociais.usuario_id}
-           where id_redes_sociais = ${redes_sociais.id_redes_sociais}`
 
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_redes_sociais')
+            .where({ id_redes_sociais })
+            .del()
 
-        if(result)
-            return true
-        else
-            return false
+        return result > 0
 
     } catch (error) {
-        return false
-    }
-}
-
-const setDeleteSocialMidia = async function(id){
-    try {
-      
-        let sql = `delete from tb_redes_sociais where id_redes_sociais=${id}`
-        
-
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO socialMidia] setDeleteSocialMidia:', error.message)
         return false
     }
 }
@@ -133,8 +130,8 @@ const setDeleteSocialMidia = async function(id){
 module.exports = {
     getSelectAllSocialMidia,
     getSelectByIdSocialMidia,
-    setInserSocialMidia,
+    setInsertSocialMidia,
     setUpdateSocialMidia,
     getSelectLastID,
     setDeleteSocialMidia
-} 
+}

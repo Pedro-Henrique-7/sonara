@@ -1,129 +1,120 @@
 /******************************************************************************
- * Objetivo: Arquivo responsável pela conexãode cassa de show com cantores
+ * Objetivo: DAO responsável pela conexão de status
  * Data: 29/04/2026
- * Autor: Davi de Alemida Santos
- * Versão: 1.0
+ * Autor: Davi de Almeida Santos
+ * Versão: 2.0
 *****************************************************************************/
 
-const knex = require('knex');
-const knexConfig = require('../database_conf/knex');
+const knex = require('knex')
+const knexConfig = require('../database_conf/knex')
 
-const knexDatabase = knex(knexConfig.development);
+const knexDatabase = knex(knexConfig.development)
+const db = (trx) => trx || knexDatabase
 
-
-
-const getSelectAllStatus = async function(){
+// Retorna todos os status
+const getSelectAllStatus = async function () {
     try {
-      
-        let sql = `select * from tb_status order by id_status desc`
-    
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result[0]
-        else
-            return false
+        return await knexDatabase('tb_status')
+            .orderBy('id_status', 'desc')
 
     } catch (error) {
-       
+        console.error('[DAO status] getSelectAllStatus:', error.message)
         return false
     }
 }
 
-//Retorna um filme filtrando pelo ID do banco de dados
-const getSelectByIdStatus = async function(id){
+// Retorna status por ID
+const getSelectByIdStatus = async function (id_status) {
     try {
-    
-        let sql = `select * from tb_status where id_status=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
 
-        if(Array.isArray(result[0]))
-            return result
-        else
-            return false
+        const result = await knexDatabase('tb_status')
+            .where({ id_status })
+
+        return result.length > 0
+            ? result
+            : false
 
     } catch (error) {
-      
+        console.error('[DAO status] getSelectByIdStatus:', error.message)
         return false
     }
 }
 
-const getSelectLastID = async function(){
+// Retorna último ID cadastrado
+const getSelectLastID = async function () {
     try {
-        
-        let sql = `select id_status from tb_status order by id_status desc limit 1`
 
-       
-        let result = await knexDatabase.raw(sql)
- 
-        if(Array.isArray(result))
-            return Number(result[0][0].id_status)
-        else
-            return false
+        const result = await knexDatabase('tb_status')
+            .select('id_status')
+            .orderBy('id_status', 'desc')
+            .first()
+
+        return result
+            ? result.id_status
+            : false
 
     } catch (error) {
-
+        console.error('[DAO status] getSelectLastID:', error.message)
         return false
     }
 }
 
-
-const setInsertStatus = async function(status){
+// Insere status
+const setInsertStatus = async function (status, trx = null) {
     try {
-        let sql = `insert into tb_status (nome)
-                    values( "${status.nome}" )`
 
-               
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_status')
+            .insert({
+                nome: status.nome
+            })
 
-        if(result)
+        return result[0]
+
+    } catch (error) {
+        console.error('[DAO status] setInsertStatus:', error.message)
+        return false
+    }
+}
+
+// Atualiza status
+const setUpdateStatus = async function (status, trx = null) {
+    try {
+
+        const dados = {}
+
+        if (status.nome !== undefined)
+            dados.nome = status.nome
+
+        if (Object.keys(dados).length === 0)
             return true
-        else
-            return false
+
+        const result = await db(trx)('tb_status')
+            .where({
+                id_status: status.id_status
+            })
+            .update(dados)
+
+        return result > 0
 
     } catch (error) {
+        console.error('[DAO status] setUpdateStatus:', error.message)
         return false
     }
 }
 
-
-const setUpdateStatus = async function(status){
+// Deleta status
+const setDeleteStatus = async function (id_status, trx = null) {
     try {
-        let sql = `update tb_status set 
-                        nome                = "${status.nome}"
-                        
-                    
-                    where id_status = ${status.id_status}`
 
-        let result = await knexDatabase.raw(sql)
+        const result = await db(trx)('tb_status')
+            .where({ id_status })
+            .del()
 
-        if(result)
-            return true
-        else
-            return false
+        return result > 0
 
     } catch (error) {
-        return false
-    }
-}
-
-const setDeleteStatus = async function(id){
-    try {
-      
-        let sql = `delete from tb_status where id_status=${id}`
-        
-       
-        let result = await knexDatabase.raw(sql)
-
-        if(Array.isArray(result))
-            return result
-        else
-            return false
-
-    } catch (error) {
-       
+        console.error('[DAO status] setDeleteStatus:', error.message)
         return false
     }
 }
@@ -135,4 +126,4 @@ module.exports = {
     setUpdateStatus,
     getSelectLastID,
     setDeleteStatus
-} 
+}
