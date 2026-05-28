@@ -2,58 +2,164 @@
   font-family: "Poppins", sans-serif;
   line-height: 1.5;
   font-weight: 400;
+
+  /* PALETA DE CORES CENTRALIZADA */
+  --bg-main: #171738;
+  --bg-box: #7180b9;
+  --btn-color: #2e1760;
+  --text-color: #ffffff;
+
+  /* VARIÁVEIS DERIVADAS */
+  --bg-secondary: #2e1760;
+  --text-main: #ffffff;
+  --text-soft: #ffffff;
+  --hover-main: #3a1f7a;
+  --border-main: #7180b9;
+  --shadow-main: rgba(0, 0, 0, 0.35);
 }
 
-body {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
   min-width: 320px;
   min-height: 100vh;
-  box-sizing: border-box;
 
-  background: linear-gradient(
-    to bottom,
-    #000000,
-    #1a1916,
-    #b32a12,
-    rgb(194, 68, 9)
-  );
+  background-color: var(--bg-main);
+  color: var(--text-main);
+
+  font-family: "Poppins", sans-serif;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* TITULOS */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-main);
 }
+
+/* TEXTOS */
+
+p,
+span,
+label,
+a,
+li {
+  color: var(--text-main);
+}
+
+a {
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: var(--text-soft);
+}
+
+/* INPUTS */
+
+input,
+textarea,
+select {
+  background-color: var(--bg-box);
+  color: var(--text-main);
+
+  border: 1px solid transparent;
+  border-radius: 12px;
+
+  padding: 12px;
+  outline: none;
+
+  transition: 0.3s;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--hover-main);
+}
+
+/* BOTÕES */
 
 button {
   border-radius: 15px;
   border: 1px solid transparent;
+
   width: 200px;
   height: 55px;
+
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
 
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: orange;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+  background-color: var(--btn-color);
+  color: var(--text-color);
+
+  transition: 0.3s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover {
+  background-color: var(--hover-main);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-main);
+}
+
+button:active {
+  background-color: #1a0f3c;
+  transform: translateY(0);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
+/* BOXES / CARDS / CONTAINERS */
+
+.card,
+.box,
+.container,
+.modal,
+section {
+  background-color: var(--bg-box);
+
+  border-radius: 20px;
+
+  box-shadow: 0 4px 12px var(--shadow-main);
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hover-main);
 }

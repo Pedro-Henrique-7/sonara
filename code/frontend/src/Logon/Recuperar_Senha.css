@@ -2,15 +2,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-  color: white;
+  color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  background-color: var(--bg-main);
 }
 
 .header-senha {
@@ -49,11 +50,11 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  background: linear-gradient(#a3240d, rgb(216, 57, 36), rgb(240, 81, 7));
+  background-color: var(--bg-box);
   padding: 40px;
   border-radius: 20px;
   width: 400px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-main);
   text-align: center;
 }
 
@@ -78,14 +79,19 @@ body {
 
 .container_credenciais input {
   height: 45px;
-  background-color: white;
-  color: black;
+  background-color: var(--bg-main);
+  color: var(--text-color);
   width: 100%;
   max-width: 300px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid transparent;
   padding: 0 15px;
   font-size: 16px;
+  transition: 0.2s ease;
+}
+
+.container_credenciais input:focus {
+  border-color: var(--hover-main);
 }
 
 .botao button {
@@ -93,8 +99,8 @@ body {
   margin: 30px auto;
   align-items: center;
   justify-content: center;
-  background-color: #fc7427;
-  color: white;
+  background-color: var(--btn-color);
+  color: var(--text-color);
   border: none;
   padding: 12px 30px;
   border-radius: 8px;
@@ -103,11 +109,18 @@ body {
   font-size: 16px;
   transition:
     transform 0.2s,
-    background-color 0.2s;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    background-color 0.2s,
+    box-shadow 0.2s;
+  box-shadow: 0 4px 12px var(--shadow-main);
 }
 
 .botao button:hover {
-  background-color: #e65a10;
+  background-color: var(--hover-main);
   transform: scale(1.05);
+  box-shadow: 0 6px 16px var(--shadow-main);
+}
+
+.botao button:active {
+  background-color: #1a0f3c;
+  transform: scale(1);
 }

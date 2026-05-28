@@ -7,10 +7,14 @@ import { loginUsuario, buscarUsuarioPorId } from "../services/usuarioService";
 
 // Mapeia códigos HTTP para mensagens amigáveis ao usuário
 function traduzirErroLogin(error, statusCode) {
-  if (statusCode === 401) return "E-mail ou senha incorretos. Verifique seus dados e tente novamente.";
-  if (statusCode === 400) return error || "Preencha o e-mail e a senha antes de continuar.";
-  if (statusCode === 415) return "Erro de comunicação com o servidor. Tente novamente.";
-  if (statusCode >= 500)  return "O servidor está indisponível no momento. Tente novamente em alguns minutos.";
+  if (statusCode === 401)
+    return "E-mail ou senha incorretos. Verifique seus dados e tente novamente.";
+  if (statusCode === 400)
+    return error || "Preencha o e-mail e a senha antes de continuar.";
+  if (statusCode === 415)
+    return "Erro de comunicação com o servidor. Tente novamente.";
+  if (statusCode >= 500)
+    return "O servidor está indisponível no momento. Tente novamente em alguns minutos.";
   return error || "Ocorreu um erro inesperado. Tente novamente.";
 }
 
@@ -19,10 +23,10 @@ function Login() {
     sessionStorage.clear();
   }, []);
 
-  const [email, setEmail]         = useState("");
-  const [senha, setSenha]         = useState("");
-  const [erro, setErro]           = useState("");
-  const [loading, setLoading]     = useState(false);
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
   const [campoErro, setCampoErro] = useState({ email: false, senha: false });
 
   const navigate = useNavigate();
@@ -50,64 +54,64 @@ function Login() {
     return mensagem === "";
   }
 
- const handleSubmit = async () => {
-  setErro("");
-  setCampoErro({ email: false, senha: false });
+  const handleSubmit = async () => {
+    setErro("");
+    setCampoErro({ email: false, senha: false });
 
-  if (!validarFormulario()) return;
+    if (!validarFormulario()) return;
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    const response = await loginUsuario(email, senha);
+    try {
+      const response = await loginUsuario(email, senha);
 
-    if (response.status === true) {
-      const usuarioLogin = response.usuario;
-      const token = response.token;
+      if (response.status === true) {
+        const usuarioLogin = response.usuario;
+        const token = response.token;
 
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("usuario", JSON.stringify(usuarioLogin));
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("usuario", JSON.stringify(usuarioLogin));
 
-      try {
-        const usuarioCompletoResponse = await buscarUsuarioPorId(
-          usuarioLogin.id_usuario
-        );
+        try {
+          const usuarioCompletoResponse = await buscarUsuarioPorId(
+            usuarioLogin.id_usuario,
+          );
 
-        const usuarioCompleto = usuarioCompletoResponse?.response?.usuario;
+          const usuarioCompleto = usuarioCompletoResponse?.response?.usuario;
 
-        if (usuarioCompleto) {
-          sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
+          if (usuarioCompleto) {
+            sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
 
-          if (usuarioCompleto.tipo_usuario === "Artista") {
-            navigate("/shows");
-          } else if (usuarioCompleto.tipo_usuario === "Organizador") {
-            navigate("/casaShow");
-          } else {
-            navigate("/usuario");
+            if (usuarioCompleto.tipo_usuario === "Artista") {
+              navigate("/shows");
+            } else if (usuarioCompleto.tipo_usuario === "Organizador") {
+              navigate("/casaShow");
+            } else {
+              navigate("/telaDeUsuario");
+            }
+
+            return;
           }
-
-          return;
+        } catch (error) {
+          console.error("Erro ao buscar usuário completo:", error);
         }
-      } catch (error) {
-        console.error("Erro ao buscar usuário completo:", error);
-      }
 
-      if (usuarioLogin.tipo_usuario === "Artista") {
-        navigate("/shows");
-      } else if (usuarioLogin.tipo_usuario === "Organizador") {
-        navigate("/organizador");
+        if (usuarioLogin.tipo_usuario === "Artista") {
+          navigate("/shows");
+        } else if (usuarioLogin.tipo_usuario === "Organizador") {
+          navigate("/organizador");
+        } else {
+          navigate("/");
+        }
       } else {
-        navigate("/");
+        setErro(response.message || "Erro ao fazer login.");
       }
-    } else {
-      setErro(response.message || "Erro ao fazer login.");
+    } catch (error) {
+      setErro(traduzirErroLogin(error.message, error.status_code));
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    setErro(traduzirErroLogin(error.message, error.status_code));
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSubmit();
@@ -183,7 +187,10 @@ function Login() {
             type="button"
             onClick={handleSubmit}
             disabled={loading}
-            style={{ opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
+            style={{
+              opacity: loading ? 0.7 : 1,
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
           >
             {loading ? "Entrando…" : "Entrar"}
           </button>

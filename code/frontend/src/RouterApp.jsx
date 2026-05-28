@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // LOGON
 import Cadastro from "./Logon/cadastro.jsx";
 import Login from "./Logon/login.jsx";
-import TelaEscolha from "./Logon/telaEscolha.jsx";
 import TelaRecuperarSenha from "./Logon/recuperar_senha.jsx";
 
 // ARTISTA
@@ -36,8 +35,7 @@ export default function RouterApp() {
     <BrowserRouter>
       <Routes>
         {/* LOGIN */}
-        <Route path="/" element={<TelaEscolha />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/recuperar_senha" element={<TelaRecuperarSenha />} />
 
