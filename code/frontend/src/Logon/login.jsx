@@ -79,7 +79,7 @@ function Login() {
           sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
 
           if (usuarioCompleto.tipo_usuario === "Artista") {
-            navigate("/shows");
+            navigate("/");
           } else if (usuarioCompleto.tipo_usuario === "Organizador") {
             navigate("/organizador");
           } else {
