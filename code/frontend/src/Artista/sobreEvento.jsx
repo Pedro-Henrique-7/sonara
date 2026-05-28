@@ -25,7 +25,6 @@ function formatarHora(hora) {
   return hora.slice(0, 5);
 }
 
-
 function obterImagens(fotos) {
   if (Array.isArray(fotos) && fotos.length > 0) {
     return fotos;
@@ -41,7 +40,6 @@ export default function SobreEvento() {
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
 
-
   const usuario = JSON.parse(sessionStorage.getItem("usuario") || "{}");
   const isArtista = usuario?.tipo_usuario?.toLowerCase() === "artista";
 
@@ -50,13 +48,15 @@ export default function SobreEvento() {
   const [nota, setNota] = useState(0);
   const [hoverNota, setHoverNota] = useState(0);
 
+  //Imagens
+  const [imagemSelecionada, setImagemSelecionada] = useState(0);
+
   useEffect(() => {
     async function carregarEvento() {
       try {
         if (!id) throw new Error("ID do evento não informado.");
 
         const json = await buscarEventosPorId(id);
-
 
         const ev =
           json?.response?.evento ||
@@ -105,7 +105,6 @@ export default function SobreEvento() {
     );
   }
 
-
   const imagens = obterImagens(evento.fotos);
 
   // FIX 5: endereço vem aninhado em evento.endereco (objeto)
@@ -124,7 +123,7 @@ export default function SobreEvento() {
         {/* ESQUERDA */}
         <div className="left">
           <img
-            src={imagens[0].url}
+            src={imagens[imagemSelecionada]?.url}
             alt={evento.nome}
             className="main-img"
             onError={(e) => {
@@ -133,7 +132,7 @@ export default function SobreEvento() {
           />
 
           {/* AVALIAÇÃO */}
-          <div className="sonaraSobreArtistaAvaliacao">
+          <div className="sonaraSobreEventoAvaliacao">
             {[...Array(totalEstrelas)].map((_, index) => {
               const valorAtual = index + 1;
               return (
@@ -141,8 +140,8 @@ export default function SobreEvento() {
                   key={valorAtual}
                   className={
                     valorAtual <= (hoverNota || nota)
-                      ? "sonaraSobreArtistaStarOn"
-                      : "sonaraSobreArtistaStarOff"
+                      ? "sonaraSobreEventoStarOn"
+                      : "sonaraSobreEventoStarOff"
                   }
                   onMouseEnter={() => setHoverNota(valorAtual)}
                   onMouseLeave={() => setHoverNota(0)}
@@ -150,22 +149,25 @@ export default function SobreEvento() {
                 />
               );
             })}
-            <span className="sonaraSobreArtistaNotaTexto">{nota}.0</span>
+            <span className="sonaraSobreEventoNotaTexto">{nota}.0</span>
+            <span className="sonaraSobreEventoNota">
+              Media de avaliações: {evento.nota_media || "Sem avaliações"}
+            </span>
           </div>
 
           {/* MINI IMAGENS */}
-          <div className="thumbs">
-            {imagens.map((foto, i) => (
-              <img
-                key={i}
-                src={foto.url}
-                alt={`Foto ${i + 1} do evento`}
-                onError={(e) => {
-                  e.target.src = PLACEHOLDER_IMG;
-                }}
-              />
-            ))}
-          </div>
+          {imagens.map((foto, i) => (
+            <img
+              key={i}
+              src={foto.url}
+              alt={`Foto ${i + 1} do evento`}
+              className={imagemSelecionada === i ? "thumb active" : "thumb"}
+              onClick={() => setImagemSelecionada(i)}
+              onError={(e) => {
+                e.target.src = PLACEHOLDER_IMG;
+              }}
+            />
+          ))}
         </div>
 
         {/* DIREITA */}
@@ -204,13 +206,10 @@ export default function SobreEvento() {
               </section>
             )}
 
-
-            {evento.organizador?.nome && (
-              <section className="evento-organizador">
-                <label>Organizador</label>
-                <p>{evento.organizador.nome}</p>
-              </section>
-            )}
+            <section className="evento-organizador">
+              <label>Organizador</label>
+              <p>{evento.organizador?.nome || "Organizador não informado"}</p>
+            </section>
 
             {evento.artistas && evento.artistas.length > 0 && (
               <section className="evento-artista">

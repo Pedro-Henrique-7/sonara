@@ -40,30 +40,21 @@ body {
   margin-top: 4vh;
 }
 
-.thumbs {
-  display: flex;
-  gap: 10px;
-}
-
-.thumbs img {
-  width: 130px;
-  height: 85px;
-  object-fit: cover;
-  border-radius: 8px;
+.thumb {
+  border: 2px solid transparent;
   cursor: pointer;
-  opacity: 0.7;
+  width: 15vh;
   transition: 0.2s;
-  border-style: solid;
-  border-width: 5px;
-  border-color: transparent;
-  margin-left: 2vh;
-  margin-top: 2vh;
+  border-radius: 10px;
+  margin-left: 1rem;
 }
 
-.thumbs img:hover {
-  opacity: 1;
+.thumb:hover {
   transform: scale(1.05);
-  border-color: var(--border-main);
+}
+
+.thumb.active {
+  border: 2px solid #f1dd007d;
 }
 
 /* RIGHT */
@@ -236,4 +227,21 @@ button:hover {
 
 button:active {
   background-color: #1a0f3c;
+}
+
+.sonaraSobreEventoAvaliacao {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 0.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  font-size: 1.8rem;
+
+  color: #ffe600;
+}
+
+.sonaraSobreEventoStarOff {
+  color: rgba(255, 255, 255, 0.4);
 }
