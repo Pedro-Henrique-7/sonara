@@ -1,34 +1,75 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import fotoPerfil from "../img/fotoPerfil.jpg";
 import "./headerCasaShow.css";
 
-export default function HeaderCasaShow() {
-  const usuario = sessionStorage.getItem("usuario");
-  const usuarioObj = usuario ? JSON.parse(usuario) : null;
+export default function Header() {
   const navigate = useNavigate();
-  return (
-    <header className="header-show">
-      <nav className="nav">
-        <button className="nav-btn" onClick={() => navigate("/casaShow")}>
-          Home
-        </button>
-        <button
-          className="nav-btn"
-          onClick={() => navigate("/contratarArtista")}
-        >
-          Buscar
-        </button>
-        <button
-          className="nav-btn"
-          onClick={() => navigate("/listaMeusEventos")}
-        >
-          Meus Eventos
-        </button>
-      </nav>
+  const [usuarioObj, setUsuarioObj] = useState(null);
 
-      <div className="perfil-area">
-        <div className="perfil-info">
-          <h2>{usuarioObj?.nome || "Usuário"}</h2>
-          <span>Organizador de Eventos</span>
+  function carregarUsuario() {
+    const salvo = sessionStorage.getItem("usuario");
+    setUsuarioObj(salvo ? JSON.parse(salvo) : null);
+  }
+
+  useEffect(() => {
+    carregarUsuario();
+    // Atualiza o header quando PerfilArtista salvar os dados
+    window.addEventListener("usuarioAtualizado", carregarUsuario);
+    return () =>
+      window.removeEventListener("usuarioAtualizado", carregarUsuario);
+  }, []);
+
+  const fotoUrl = usuarioObj?.foto || fotoPerfil;
+  const tipoUsuario = usuarioObj?.tipo_usuario || "";
+
+  function rotaPerfil() {
+    const tipo = tipoUsuario.toLowerCase();
+    if (tipo === "artista") return "/perfil-artista";
+    if (tipo === "organizador") return "/perfil-organizador";
+    return "/perfil";
+  }
+
+  return (
+    <header className="header">
+      <div className="content-limit">
+        <div className="header-top">
+          <nav className="nav">
+            <span className="nav-item" onClick={() => navigate("/casaShow")}>
+              Home
+            </span>
+
+            <span className="nav-item">Buscar</span>
+
+            <span
+              className="nav-item"
+              onClick={() => navigate("/listaEventos")}
+            >
+              Meus Eventos
+            </span>
+          </nav>
+
+          <div className="user">
+            <div className="user-info">
+              <span
+                className="user-name"
+                onClick={() => navigate(rotaPerfil())}
+              >
+                {usuarioObj?.nome || "Usuário"}
+              </span>
+              <span className="user-role">{tipoUsuario}</span>
+            </div>
+
+            <div className="avatar" onClick={() => navigate(rotaPerfil())}>
+              <img
+                src={fotoUrl}
+                alt="Perfil"
+                onError={(e) => {
+                  e.target.src = fotoPerfil;
+                }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </header>

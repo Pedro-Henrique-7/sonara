@@ -1,0 +1,679 @@
+/* =========================================================
+   RESET
+========================================================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   BASE
+========================================================= */
+.pa-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  font-family: "Poppins", sans-serif;
+  color: var(--text-color);
+}
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+========================================================= */
+.pa-central {
+  width: 100%;
+  max-width: 1400px;
+  height: fit-content;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  border-radius: 24px;
+  background-color: var(--bg-box);
+  border: 1px solid var(--border-main);
+  box-shadow: 0 4px 12px var(--shadow-main);
+}
+
+/* =========================================================
+   COLUNAS
+========================================================= */
+.pa-col-left {
+  flex: 0 0 260px;
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  align-self: flex-start;
+}
+
+.pa-col-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* =========================================================
+   FOTO DE PERFIL
+========================================================= */
+.pa-foto-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+}
+
+.pa-foto-circle {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: var(--bg-main);
+  box-shadow: 0 4px 12px var(--shadow-main);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid var(--border-main);
+}
+
+.pa-foto-circle:hover {
+  transform: scale(1.02);
+}
+
+.pa-foto-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--border-main);
+  transition: transform 0.3s ease;
+}
+
+.pa-foto-circle img:hover {
+  transform: scale(1.03);
+}
+
+.pa-foto-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-main);
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.pa-foto-placeholder::after {
+  content: "📸";
+  opacity: 0.5;
+}
+
+/* =========================================================
+   BOTÃO EDITAR FOTO
+========================================================= */
+.pa-edit-btn {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--btn-color);
+  color: var(--text-color);
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--shadow-main);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.pa-edit-btn:hover {
+  transform: scale(1.08);
+  background-color: var(--hover-main);
+}
+
+.pa-edit-btn:active {
+  transform: scale(0.95);
+}
+
+.pa-edit-btn:focus-visible {
+  outline: 2px solid var(--border-main);
+  outline-offset: 2px;
+}
+
+.pa-edit-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+/* =========================================================
+   CARDS GENÉRICOS
+========================================================= */
+.pa-plano-card,
+.pa-dados-card,
+.pa-eventos-card {
+  width: 100%;
+  border-radius: 16px;
+}
+
+/* =========================================================
+   PLANO
+========================================================= */
+.pa-plano-card {
+  padding: 1.3rem;
+  background: #e06020;
+}
+
+.pa-plano-card--secondary {
+  background: #cc5015;
+}
+
+.pa-plano-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.pa-plano-titulo,
+.pa-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.pa-plano-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.pa-plano-desc {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+.pa-eventos-card {
+  padding: 1.25rem 1.5rem;
+  background: #47589f;
+}
+
+.pa-eventos-content {
+  width: 100%;
+}
+
+.pa-eventos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.pa-evento-thumb {
+  width: 100%;
+  aspect-ratio: 1.5 / 1;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #3a2010;
+}
+
+.pa-evento-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pa-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4a2818, #2a1808);
+}
+
+/* =========================================================
+   CARD DE DADOS (FORMULÁRIO)
+========================================================= */
+.pa-dados-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  background: var(--bg-card-secodary);
+}
+
+.pa-dados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+.pa-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: var(--bg-placeholder);
+  color: black;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pa-input:focus {
+  border-color: var(--bg-main);
+  background: #d5d5d5;
+}
+
+.pa-input::placeholder {
+  color: rgb(140, 140, 140);
+}
+
+/* =========================================================
+   ÁREA DOS BOTÕES
+========================================================= */
+.pa-dados-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.pa-dados-actions-destrutivas {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.pa-dados-actions-edicao {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   BOTÕES BASE
+========================================================= */
+.pa-btn {
+  height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease,
+    background 0.15s ease, border-color 0.15s ease;
+}
+
+.pa-btn:hover {
+  filter: brightness(1.1);
+}
+
+.pa-btn:active {
+  transform: scale(0.97);
+}
+
+.pa-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+/* Sair — ghost neutro */
+.pa-btn-sair {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.pa-btn-sair:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+  filter: none;
+}
+
+/* Deletar — ghost vermelho */
+.pa-btn-deletar {
+  background: transparent;
+  border: 1.5px solid rgba(220, 60, 50, 0.5);
+  color: #e05548;
+}
+
+.pa-btn-deletar:hover {
+  background: rgba(220, 60, 50, 0.1);
+  border-color: #e05548;
+  filter: none;
+}
+
+/* Cancelar — ghost claro */
+.pa-btn-cancelar {
+  background: transparent;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.pa-btn-cancelar:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+  filter: none;
+}
+
+/* Salvar — sólido laranja */
+.pa-btn-salvar {
+  background: #c04010;
+  border: 1.5px solid transparent;
+  color: #fff;
+  padding: 0 1.6rem;
+}
+
+.pa-btn-salvar:hover {
+  background: #d4491a;
+  filter: none;
+}
+
+/* =========================================================
+   ANIMAÇÃO APARECER (Cancelar + Salvar)
+========================================================= */
+@keyframes pa-fade-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pa-btn-aparecer {
+  animation: pa-fade-slide-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+/* =========================================================
+   FEEDBACK (erro / sucesso)
+========================================================= */
+.pa-feedback {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  margin-top: -0.25rem;
+}
+
+.pa-feedback--erro {
+  background: rgba(200, 50, 40, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(200, 50, 40, 0.3);
+}
+
+.pa-feedback--sucesso {
+  background: rgba(40, 180, 100, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(40, 180, 100, 0.3);
+}
+
+/* =========================================================
+   GÊNEROS — DROPDOWN
+========================================================= */
+.pa-generos-section {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pa-generos-dropdown {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.pa-generos-trigger {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pa-generos-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.pa-generos-trigger:focus-visible {
+  outline: 2px solid #ffb347;
+  outline-offset: 2px;
+}
+
+.pa-generos-trigger span {
+  flex: 1;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.pa-generos-arrow {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.pa-generos-arrow--aberto {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   LISTA DE GÊNEROS
+========================================================= */
+.pa-generos-lista {
+  width: 100%;
+  max-width: 400px;
+  min-height: 160px;
+  max-height: 240px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(30, 18, 6, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+.pa-generos-lista::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pa-generos-lista::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pa-generos-lista::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.pa-generos-lista::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* =========================================================
+   CHECKBOX GÊNERO
+========================================================= */
+.pa-genero-cb,
+.pa-generos-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.15s ease;
+}
+
+.pa-genero-cb:hover,
+.pa-generos-item:hover {
+  color: #fff;
+}
+
+.pa-genero-cb input[type="checkbox"],
+.pa-generos-cb {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1.5px solid #666;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.pa-genero-cb input[type="checkbox"]:checked,
+.pa-generos-cb:checked {
+  border-color: #a78bfa;
+  background: #a78bfa;
+}
+
+.pa-genero-cb input[type="checkbox"]:checked::after,
+.pa-generos-cb:checked::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 4px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+@media (max-width: 900px) {
+  .pa-central {
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .pa-col-left,
+  .pa-col-right {
+    width: 100%;
+  }
+
+  .pa-col-left {
+    flex: auto;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .pa-foto-wrapper {
+    max-width: 120px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .pa-wrapper {
+    padding: 0.75rem;
+  }
+
+  .pa-central {
+    padding: 1rem;
+  }
+
+  .pa-col-left {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pa-dados-grid,
+  .pa-eventos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pa-dados-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .pa-dados-actions-destrutivas,
+  .pa-dados-actions-edicao {
+    width: 100%;
+  }
+
+  .pa-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pa-foto-wrapper {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pa-dados-card,
+  .pa-eventos-card {
+    padding: 1rem;
+  }
+
+  .pa-generos-trigger {
+    font-size: 0.875rem;
+  }
+
+  .pa-generos-lista {
+    min-height: 130px;
+    max-height: 190px;
+  }
+}

@@ -21,7 +21,7 @@ import ListaMeusEventos from "./Casa_Show/meus-eventos-casaShow.jsx";
 import ContratarArtista from "./Casa_Show/contratarArtista.jsx";
 import TelaSobreArtista from "./Casa_Show/sobreArtista.jsx";
 import SobreEventoCasaShow from "./Casa_Show/sobreEventoCasaShow.jsx";
-
+import TelaPerfilOrganizador from "./Casa_Show/telaPerfilOrganizador.jsx"
 // NOVA TELA
 import EditarEvento from "./Casa_Show/sobreEventoCasaShow.jsx";
 
@@ -54,6 +54,7 @@ export default function RouterApp() {
         <Route path="/listaMeusEventos" element={<ListaMeusEventos />} />
         <Route path="/contratarArtista" element={<ContratarArtista />} />
         <Route path="/sobreArtista" element={<TelaSobreArtista />} />
+        <Route path="/perfil-organizador" element={<TelaPerfilOrganizador/>} />
         <Route path="/sobreEventoCasaShow" element={<SobreEventoCasaShow />} />
 
         {/* EDITAR EVENTO */}
