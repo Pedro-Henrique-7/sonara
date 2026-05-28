@@ -46,9 +46,9 @@
 
   aspect-ratio: 4 / 3;
 
-  background: #1c0700;
+  background-color: var(--bg-main);
 
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px var(--shadow-main);
 }
 
 .evento-imagem {
@@ -89,7 +89,7 @@
 .evento-detalhes-card {
   width: 100%;
 
-  background: linear-gradient(145deg, #3a0e00 0%, #2a0a00 100%);
+  background-color: var(--bg-box);
 
   border-radius: 24px;
 
@@ -99,7 +99,8 @@
   flex-direction: column;
   gap: 22px;
 
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px var(--shadow-main);
+  border: 1px solid var(--border-main);
 }
 
 .evento-detalhes-campo,
@@ -117,7 +118,7 @@
 .evento-cache-label {
   font-size: 0.95rem;
   font-family: "Georgia", serif;
-  color: #ffffff;
+  color: var(--text-color);
 
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -127,7 +128,7 @@
 .evento-cache-input {
   width: 100%;
 
-  background: linear-gradient(90deg, #b84010 0%, #9a3008 100%);
+  background-color: var(--bg-main);
 
   border-radius: 16px;
 
@@ -135,7 +136,7 @@
 
   font-size: 0.92rem;
   font-family: "Georgia", serif;
-  color: #fff;
+  color: var(--text-color);
 
   min-height: 48px;
 
@@ -145,6 +146,13 @@
   word-break: break-word;
 
   line-height: 1.5;
+  border: 1px solid var(--border-main);
+  transition: 0.2s ease;
+}
+
+.evento-detalhes-input:focus,
+.evento-cache-input:focus {
+  border-color: var(--hover-main);
 }
 
 .evento-detalhes-input--small {
@@ -158,7 +166,7 @@
 .evento-detalhes-textarea {
   width: 100%;
 
-  background: linear-gradient(135deg, #b84010 0%, #8a2800 100%);
+  background-color: var(--bg-main);
 
   border-radius: 18px;
 
@@ -166,13 +174,19 @@
 
   font-size: 0.9rem;
   font-family: "Georgia", serif;
-  color: #fff;
+  color: var(--text-color);
 
   line-height: 1.7;
 
   min-height: 140px;
 
   word-break: break-word;
+  border: 1px solid var(--border-main);
+  transition: 0.2s ease;
+}
+
+.evento-detalhes-textarea:focus {
+  border-color: var(--hover-main);
 }
 
 .evento-detalhes-row {
@@ -190,7 +204,7 @@
 .evento-cache-card {
   width: 100%;
 
-  background: linear-gradient(145deg, #b03010 0%, #8a1e00 60%, #6a1500 100%);
+  background-color: var(--bg-box);
 
   border-radius: 24px;
 
@@ -200,7 +214,8 @@
   flex-direction: column;
   gap: 20px;
 
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px var(--shadow-main);
+  border: 1px solid var(--border-main);
 }
 
 /* ─────────────────────────────
@@ -214,7 +229,7 @@
 .evento-btn-ver {
   width: 100%;
 
-  background: linear-gradient(90deg, #c86020 0%, #a84010 100%);
+  background-color: var(--btn-color);
 
   border: none;
   border-radius: 999px;
@@ -223,7 +238,7 @@
 
   font-size: 0.95rem;
   font-family: "Georgia", serif;
-  color: #fff;
+  color: var(--text-color);
 
   cursor: pointer;
 
@@ -231,17 +246,20 @@
 
   transition:
     transform 0.2s ease,
-    filter 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 12px var(--shadow-main);
 }
 
 .evento-btn-ver:hover {
-  filter: brightness(1.08);
+  background-color: var(--hover-main);
   transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-main);
 }
 
 .evento-btn-ver:active {
+  background-color: #1a0f3c;
   transform: scale(0.98);
 }
 

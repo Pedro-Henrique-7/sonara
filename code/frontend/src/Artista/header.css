@@ -45,7 +45,7 @@
 }
 
 .nav-item:hover {
-  background-color: #8b0000;
+  background-color: var(--hover-main);
   border-radius: 1.25rem;
 }
 

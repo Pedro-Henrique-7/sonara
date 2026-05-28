@@ -2,12 +2,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-  background: linear-gradient(to bottom, #000, #ff3c00);
-  color: white;
+  background-color: var(--bg-main);
+  color: var(--text-color);
 }
 
 /* MAIN */
@@ -35,7 +35,7 @@ body {
 
 .stars {
   margin: 15px 0;
-  color: gold;
+  color: var(--text-color);
   font-size: 30px;
   margin-top: 4vh;
 }
@@ -63,7 +63,7 @@ body {
 .thumbs img:hover {
   opacity: 1;
   transform: scale(1.05);
-  border-color: #ff7a3d;
+  border-color: var(--border-main);
 }
 
 /* RIGHT */
@@ -78,7 +78,7 @@ body {
 
 /* BOX PRINCIPAL */
 .form-box {
-  background: rgba(120, 0, 0, 0.65);
+  background-color: var(--bg-box);
   backdrop-filter: blur(6px);
   padding: 35px;
   border-radius: 20px;
@@ -89,7 +89,7 @@ body {
   flex-direction: column;
   gap: 22px;
 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-main);
 }
 
 /* LABELS */
@@ -99,26 +99,27 @@ body {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #ffe5d9;
+  color: var(--text-color);
 }
 
 /* ESTILO BASE DOS CARDS */
 .form-box section {
-  background: #ff5a1f;
+  background-color: var(--bg-main);
   border-radius: 12px;
   padding: 14px 16px;
-  color: white;
+  color: var(--text-color);
 
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border: 1px solid var(--border-main);
 }
 
 /* TEXTO */
 .form-box section p {
   font-size: 15px;
   font-weight: 500;
-  color: white;
+  color: var(--text-color);
 }
 
 /* NOME */
@@ -221,13 +222,18 @@ button {
   padding: 14px;
   border: none;
   border-radius: 10px;
-  background: #ff5a1f;
-  color: white;
+  background-color: var(--btn-color);
+  color: var(--text-color);
   font-size: 16px;
   cursor: pointer;
   transition: 0.2s;
 }
 
 button:hover {
-  background: #ff7a3d;
+  background-color: var(--hover-main);
+  box-shadow: 0 4px 12px var(--shadow-main);
+}
+
+button:active {
+  background-color: #1a0f3c;
 }
