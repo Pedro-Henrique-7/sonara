@@ -18,12 +18,25 @@ const getSelectAllUsers = async function () {
     }
 }
 
+
+
 const getSelectByIdUsers = async function (id) {
     try {
         return await knexDatabase('vw_usuario_completo')
             .where({ id_usuario: id })
     } catch (error) {
         console.error('[DAO usuario] getSelectByIdUsers:', error.message)
+        return false
+    }
+}
+
+const getUsuarioLoginById = async function (id) {
+    try {
+        return await knexDatabase('vw_usuario_login')
+            .where({ id_usuario: id })
+            .first()
+    } catch (error) {
+        console.error('[DAO usuario] getUsuarioLoginById:', error.message)
         return false
     }
 }
@@ -39,16 +52,15 @@ const getSelectByIdUsersOrganizer = async function (usuario_id) {
 }
 
 const getUsuarioByUsuarioEmail = async function (email) {
-    try {
-        const emailValue = typeof email === 'object' && email !== null ? email.email : email
-
-        const result = await knexDatabase('vw_usuario_completo')
-            .where({ email: emailValue })
+ try {
+        const result = await knexDatabase('tb_usuario')
+            .select('id_usuario')
+            .where({ email })
             .first()
 
         return result || false
     } catch (error) {
-        console.error('[DAO usuario] getUsuarioByUsuarioEmail:', error.message)
+        console.error('[DAO usuario] getUsuarioByEmailBasico:', error.message)
         return false
     }
 }
@@ -152,14 +164,31 @@ const setDeleteUsers = async function (id, trx = null) {
     }
 }
 
+
+const getUsuarioExisteById = async function (id_usuario) {
+    try {
+        const result = await knexDatabase('tb_usuario')
+            .select('id_usuario')
+            .where({ id_usuario })
+            .first()
+
+        return result || false
+    } catch (error) {
+        console.error('[DAO usuario] getUsuarioExisteById:', error.message)
+        return false
+    }
+}
+
 module.exports = {
     knexDatabase,
     getSelectAllUsers,
     getSelectByIdUsers,
     getSelectByIdUsersOrganizer,
     getUsuarioByUsuarioEmail,
+    getUsuarioLoginById,
     getSenhaByEmail,
     getUsuarioByUsuarioCPF,
+    getUsuarioExisteById,
     setInsertUsers,
     setUpdateUsers,
     setUpdateFotoUsuario,

@@ -245,7 +245,7 @@ const loginUsuario = async function (usuario) {
         let senhaVerificada = false
 
         try {
-            senhaVerificada = crypto.verifyPassword(usuario.senha, credenciais.senha)
+            senhaVerificada = await crypto.verifyPassword(usuario.senha, credenciais.senha)
         } catch (cryptoErr) {
             console.error('[Controller usuario] loginUsuario — erro ao verificar senha:', cryptoErr.message)
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
@@ -255,15 +255,15 @@ const loginUsuario = async function (usuario) {
             return MESSAGES.ERROR_LOGIN
         }
 
-        let resultUsuario = await usuarioDAO.getSelectByIdUsers(credenciais.id_usuario)
+        let resultUsuario = await usuarioDAO.getUsuarioLoginById(credenciais.id_usuario)
 
-        if (!resultUsuario || resultUsuario.length === 0) {
+        if (!resultUsuario) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
         MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
         MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-        MESSAGES.HEADER.response.usuario = formatarUsuario(resultUsuario[0])
+        MESSAGES.HEADER.response.usuario = resultUsuario
 
         return MESSAGES.HEADER
 
@@ -294,7 +294,7 @@ const inserirUsuario = async function (usuario, arquivo) {
         const usuarioCriptografado = {
             nome: usuario.nome,
             email: usuario.email,
-            senha: crypto.hashPassword(usuario.senha),
+            senha: await crypto.hashPassword(usuario.senha),
             cpf: usuario.cpf,
             data_nasc: usuario.data_nasc,
             nacionalidade_id: usuario.nacionalidade_id,
