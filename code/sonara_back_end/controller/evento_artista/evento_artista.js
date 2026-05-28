@@ -121,6 +121,82 @@ const inserirEventoArtista = async function(EventoArtista, contentType){
     }
 }
 
+
+
+
+const EventoArtistaStatusDAO = require('../../model/DAO/evento_artista_status.js')
+
+
+const candidatarArtista = async function (candidatura, contentType) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (!String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
+            return MESSAGES.ERROR_CONTENT_TYPE
+        }
+
+        if (!candidatura.artista_id || isNaN(candidatura.artista_id) || candidatura.artista_id <= 0)
+            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [artista_id]' }
+
+        if (!candidatura.evento_id || isNaN(candidatura.evento_id) || candidatura.evento_id <= 0)
+            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [evento_id]' }
+
+        if (!candidatura.cache_esperado || isNaN(candidatura.cache_esperado))
+            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [cache_esperado]' }
+
+        if (!candidatura.sobre_artista || candidatura.sobre_artista.length > 500)
+            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [sobre_artista]' }
+
+        if (!candidatura.motivo_inscricao || candidatura.motivo_inscricao.length > 500)
+            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [motivo_inscricao]' }
+
+        const eventoArtista = {
+            artista_id: Number(candidatura.artista_id),
+            evento_id: Number(candidatura.evento_id),
+            cache_esperado: Number(candidatura.cache_esperado),
+            cache_ofertado: 0,
+            cache_final: 0,
+            contra_proposta: null,
+            sobre_artista: candidatura.sobre_artista,
+            motivo_inscricao: candidatura.motivo_inscricao,
+        }
+
+        const resultInsert = await EventoArtistaDAO.setInsertArtistEvent(eventoArtista)
+
+        if (!resultInsert) {
+            // Pode ser duplicata (UNIQUE artista_id + evento_id)
+            return { ...MESSAGES.ERROR_INTERNAL_SERVER_MODEL, message: 'Você já está candidatado a este evento.' }
+        }
+
+        const lastID = await EventoArtistaDAO.getSelectLastID()
+        if (!lastID) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+
+        const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: lastID,
+            status_id: 1, 
+            data_hora: agora,
+        })
+
+        if (!resultStatus) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+
+        eventoArtista.id_evento_artista = lastID
+        eventoArtista.status = 'Pendente'
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_CREATED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
+        MESSAGES.HEADER.message     = 'Candidatura enviada com sucesso!'
+        MESSAGES.HEADER.response    = eventoArtista
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] candidatarArtista:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+
 //Atualiza um EventoArtista buscando pelo ID
 const atualizarEventoArtista = async function(EventoArtista, id, contentType){
     //Criando um objeto novo para as mensagens
@@ -256,5 +332,6 @@ module.exports = {
     buscarEventoArtistaId,
     inserirEventoArtista,
     atualizarEventoArtista,
+    candidatarArtista,
     excluirEventoArtista
 }

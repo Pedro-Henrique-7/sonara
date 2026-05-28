@@ -39,6 +39,18 @@ router.get('/:id', cors(), async function (request, response){
 
 })
 
+//candidatar artista para evento   
+
+router.post('/candidatar', cors(), bodyParserJson, async function (request, response) {
+    const dadosBody   = request.body
+    const contentType = request.headers['content-type']
+
+    const resultado = await controllerEventoArtista.candidatarArtista(dadosBody, contentType)
+
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
+
 
 //inserir EventoArtista
 router.post('/', cors(), bodyParserJson, async function (request, response) {
@@ -52,6 +64,9 @@ router.post('/', cors(), bodyParserJson, async function (request, response) {
     response.status(EventoArtista.status_code)
     response.json(EventoArtista)
 })
+
+
+
 
 
 router.put('/:id', cors(), bodyParserJson, async function(request, response) {

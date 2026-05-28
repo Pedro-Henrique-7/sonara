@@ -5,6 +5,41 @@ function extrairMensagemErro(data, fallback) {
   return data?.message || data?.error || fallback;
 }
 
+
+export async function buscarUsuarioPorId(id) {
+  try {
+    const token = sessionStorage.getItem("token"); 
+    const response = await fetch(`${URL_BASE}/usuario/${id}`, {
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    }); 
+    const data = await response.json();
+
+    if (!response.ok) {   
+      const mensagem = extrairMensagemErro(
+        data,
+        response.status === 404
+          ? "Usuário não encontrado."
+          : "Erro ao buscar dados do usuário. Tente novamente."
+      );
+      const err = new Error(mensagem);
+      err.status_code = response.status;
+      throw err;
+    }
+    return data;
+  }
+  catch (err) {
+    if (err.status_code) throw err;
+    const networkErr = new Error(
+      "Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente."
+    );
+    networkErr.status_code = 0;
+    throw networkErr;
+  }
+}
+
+
 // ─── Cadastrar usuário ─────────────────────────────────────────────────────────
 export async function cadastrarUsuario(usuario, foto = null) {
   try {

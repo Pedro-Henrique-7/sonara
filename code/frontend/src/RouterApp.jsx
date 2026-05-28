@@ -49,7 +49,7 @@ export default function RouterApp() {
         <Route path="/meusEventos" element={<MeusEventos />} />
         <Route path="/listaEventos" element={<EventosLista />} />
         <Route path="/perfil-artista" element={<PerfilArtista />} />
-
+        <Route path="/candidatar/:idEvento" element={<EventoInscricao />} />
         {/* CASA DE SHOW */}
         <Route path="/casaShow" element={<TelaInicial />} />
         <Route path="/marcarEvento" element={<MarcarEvento />} />

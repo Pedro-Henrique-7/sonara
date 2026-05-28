@@ -39,6 +39,8 @@ const getSelectByIdArtistEvent = async function (id_evento_artista) {
     }
 }
 
+
+
 // Retorna último ID cadastrado
 const getSelectLastID = async function () {
     try {

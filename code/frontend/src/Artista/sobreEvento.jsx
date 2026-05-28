@@ -3,21 +3,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
 import "./sobreEvento.css";
-
 import fotoShow from "../img/fotoShow.png";
-
 import Header from "./header";
 import FooterSonara from "./footer";
-
 import { buscarEventosPorId } from "../services/eventoService";
 
 const PLACEHOLDER_IMG = fotoShow;
 
 function formatarData(dataISO) {
   if (!dataISO) return "Data não informada";
-
   const data = new Date(dataISO);
-
   return data.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",
@@ -27,54 +22,45 @@ function formatarData(dataISO) {
 
 function formatarHora(hora) {
   if (!hora) return "--:--";
-
   return hora.slice(0, 5);
 }
 
-function obterImagem(fotos) {
-  if (fotos && fotos.length > 0 ) {
+
+function obterImagens(fotos) {
+  if (Array.isArray(fotos) && fotos.length > 0) {
     return fotos;
   }
-
-  return PLACEHOLDER_IMG;
+  return [{ url: PLACEHOLDER_IMG }];
 }
 
 export default function SobreEvento() {
   const navigate = useNavigate();
-
   const { id } = useParams();
 
   const [evento, setEvento] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
   const [erro, setErro] = useState(null);
 
-  // ESTRELAS
+
+  const usuario = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+  const isArtista = usuario?.tipo_usuario?.toLowerCase() === "artista";
+
+  // Estrelas
   const totalEstrelas = 5;
-
   const [nota, setNota] = useState(0);
-
   const [hoverNota, setHoverNota] = useState(0);
 
   useEffect(() => {
     async function carregarEvento() {
       try {
-        if (!id) {
-          throw new Error("ID do evento não informado.");
-        }
-
-        console.log("ID RECEBIDO:", id);
+        if (!id) throw new Error("ID do evento não informado.");
 
         const json = await buscarEventosPorId(id);
 
-        console.log("RESPOSTA API:", json);
 
-        // TENTA ENCONTRAR O EVENTO EM DIFERENTES FORMATOS
         const ev =
-          json?.response?.Evento ||
           json?.response?.evento ||
-          json?.Evento ||
+          json?.response?.Evento ||
           json?.evento ||
           json;
 
@@ -85,7 +71,6 @@ export default function SobreEvento() {
         setEvento(ev);
       } catch (err) {
         console.error(err);
-
         setErro(err.message || "Não foi possível carregar o evento.");
       } finally {
         setLoading(false);
@@ -99,11 +84,9 @@ export default function SobreEvento() {
     return (
       <div className="main-wrapper">
         <Header />
-
         <div className="loading-state">
           <h2>Carregando evento...</h2>
         </div>
-
         <FooterSonara />
       </div>
     );
@@ -113,28 +96,26 @@ export default function SobreEvento() {
     return (
       <div className="main-wrapper">
         <Header />
-
         <div className="error-state">
           <h2>{erro || "Evento não encontrado."}</h2>
-
           <button onClick={() => navigate(-1)}>Voltar</button>
         </div>
-
         <FooterSonara />
       </div>
     );
   }
 
-  const imagens = obterImagem(evento.fotos);
-  console.log(imagens)
 
-  const enderecoCompleto = evento.logradouro
-    ? `${evento.logradouro}, ${evento.numero || "S/N"}${
-        evento.complemento ? ` - ${evento.complemento}` : ""
-      }, ${evento.bairro || ""} - ${evento.cidade || ""}/${evento.estado || ""}`
+  const imagens = obterImagens(evento.fotos);
+
+  // FIX 5: endereço vem aninhado em evento.endereco (objeto)
+  const end = evento.endereco || {};
+  const enderecoCompleto = end.logradouro
+    ? `${end.logradouro}, ${end.numero || "S/N"}${
+        end.complemento ? ` - ${end.complemento}` : ""
+      }, ${end.bairro || ""} - ${end.cidade || ""}/${end.estado || ""}`
     : null;
 
-    console.log(imagens[0].url)
   return (
     <div className="main-wrapper">
       <Header />
@@ -155,7 +136,6 @@ export default function SobreEvento() {
           <div className="sonaraSobreArtistaAvaliacao">
             {[...Array(totalEstrelas)].map((_, index) => {
               const valorAtual = index + 1;
-
               return (
                 <FaStar
                   key={valorAtual}
@@ -170,7 +150,6 @@ export default function SobreEvento() {
                 />
               );
             })}
-
             <span className="sonaraSobreArtistaNotaTexto">{nota}.0</span>
           </div>
 
@@ -180,8 +159,10 @@ export default function SobreEvento() {
               <img
                 key={i}
                 src={foto.url}
-                alt=""
-                onError={(e) => { e.target.src = PLACEHOLDER_IMG; }}
+                alt={`Foto ${i + 1} do evento`}
+                onError={(e) => {
+                  e.target.src = PLACEHOLDER_IMG;
+                }}
               />
             ))}
           </div>
@@ -192,29 +173,24 @@ export default function SobreEvento() {
           <div className="form-box">
             <section className="evento-nome">
               <label>Nome do evento</label>
-
-              <p>{evento.evento_nome || evento.nome || "Nome não informado"}</p>
+              <p>{evento.nome || "Nome não informado"}</p>
             </section>
 
             <section className="evento-descricao">
               <label>Descrição</label>
-
               <p>{evento.descricao || "Sem descrição disponível."}</p>
             </section>
 
             <div className="evento-row">
               <section className="evento-data">
                 <label>DATA</label>
-
                 <p>{formatarData(evento.data)}</p>
               </section>
 
               <section className="evento-hora">
                 <label>HORA</label>
-
                 <p>
                   {formatarHora(evento.hora_inicio)}
-
                   {evento.hora_fim && ` - ${formatarHora(evento.hora_fim)}`}
                 </p>
               </section>
@@ -223,34 +199,33 @@ export default function SobreEvento() {
             {(evento.local || enderecoCompleto) && (
               <section className="evento-local">
                 <label>Local</label>
-
                 {evento.local && <p>{evento.local}</p>}
-
                 {enderecoCompleto && <p>{enderecoCompleto}</p>}
               </section>
             )}
 
-            {evento.organizador_nome && (
+
+            {evento.organizador?.nome && (
               <section className="evento-organizador">
                 <label>Organizador</label>
-
-                <p>{evento.organizador_nome}</p>
+                <p>{evento.organizador.nome}</p>
               </section>
             )}
 
-            {evento.artista && (
+            {evento.artistas && evento.artistas.length > 0 && (
               <section className="evento-artista">
-                <label>Artista</label>
-
-                <p>{evento.artista}</p>
-
-                {evento.sobre_artista && <p>{evento.sobre_artista}</p>}
+                <label>Artistas confirmados</label>
+                {evento.artistas.map((a, i) => (
+                  <p key={i}>{a.nome_artistico || a.nome}</p>
+                ))}
               </section>
             )}
 
-            <button onClick={() => navigate("/eventoInscricao")}>
-              Inscreva-se
-            </button>
+            {isArtista && (
+              <button onClick={() => navigate(`/candidatar/${id}`)}>
+                Inscreva-se
+              </button>
+            )}
           </div>
         </div>
       </main>
