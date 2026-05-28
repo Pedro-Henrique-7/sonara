@@ -79,11 +79,11 @@ function Login() {
           sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
 
           if (usuarioCompleto.tipo_usuario === "Artista") {
-            navigate("/");
+            navigate("/shows");
           } else if (usuarioCompleto.tipo_usuario === "Organizador") {
-            navigate("/organizador");
+            navigate("/casaShow");
           } else {
-            navigate("/");
+            navigate("/usuario");
           }
 
           return;
