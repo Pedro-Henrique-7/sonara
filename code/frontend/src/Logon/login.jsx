@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import "./login.css";
 import "../index.css";
 import logo from "../img/sonara-logo.svg";
-import { loginUsuario } from "../services/usuarioService";
+import { loginUsuario, buscarUsuarioPorId } from "../services/usuarioService";
 
 // Mapeia códigos HTTP para mensagens amigáveis ao usuário
 function traduzirErroLogin(error, statusCode) {
@@ -50,45 +50,64 @@ function Login() {
     return mensagem === "";
   }
 
-  const handleSubmit = async () => {
-    setErro("");
-    setCampoErro({ email: false, senha: false });
+ const handleSubmit = async () => {
+  setErro("");
+  setCampoErro({ email: false, senha: false });
 
-    if (!validarFormulario()) return;
+  if (!validarFormulario()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    try {
-      const response = await loginUsuario(email.trim(), senha);
+  try {
+    const response = await loginUsuario(email, senha);
 
-      if (response.status === true) {
-        const tipoUsuario = response.usuario?.tipo_usuario?.toLowerCase();
+    if (response.status === true) {
+      const usuarioLogin = response.usuario;
+      const token = response.token;
 
-        sessionStorage.setItem("usuario", JSON.stringify(response.usuario));
-        sessionStorage.setItem("token", response.token);
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("usuario", JSON.stringify(usuarioLogin));
 
-        if (tipoUsuario === "artista") {
-          navigate("/shows");
-        } else if (tipoUsuario === "organizador") {
-          navigate("/casaShow");
-        } else {
-          // tipo "user" ou desconhecido — redireciona para shows (vitrine pública)
-          navigate("/shows");
+      try {
+        const usuarioCompletoResponse = await buscarUsuarioPorId(
+          usuarioLogin.id_usuario
+        );
+
+        const usuarioCompleto = usuarioCompletoResponse?.response?.usuario;
+
+        if (usuarioCompleto) {
+          sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
+
+          if (usuarioCompleto.tipo_usuario === "Artista") {
+            navigate("/shows");
+          } else if (usuarioCompleto.tipo_usuario === "Organizador") {
+            navigate("/organizador");
+          } else {
+            navigate("/");
+          }
+
+          return;
         }
-      } else {
-        // Resposta sem lançar exceção mas com status false
-        const mensagem = traduzirErroLogin(response.message, response.status_code);
-        setErro(mensagem);
-        setCampoErro({ email: true, senha: true });
+      } catch (error) {
+        console.error("Erro ao buscar usuário completo:", error);
       }
-    } catch (error) {
-      // Erro de rede ou exceção lançada pelo service
-      const statusCode = error?.status_code || 0;
-      setErro(traduzirErroLogin(error.message, statusCode));
-    } finally {
-      setLoading(false);
+
+      if (usuarioLogin.tipo_usuario === "Artista") {
+        navigate("/shows");
+      } else if (usuarioLogin.tipo_usuario === "Organizador") {
+        navigate("/organizador");
+      } else {
+        navigate("/");
+      }
+    } else {
+      setErro(response.message || "Erro ao fazer login.");
     }
-  };
+  } catch (error) {
+    setErro(traduzirErroLogin(error.message, error.status_code));
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") handleSubmit();

@@ -3,7 +3,7 @@ const { promisify } = require('util')
 
 const pbkdf2Async = promisify(crypto.pbkdf2)
 
-const ITERATIONS = 100000
+const ITERATIONS = 5000
 const KEY_LENGTH = 64
 const DIGEST = 'sha512'
 

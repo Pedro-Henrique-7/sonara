@@ -4,6 +4,7 @@ import "./telaShows.css";
 import { Search, MapPin, Clock, Calendar } from "lucide-react";
 import FooterSonara from "./footer";
 import Header from "./header";
+import { buscarUsuarioPorId } from "../services/usuarioService";
 
 import { buscarEventos } from "../services/eventoService"; 
 
@@ -40,6 +41,31 @@ export default function Shows() {
   const [erro, setErro] = useState(null);
   const [sliderIndex, setSliderIndex] = useState(0);
   const [busca, setBusca] = useState("");
+
+
+
+  //busca usuario e salva na sessionStorage para manter os dados atualizados
+  useEffect(() => {
+  const carregarUsuarioCompleto = async () => {
+    try {
+      const usuarioStorage = JSON.parse(sessionStorage.getItem("usuario"));
+
+      if (!usuarioStorage?.id_usuario) return;
+
+      const json = await buscarUsuarioPorId(usuarioStorage.id_usuario);
+      const usuarioCompleto = json?.response?.usuario;
+
+      if (usuarioCompleto) {
+        sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
+      }
+    } catch (error) {
+      console.error("Erro ao carregar usuário completo:", error);
+    }
+  };
+
+  carregarUsuarioCompleto();
+}, []);
+
 
   // Busca os eventos da API
   useEffect(() => {
