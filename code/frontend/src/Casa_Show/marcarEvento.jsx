@@ -242,13 +242,13 @@ export default function MarcarEvento() {
                 <>
                   <img className="foto-principal" src={fotoPrincipalUrl} alt="Foto principal" />
                   <div className="upload-zone__overlay">
-                    <span className="upload-zone__icon">📷</span>
+                    <span className="upload-zone__icon">+</span>
                     <span className="upload-zone__label upload-zone__label--sobre">Trocar foto</span>
                   </div>
                 </>
               ) : (
                 <>
-                  <span className="upload-zone__icon">📷</span>
+                  <span className="upload-zone__icon">+</span>
                   <span className="upload-zone__label">
                     {drag ? "Solte aqui!" : "Arraste ou clique para adicionar fotos"}
                   </span>

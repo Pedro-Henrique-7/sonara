@@ -11,6 +11,18 @@ const EventoArtistaDAO = require('../../model/DAO/evento_artista.js')
 const DEFAULT_MESSAGES = require('../modulo/conf_message.js')
 
 
+const STATUS = {
+    PENDENTE: 1,
+    APROVADO: 2,
+    REPROVADO: 3,
+    CONTRA_PROPOSTA: 4,
+    CONTRA_PROPOSTA_ACEITA: 5,
+    CONTRA_PROPOSTA_RECUSADA: 6,
+    FINALIZADO: 7,
+    CANCELADO: 8
+}
+
+
 const listarEventoArtista = async function(){
     
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -135,52 +147,79 @@ const candidatarArtista = async function (candidatura, contentType) {
             return MESSAGES.ERROR_CONTENT_TYPE
         }
 
-        if (!candidatura.artista_id || isNaN(candidatura.artista_id) || candidatura.artista_id <= 0)
-            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [artista_id]' }
+        if (!candidatura.artista_id || isNaN(candidatura.artista_id) || candidatura.artista_id <= 0) {
+            return {
+                ...MESSAGES.ERROR_REQUIRED_FIELDS,
+                message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [artista_id]'
+            }
+        }
 
-        if (!candidatura.evento_id || isNaN(candidatura.evento_id) || candidatura.evento_id <= 0)
-            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [evento_id]' }
+        if (!candidatura.evento_id || isNaN(candidatura.evento_id) || candidatura.evento_id <= 0) {
+            return {
+                ...MESSAGES.ERROR_REQUIRED_FIELDS,
+                message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [evento_id]'
+            }
+        }
 
-        if (!candidatura.cache_esperado || isNaN(candidatura.cache_esperado))
-            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [cache_esperado]' }
+        if (!candidatura.cache_esperado || isNaN(candidatura.cache_esperado) || Number(candidatura.cache_esperado) <= 0) {
+            return {
+                ...MESSAGES.ERROR_REQUIRED_FIELDS,
+                message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [cache_esperado]'
+            }
+        }
 
-        if (!candidatura.sobre_artista || candidatura.sobre_artista.length > 500)
-            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [sobre_artista]' }
+        if (!candidatura.sobre_artista || candidatura.sobre_artista.length > 500) {
+            return {
+                ...MESSAGES.ERROR_REQUIRED_FIELDS,
+                message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [sobre_artista]'
+            }
+        }
 
-        if (!candidatura.motivo_inscricao || candidatura.motivo_inscricao.length > 500)
-            return { ...MESSAGES.ERROR_REQUIRED_FIELDS, message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [motivo_inscricao]' }
+        if (!candidatura.motivo_inscricao || candidatura.motivo_inscricao.length > 500) {
+            return {
+                ...MESSAGES.ERROR_REQUIRED_FIELDS,
+                message: MESSAGES.ERROR_REQUIRED_FIELDS.message + ' [motivo_inscricao]'
+            }
+        }
 
         const eventoArtista = {
             artista_id: Number(candidatura.artista_id),
             evento_id: Number(candidatura.evento_id),
             cache_esperado: Number(candidatura.cache_esperado),
-            cache_ofertado: 0,
-            cache_final: 0,
+            cache_ofertado: null,
+            cache_final: null,
             contra_proposta: null,
             sobre_artista: candidatura.sobre_artista,
-            motivo_inscricao: candidatura.motivo_inscricao,
+            motivo_inscricao: candidatura.motivo_inscricao
         }
 
-        const resultInsert = await EventoArtistaDAO.setInsertArtistEvent(eventoArtista)
+        const idGerado = await EventoArtistaDAO.setInsertArtistEvent(eventoArtista)
 
-        if (!resultInsert) {
-            // Pode ser duplicata (UNIQUE artista_id + evento_id)
-            return { ...MESSAGES.ERROR_INTERNAL_SERVER_MODEL, message: 'Você já está candidatado a este evento.' }
+        if (idGerado?.erro && idGerado.tipo === 'DUPLICADO') {
+            return {
+                ...MESSAGES.ERROR_REQUIRED_FIELDS,
+                status_code: 409,
+                message: idGerado.message
+            }
         }
 
-        const lastID = await EventoArtistaDAO.getSelectLastID()
-        if (!lastID) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        if (!idGerado) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
         const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
-            evento_artista_id: lastID,
-            status_id: 1, 
-            data_hora: agora,
+            evento_artista_id: idGerado,
+            status_id: STATUS.PENDENTE,
+            data_hora: agora
         })
 
-        if (!resultStatus) return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        if (!resultStatus) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
 
-        eventoArtista.id_evento_artista = lastID
+        eventoArtista.id_evento_artista = idGerado
         eventoArtista.status = 'Pendente'
 
         MESSAGES.HEADER.status      = MESSAGES.SUCCESS_CREATED_ITEM.status
@@ -192,6 +231,291 @@ const candidatarArtista = async function (candidatura, contentType) {
 
     } catch (error) {
         console.error('[Controller evento_artista] candidatarArtista:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+
+const aprovarArtistaEvento = async function (id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (isNaN(id) || id == '' || id == null || id <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [id_evento_artista]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+
+        if (!resultBusca || resultBusca.length === 0) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const inscricao = resultBusca[0]
+
+        const cacheFinal =
+            inscricao.cache_ofertado && Number(inscricao.cache_ofertado) > 0
+                ? Number(inscricao.cache_ofertado)
+                : Number(inscricao.cache_esperado)
+
+        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+            id_evento_artista: Number(id),
+            cache_final: cacheFinal
+        })
+
+        if (!resultUpdate) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: Number(id),
+            status_id: STATUS.APROVADO,
+            data_hora: agora
+        })
+
+        if (!resultStatus) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
+        MESSAGES.HEADER.message     = 'Artista aprovado com sucesso!'
+        MESSAGES.HEADER.response    = {
+            id_evento_artista: Number(id),
+            cache_final: cacheFinal,
+            status: 'Aprovado'
+        }
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] aprovarArtistaEvento:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const reprovarArtistaEvento = async function (id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (isNaN(id) || id == '' || id == null || id <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [id_evento_artista]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+
+        if (!resultBusca || resultBusca.length === 0) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: Number(id),
+            status_id: STATUS.REPROVADO,
+            data_hora: agora
+        })
+
+        if (!resultStatus) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
+        MESSAGES.HEADER.message     = 'Artista reprovado com sucesso!'
+        MESSAGES.HEADER.response    = {
+            id_evento_artista: Number(id),
+            status: 'Reprovado'
+        }
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] reprovarArtistaEvento:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const enviarContraProposta = async function (id, dados, contentType) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (!String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
+            return MESSAGES.ERROR_CONTENT_TYPE
+        }
+
+        if (isNaN(id) || id == '' || id == null || id <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [id_evento_artista]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        if (!dados.cache_ofertado || isNaN(dados.cache_ofertado) || Number(dados.cache_ofertado) <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [cache_ofertado]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+
+        if (!resultBusca || resultBusca.length === 0) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const valorContraProposta = Number(dados.cache_ofertado)
+
+        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+            id_evento_artista: Number(id),
+            cache_ofertado: valorContraProposta,
+            contra_proposta: valorContraProposta
+        })
+
+        if (!resultUpdate) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: Number(id),
+            status_id: STATUS.CONTRA_PROPOSTA,
+            data_hora: agora
+        })
+
+        if (!resultStatus) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
+        MESSAGES.HEADER.message     = 'Contra proposta enviada com sucesso!'
+        MESSAGES.HEADER.response    = {
+            id_evento_artista: Number(id),
+            cache_ofertado: valorContraProposta,
+            contra_proposta: valorContraProposta,
+            status: 'Contra proposta'
+        }
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] enviarContraProposta:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const aceitarContraProposta = async function (id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (isNaN(id) || id == '' || id == null || id <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [id_evento_artista]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+
+        if (!resultBusca || resultBusca.length === 0) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const inscricao = resultBusca[0]
+
+        if (!inscricao.cache_ofertado || Number(inscricao.cache_ofertado) <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [Não existe contra proposta para aceitar]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const cacheFinal = Number(inscricao.cache_ofertado)
+
+        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+            id_evento_artista: Number(id),
+            cache_final: cacheFinal
+        })
+
+        if (!resultUpdate) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        const resultStatusAceita = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: Number(id),
+            status_id: STATUS.CONTRA_PROPOSTA_ACEITA,
+            data_hora: agora
+        })
+
+        if (!resultStatusAceita) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        const resultStatusAprovado = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: Number(id),
+            status_id: STATUS.APROVADO,
+            data_hora: agora
+        })
+
+        if (!resultStatusAprovado) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
+        MESSAGES.HEADER.message     = 'Contra proposta aceita com sucesso!'
+        MESSAGES.HEADER.response    = {
+            id_evento_artista: Number(id),
+            cache_final: cacheFinal,
+            status: 'Aprovado'
+        }
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] aceitarContraProposta:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+const recusarContraProposta = async function (id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (isNaN(id) || id == '' || id == null || id <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [id_evento_artista]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+
+        if (!resultBusca || resultBusca.length === 0) {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+
+        const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
+        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+            evento_artista_id: Number(id),
+            status_id: STATUS.CONTRA_PROPOSTA_RECUSADA,
+            data_hora: agora
+        })
+
+        if (!resultStatus) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+        }
+
+        MESSAGES.HEADER.status      = MESSAGES.SUCCESS_UPDATED_ITEM.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code
+        MESSAGES.HEADER.message     = 'Contra proposta recusada com sucesso!'
+        MESSAGES.HEADER.response    = {
+            id_evento_artista: Number(id),
+            status: 'Contra proposta recusada'
+        }
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] recusarContraProposta:', error.message)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -333,5 +657,10 @@ module.exports = {
     inserirEventoArtista,
     atualizarEventoArtista,
     candidatarArtista,
-    excluirEventoArtista
+    excluirEventoArtista,
+    aprovarArtistaEvento,
+    reprovarArtistaEvento,
+    enviarContraProposta,
+    aceitarContraProposta,
+    recusarContraProposta
 }

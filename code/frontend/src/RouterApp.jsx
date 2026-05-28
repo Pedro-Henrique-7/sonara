@@ -21,11 +21,13 @@ import ListaMeusEventos from "./Casa_Show/meus-eventos-casaShow.jsx";
 import ContratarArtista from "./Casa_Show/contratarArtista.jsx";
 import TelaSobreArtista from "./Casa_Show/sobreArtista.jsx";
 import SobreEventoCasaShow from "./Casa_Show/sobreEventoCasaShow.jsx";
-import TelaPerfilOrganizador from "./Casa_Show/telaPerfilOrganizador.jsx"
-// NOVA TELA
+import TelaPerfilOrganizador from "./Casa_Show/telaPerfilOrganizador.jsx";
+
+
+// EDITAR EVENTO
 import EditarEvento from "./Casa_Show/sobreEventoCasaShow.jsx";
 
-//Usuario padrão
+// USUÁRIO PADRÃO
 import TelaUsuario from "./Usuario/telaUsuario.jsx";
 import SobreEventoUsuario from "./Usuario/sobreEventoUsuario.jsx";
 import MapaEvento from "./Usuario/telaMapa.jsx";
@@ -42,25 +44,27 @@ export default function RouterApp() {
         {/* ARTISTA */}
         <Route path="/shows" element={<Shows />} />
         <Route path="/sobreEvento/:id" element={<SobreEvento />} />
-        <Route path="/eventoInscricao" element={<EventoInscricao />} />
+        <Route path="/candidatar/:idEvento" element={<EventoInscricao />} />
         <Route path="/planosArtista" element={<PlanosArtista />} />
         <Route path="/meusEventos" element={<MeusEventos />} />
         <Route path="/listaEventos" element={<EventosLista />} />
         <Route path="/perfil-artista" element={<PerfilArtista />} />
-        <Route path="/candidatar/:idEvento" element={<EventoInscricao />} />
+
         {/* CASA DE SHOW */}
         <Route path="/casaShow" element={<TelaInicial />} />
         <Route path="/marcarEvento" element={<MarcarEvento />} />
         <Route path="/listaMeusEventos" element={<ListaMeusEventos />} />
         <Route path="/contratarArtista" element={<ContratarArtista />} />
         <Route path="/sobreArtista" element={<TelaSobreArtista />} />
-        <Route path="/perfil-organizador" element={<TelaPerfilOrganizador/>} />
+        <Route path="/perfil-organizador" element={<TelaPerfilOrganizador />} />
         <Route path="/sobreEventoCasaShow" element={<SobreEventoCasaShow />} />
 
+        {/* INSCRITOS DO EVENTO */}
+        <Route path="/evento/:idEvento/inscritos" element={<ContratarArtista />} />
         {/* EDITAR EVENTO */}
         <Route path="/editarEvento/:id" element={<EditarEvento />} />
 
-        {/* Usuario */}
+        {/* USUÁRIO */}
         <Route path="/telaDeUsuario" element={<TelaUsuario />} />
         <Route
           path="/sobreEventoUsuario/:id"

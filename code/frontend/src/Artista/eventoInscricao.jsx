@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import "./eventoInscricao.css";
 import Header from "./header";
 import FooterSonara from "./footer";
-
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import { buscarEventosPorId } from "../services/eventoService";
+import { candidatarArtista } from "../services/eventoArtistaSevice";
 
 export default function EventoInscricao() {
   const { idEvento } = useParams();
@@ -22,42 +22,69 @@ export default function EventoInscricao() {
     cache_esperado: "",
   });
 
-  // Busca dados do evento para exibir o nome/contexto
   useEffect(() => {
-    if (!idEvento) return;
+    async function carregarEvento() {
+      try {
+        if (!idEvento) return;
 
-    fetch(`${BASE_URL}/evento/${idEvento}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.status_code === 200) {
-          setEvento(data.response.evento);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setCarregando(false));
+        const data = await buscarEventosPorId(idEvento);
+
+        const ev =
+          data?.response?.evento ||
+          data?.response?.Evento ||
+          data?.evento ||
+          data;
+
+        setEvento(ev);
+      } catch (error) {
+        setErro("Não foi possível carregar o evento.");
+      } finally {
+        setCarregando(false);
+      }
+    }
+
+    carregarEvento();
   }, [idEvento]);
 
   function handleChange(e) {
     setErro("");
-    setForm({ ...form, [e.target.id]: e.target.value });
+    setForm({
+      ...form,
+      [e.target.id]: e.target.value,
+    });
   }
 
   function validar() {
-    if (!form.sobre_artista.trim())
+    if (!form.sobre_artista.trim()) {
       return "Conte um pouco sobre você.";
-    if (form.sobre_artista.length > 500)
+    }
+
+    if (form.sobre_artista.length > 500) {
       return "Limite de 500 caracteres para a apresentação.";
-    if (!form.motivo_inscricao.trim())
+    }
+
+    if (!form.motivo_inscricao.trim()) {
       return "Informe por que quer participar.";
-    if (form.motivo_inscricao.length > 500)
+    }
+
+    if (form.motivo_inscricao.length > 500) {
       return "Limite de 500 caracteres para o motivo.";
-    if (!form.cache_esperado || isNaN(Number(form.cache_esperado)) || Number(form.cache_esperado) < 0)
-      return "Informe um cachê válido (pode ser 0).";
+    }
+
+    if (
+      !form.cache_esperado ||
+      isNaN(Number(form.cache_esperado)) ||
+      Number(form.cache_esperado) <= 0
+    ) {
+      return "Informe um cachê válido.";
+    }
+
     return null;
   }
 
   async function handleCandidatar() {
     const erroValidacao = validar();
+
     if (erroValidacao) {
       setErro(erroValidacao);
       return;
@@ -68,45 +95,33 @@ export default function EventoInscricao() {
 
     try {
       const usuario = JSON.parse(sessionStorage.getItem("usuario") || "{}");
-      const artistaId = usuario?.artista?.id_artista;
-      const token = sessionStorage.getItem("token");
+
+      const artistaId =
+        usuario?.id_artista ||
+        usuario?.artista?.id_artista ||
+        usuario?.Artista?.id_artista;
 
       if (!artistaId) {
         setErro("Perfil de artista não encontrado. Faça login novamente.");
-        setEnviando(false);
         return;
       }
 
-      const response = await fetch(`${BASE_URL}/eventoArtista/candidatar`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-        body: JSON.stringify({
-          artista_id: artistaId,
-          evento_id: Number(idEvento),
-          cache_esperado: Number(form.cache_esperado),
-          sobre_artista: form.sobre_artista,
-          motivo_inscricao: form.motivo_inscricao,
-        }),
+      await candidatarArtista({
+        artista_id: Number(artistaId),
+        evento_id: Number(idEvento),
+        cache_esperado: Number(form.cache_esperado),
+        sobre_artista: form.sobre_artista,
+        motivo_inscricao: form.motivo_inscricao,
       });
 
-      const data = await response.json();
-
-      if (data.status_code === 201) {
-        setSucesso(true);
-      } else {
-        setErro(data.message || "Erro ao enviar candidatura.");
-      }
-    } catch {
-      setErro("Erro ao conectar com o servidor.");
+      setSucesso(true);
+    } catch (error) {
+      setErro(error.message || "Erro ao enviar candidatura.");
     } finally {
       setEnviando(false);
     }
   }
 
-  // ── Tela de sucesso ───────────────────────────────────────────────────────
   if (sucesso) {
     return (
       <div className="pa-wrapper">
@@ -114,11 +129,14 @@ export default function EventoInscricao() {
         <main className="main-central">
           <div className="card-inscricao card-sucesso">
             <div className="sucesso-icone">✓</div>
+
             <h2 className="sucesso-titulo">Candidatura enviada!</h2>
+
             <p className="sucesso-desc">
-              Sua candidatura foi registrada com status <strong>Pendente</strong>.
-              O organizador irá analisá-la em breve.
+              Sua candidatura foi registrada com status{" "}
+              <strong>Pendente</strong>. O organizador irá analisá-la em breve.
             </p>
+
             <div className="sucesso-acoes">
               <button
                 className="btn-inscricao btn-secundario"
@@ -126,11 +144,12 @@ export default function EventoInscricao() {
               >
                 Voltar ao evento
               </button>
+
               <button
                 className="btn-inscricao"
-                onClick={() => navigate("/perfil")}
+                onClick={() => navigate("/meus-eventos")}
               >
-                Ver meu perfil
+                Minhas inscrições
               </button>
             </div>
           </div>
@@ -143,33 +162,44 @@ export default function EventoInscricao() {
   return (
     <div className="pa-wrapper">
       <Header />
+
       <main className="main-central">
         <div className="card-inscricao">
-
-          {/* Nome do evento no topo */}
           {!carregando && evento && (
             <div className="inscricao-evento-info">
-              <span className="inscricao-label-evento">Candidatando-se para</span>
-              <h2 className="inscricao-nome-evento">{evento.nome}</h2>
+              <span className="inscricao-label-evento">
+                Candidatando-se para
+              </span>
+
+              <h2 className="inscricao-nome-evento">
+                {evento.nome || evento.evento_nome || "Evento"}
+              </h2>
+
               <p className="inscricao-data-evento">
-                {evento.data
-                  ? new Date(evento.data).toLocaleDateString("pt-BR", {
-                      day: "2-digit",
-                      month: "long",
-                      year: "numeric",
-                    })
+                {evento.data || evento.data_evento
+                  ? new Date(evento.data || evento.data_evento).toLocaleDateString(
+                      "pt-BR",
+                      {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )
                   : ""}
+
                 {evento.local ? ` — ${evento.local}` : ""}
               </p>
             </div>
           )}
 
-          {/* Campo: sobre o artista */}
           <div className="campo">
             <label htmlFor="sobre_artista">
               Conte sobre você
-              <span className="campo-counter">{form.sobre_artista.length}/500</span>
+              <span className="campo-counter">
+                {form.sobre_artista.length}/500
+              </span>
             </label>
+
             <textarea
               id="sobre_artista"
               placeholder="Seu estilo, experiência, conquistas..."
@@ -179,12 +209,14 @@ export default function EventoInscricao() {
             />
           </div>
 
-          {/* Campo: motivo */}
           <div className="campo">
             <label htmlFor="motivo_inscricao">
               Por que você deveria cantar aqui?
-              <span className="campo-counter">{form.motivo_inscricao.length}/500</span>
+              <span className="campo-counter">
+                {form.motivo_inscricao.length}/500
+              </span>
             </label>
+
             <textarea
               id="motivo_inscricao"
               placeholder="O que te conecta a este evento?"
@@ -194,23 +226,21 @@ export default function EventoInscricao() {
             />
           </div>
 
-          {/* Campo: cachê */}
           <div className="campo-cache">
             <label htmlFor="cache_esperado">Cachê Pretendido (R$)</label>
+
             <input
               id="cache_esperado"
               type="number"
-              min="0"
+              min="1"
               placeholder="Ex: 1500"
               value={form.cache_esperado}
               onChange={handleChange}
             />
           </div>
 
-          {/* Erro */}
           {erro && <p className="inscricao-erro">{erro}</p>}
 
-          {/* Botões */}
           <div className="inscricao-acoes">
             <button
               className="btn-inscricao btn-secundario"
@@ -219,6 +249,7 @@ export default function EventoInscricao() {
             >
               Cancelar
             </button>
+
             <button
               className="btn-inscricao"
               onClick={handleCandidatar}
@@ -227,9 +258,9 @@ export default function EventoInscricao() {
               {enviando ? "Enviando..." : "Candidatar-se"}
             </button>
           </div>
-
         </div>
       </main>
+
       <FooterSonara />
     </div>
   );

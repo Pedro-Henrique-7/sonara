@@ -271,7 +271,7 @@ export default function ListaMeusEventos() {
                       onClick={(e) => {
                         e.stopPropagation();
 
-                        navigate("/sobreEventoCasaShow");
+                        navigate(`/evento/${evento.id_evento}/inscritos`);
                       }}
                       style={{
                         background: "rgba(255,255,255,0.08)",

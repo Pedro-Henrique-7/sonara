@@ -12,167 +12,173 @@ import {
   cadastrarRedeSocial,
 } from "../services/redeSocialService";
 
-// ─── Mapeia mensagens de erro do backend para português claro ──────────────────
+// ─── Steps ────────────────────────────────────────────────────────────────────
+const STEPS = ["Pessoal", "Artístico", "Endereço", "Redes"];
+
+// ─── Tradução de erros do backend ─────────────────────────────────────────────
 function traduzirErroCadastro(mensagem) {
   if (!mensagem) return "Ocorreu um erro inesperado. Tente novamente.";
-
   const mapa = {
-    "já está cadastrado":           mensagem, // já é clara, repassa
-    "E-mail":                       mensagem,
-    "CPF":                          mensagem,
-    "nome artístico":               mensagem,
-    "gênero musical":               mensagem,
-    "senha deve ter":               mensagem,
-    "formato do e-mail":            mensagem,
-    "endereço":                     mensagem,
-    "tipo_usuario":                 mensagem,
-    "500":  "Erro interno no servidor. Tente novamente em alguns minutos.",
-    "502":  "Serviço de armazenamento de imagens indisponível. O cadastro foi realizado sem a foto.",
+    "já está cadastrado": mensagem,
+    "E-mail": mensagem,
+    "CPF": mensagem,
+    "nome artístico": mensagem,
+    "gênero musical": mensagem,
+    "senha deve ter": mensagem,
+    "formato do e-mail": mensagem,
+    "endereço": mensagem,
+    "tipo_usuario": mensagem,
+    "500": "Erro interno no servidor. Tente novamente em alguns minutos.",
+    "502": "Serviço de armazenamento de imagens indisponível. O cadastro foi realizado sem a foto.",
     "conexão": "Não foi possível conectar ao servidor. Verifique sua internet.",
   };
-
   for (const [chave, valor] of Object.entries(mapa)) {
     if (mensagem.includes(chave)) return valor;
   }
-
   return mensagem;
 }
 
+// ─── Validação por step ───────────────────────────────────────────────────────
+function validarStep(step, form) {
+  const erros = {};
+
+  if (step === 0) {
+    if (!form.nome.trim())         erros.nome = "Nome completo é obrigatório.";
+    if (!form.email.trim())        erros.email = "E-mail é obrigatório.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      erros.email = "Informe um e-mail válido.";
+    if (form.email !== form["confirm-email"])
+      erros["confirm-email"] = "Os e-mails não coincidem.";
+    if (!form.senha)               erros.senha = "Senha é obrigatória.";
+    else if (form.senha.length < 8)
+      erros.senha = "A senha deve ter pelo menos 8 caracteres.";
+    else if (!/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(form.senha))
+      erros.senha = "Use: letra maiúscula, número e caractere especial (!@#$%^&*).";
+    if (form.senha !== form["confirm-senha"])
+      erros["confirm-senha"] = "As senhas não coincidem.";
+    if (!form.cpf.trim())          erros.cpf = "CPF é obrigatório.";
+    if (!form.data_nasc)           erros.data_nasc = "Data de nascimento é obrigatória.";
+    if (!form.nacionalidade_id)    erros.nacionalidade_id = "Selecione uma nacionalidade.";
+    if (!form.genero_id)           erros.genero_id = "Selecione um gênero.";
+    if (!form.tipo_usuario)        erros.tipo_usuario = "Selecione o tipo de usuário.";
+  }
+
+  if (step === 1 && form.tipo_usuario === "artista") {
+    if (!form.nome_artistico.trim())
+      erros.nome_artistico = "Nome artístico é obrigatório.";
+    if (form.generos_musicais.length === 0)
+      erros.generos_musicais = "Selecione pelo menos um gênero musical.";
+  }
+
+  if (step === 2) {
+    if (!form.cep.trim())           erros.cep = "CEP é obrigatório.";
+    if (!form.logradouro.trim())    erros.logradouro = "Rua/logradouro é obrigatório.";
+    if (!form.numero.trim())        erros.numero = "Número é obrigatório.";
+    if (!form.bairro.trim())        erros.bairro = "Bairro é obrigatório.";
+    if (!form.cidade.trim())        erros.cidade = "Cidade é obrigatória.";
+    if (!form.estado.trim())        erros.estado = "Estado é obrigatório.";
+  }
+
+  if (step === 3) {
+    const redesInvalidas = form._redesSociais?.some(
+      (rs) => !rs.tipo_id || !rs.link.trim()
+    );
+    if (redesInvalidas)
+      erros.redesSociais = "Preencha a plataforma e o link de todas as redes adicionadas.";
+  }
+
+  return erros;
+}
+
+// ─── Componente principal ─────────────────────────────────────────────────────
 function Cadastro() {
   const navigate = useNavigate();
 
-  const [erro, setErro]           = useState("");
-  const [sucesso, setSucesso]     = useState(false);
-  const [carregando, setCarregando] = useState(false);
-  const [buscandoCep, setBuscandoCep] = useState(false);
-  const [erroCep, setErroCep]     = useState("");
+  const [stepAtual, setStepAtual] = useState(0);
+  const [stepsOk, setStepsOk]     = useState([]);
+  const [erros, setErros]         = useState({});
 
-  const [generos, setGeneros]                   = useState([]);
-  const [nacionalidades, setNacionalidades]     = useState([]);
-  const [generosMusical, setGenerosMusical]     = useState([]);
+  const [erroGlobal, setErroGlobal]     = useState("");
+  const [sucesso, setSucesso]           = useState(false);
+  const [carregando, setCarregando]     = useState(false);
+
+  const [buscandoCep, setBuscandoCep]   = useState(false);
+  const [statusCep, setStatusCep]       = useState(null);
+  const [msgCep, setMsgCep]             = useState("");
+
+  const [generos, setGeneros]                     = useState([]);
+  const [nacionalidades, setNacionalidades]       = useState([]);
+  const [generosMusical, setGenerosMusical]       = useState([]);
   const [tiposRedesSociais, setTiposRedesSociais] = useState([]);
-  const [redesSociais, setRedesSociais]         = useState([]);
-
-  const [errosCampos, setErrosCampos] = useState({});
+  const [redesSociais, setRedesSociais]           = useState([]);
 
   const [form, setForm] = useState({
-    nome: "",
-    email: "",
-    "confirm-email": "",
-    senha: "",
-    "confirm-senha": "",
-    cpf: "",
-    data_nasc: "",
-    nacionalidade_id: "",
-    genero_id: "",
-    telefone: "",
-    tipo_usuario: "",
-    nome_artistico: "",
-    descricao: "",
+    nome: "", email: "", "confirm-email": "",
+    senha: "", "confirm-senha": "",
+    cpf: "", data_nasc: "",
+    nacionalidade_id: "", genero_id: "",
+    telefone: "", tipo_usuario: "",
+    nome_artistico: "", descricao: "",
     generos_musicais: [],
-    cep: "",
-    cidade: "",
-    estado: "",
-    logradouro: "",
-    numero: "",
-    complemento: "",
-    bairro: "",
+    cep: "", cidade: "", estado: "",
+    logradouro: "", numero: "", complemento: "", bairro: "",
     foto: null,
   });
 
   useEffect(() => {
     buscarGeneros()
-      .then((data) => setGeneros(data.response?.generos ?? []))
-      .catch(() => setErro("Erro ao carregar gêneros. Recarregue a página."));
-
+      .then((d) => setGeneros(d.response?.generos ?? []))
+      .catch(() => setErroGlobal("Erro ao carregar gêneros."));
     buscarNacionalidades()
-      .then((data) => setNacionalidades(data.response?.nacionalidades ?? []))
-      .catch(() => setErro("Erro ao carregar nacionalidades. Recarregue a página."));
-
+      .then((d) => setNacionalidades(d.response?.nacionalidades ?? []))
+      .catch(() => setErroGlobal("Erro ao carregar nacionalidades."));
     buscarGeneroMusical()
-      .then((data) => setGenerosMusical(data.response?.GeneroMusical ?? []))
-      .catch(() => setErro("Erro ao carregar gêneros musicais. Recarregue a página."));
-
+      .then((d) => setGenerosMusical(d.response?.GeneroMusical ?? []))
+      .catch(() => setErroGlobal("Erro ao carregar gêneros musicais."));
     buscarTiposRedesSociais()
-      .then((data) => setTiposRedesSociais(data.response?.TipoRedesSociais ?? []))
-      .catch(() => setErro("Erro ao carregar tipos de redes sociais. Recarregue a página."));
+      .then((d) => setTiposRedesSociais(d.response?.TipoRedesSociais ?? []))
+      .catch(() => setErroGlobal("Erro ao carregar tipos de redes sociais."));
   }, []);
 
+  // ── Handlers genéricos ────────────────────────────────────────────────────
   function handleChange(e) {
-    setErro("");
     const { id, value } = e.target;
-    setErrosCampos((prev) => ({ ...prev, [id]: "" }));
+    setErros((prev) => ({ ...prev, [id]: undefined }));
+    setErroGlobal("");
     setForm((prev) => ({ ...prev, [id]: value }));
   }
 
   function handleFotoChange(e) {
-    setErro("");
     const arquivo = e.target.files[0] || null;
-
     if (arquivo) {
-      const tiposPermitidos = ["image/jpeg", "image/png", "image/webp"];
-      if (!tiposPermitidos.includes(arquivo.type)) {
-        setErro("Formato de imagem inválido. Use JPEG, PNG ou WebP.");
-        return;
-      }
-      if (arquivo.size > 5 * 1024 * 1024) {
-        setErro("A imagem deve ter no máximo 5MB.");
-        return;
-      }
+      const tipos = ["image/jpeg", "image/png", "image/webp"];
+      if (!tipos.includes(arquivo.type)) { setErroGlobal("Use JPEG, PNG ou WebP."); return; }
+      if (arquivo.size > 5 * 1024 * 1024) { setErroGlobal("Imagem máx. 5 MB."); return; }
     }
-
+    setErroGlobal("");
     setForm((prev) => ({ ...prev, foto: arquivo }));
   }
 
   function handleGeneroMusicalChange(e) {
-    const selecionados = Array.from(e.target.selectedOptions).map((opt) =>
-      Number(opt.value)
-    );
+    const selecionados = Array.from(e.target.selectedOptions).map((o) => Number(o.value));
+    setErros((prev) => ({ ...prev, generos_musicais: undefined }));
     setForm((prev) => ({ ...prev, generos_musicais: selecionados }));
   }
 
-  function adicionarRedeSocial() {
-    setRedesSociais((prev) => [...prev, { tipo_id: "", link: "" }]);
-  }
-
-  function handleRedeSocialChange(index, field, value) {
-    setRedesSociais((prev) =>
-      prev.map((rs, i) => (i === index ? { ...rs, [field]: value } : rs))
-    );
-  }
-
-  function removerRedeSocial(index) {
-    setRedesSociais((prev) => prev.filter((_, i) => i !== index));
-  }
-
+  // ── CEP ───────────────────────────────────────────────────────────────────
   async function handleCepBlur() {
     const cepLimpo = form.cep.replace(/\D/g, "");
     if (cepLimpo.length !== 8) return;
-
-    setErroCep("");
+    setStatusCep(null);
     setBuscandoCep(true);
-
+    setMsgCep("Buscando…");
     try {
       const dados = await buscarCep(cepLimpo);
-
-      if (dados.erro) {
-        setErroCep("CEP não encontrado. Preencha o endereço manualmente.");
-        return;
-      }
-
-      // Busca lat/long em paralelo sem bloquear o preenchimento do formulário
+      if (dados.erro) { setStatusCep("erro"); setMsgCep("CEP não encontrado."); return; }
       buscarLatLong(`${dados.logradouro}, ${dados.localidade}, ${dados.uf}, Brasil`)
-        .then((coordenadas) => {
-          if (coordenadas) {
-            setForm((prev) => ({
-              ...prev,
-              latitude:  coordenadas.lat,
-              longitude: coordenadas.lng,
-            }));
-          }
-        })
-        .catch(() => {}); // silencia erro de geolocalização
-
+        .then((coord) => {
+          if (coord) setForm((prev) => ({ ...prev, latitude: coord.lat, longitude: coord.lng }));
+        }).catch(() => {});
       setForm((prev) => ({
         ...prev,
         logradouro:  dados.logradouro  || "",
@@ -181,641 +187,480 @@ function Cadastro() {
         estado:      dados.uf          || "",
         complemento: dados.complemento || "",
       }));
+      setStatusCep("ok");
+      setMsgCep("Endereço preenchido automaticamente.");
     } catch {
-      setErroCep("Erro ao buscar CEP. Preencha o endereço manualmente.");
+      setStatusCep("erro");
+      setMsgCep("Erro ao buscar CEP.");
     } finally {
       setBuscandoCep(false);
     }
   }
 
-  function validarFormulario() {
-    const erros = {};
-
-    if (!form.nome.trim())
-      erros.nome = "Nome completo é obrigatório.";
-
-    if (!form.email.trim())
-      erros.email = "E-mail é obrigatório.";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
-      erros.email = "Informe um e-mail válido.";
-
-    if (form.email !== form["confirm-email"])
-      erros["confirm-email"] = "Os e-mails não coincidem.";
-
-    if (!form.senha)
-      erros.senha = "Senha é obrigatória.";
-    else if (form.senha.length < 8)
-      erros.senha = "A senha deve ter pelo menos 8 caracteres.";
-    else if (!/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(form.senha))
-      erros.senha = "A senha deve ter: letra maiúscula, número e caractere especial (!@#$%^&*).";
-
-    if (form.senha !== form["confirm-senha"])
-      erros["confirm-senha"] = "As senhas não coincidem.";
-
-    if (!form.cpf.trim())
-      erros.cpf = "CPF é obrigatório.";
-
-    if (!form.data_nasc)
-      erros.data_nasc = "Data de nascimento é obrigatória.";
-
-    if (!form.nacionalidade_id)
-      erros.nacionalidade_id = "Selecione uma nacionalidade.";
-
-    if (!form.genero_id)
-      erros.genero_id = "Selecione um gênero.";
-
-    if (!form.tipo_usuario)
-      erros.tipo_usuario = "Selecione o tipo de usuário.";
-
-    if (form.tipo_usuario === "artista") {
-      if (!form.nome_artistico.trim())
-        erros.nome_artistico = "Nome artístico é obrigatório para artistas.";
-      if (form.generos_musicais.length === 0)
-        erros.generos_musicais = "Selecione pelo menos um gênero musical.";
-    }
-
-    if (!form.cep.trim())
-      erros.cep = "CEP é obrigatório.";
-    if (!form.logradouro.trim())
-      erros.logradouro = "Rua/logradouro é obrigatório.";
-    if (!form.numero.trim())
-      erros.numero = "Número é obrigatório.";
-    if (!form.bairro.trim())
-      erros.bairro = "Bairro é obrigatório.";
-    if (!form.cidade.trim())
-      erros.cidade = "Cidade é obrigatória.";
-    if (!form.estado.trim())
-      erros.estado = "Estado é obrigatório.";
-
-    const redesInvalidas = redesSociais.some((rs) => !rs.tipo_id || !rs.link.trim());
-    if (redesInvalidas)
-      erros.redesSociais = "Preencha a plataforma e o link de todas as redes sociais adicionadas.";
-
-    setErrosCampos(erros);
-    return Object.keys(erros).length === 0;
+  // ── Redes sociais ─────────────────────────────────────────────────────────
+  function adicionarRedeSocial() {
+    setRedesSociais((prev) => [...prev, { tipo_id: "", link: "" }]);
+  }
+  function handleRedeSocialChange(index, field, value) {
+    setRedesSociais((prev) => prev.map((rs, i) => i === index ? { ...rs, [field]: value } : rs));
+  }
+  function removerRedeSocial(index) {
+    setRedesSociais((prev) => prev.filter((_, i) => i !== index));
   }
 
+  // ── Navegação de steps ────────────────────────────────────────────────────
+  function avancar() {
+    // Pula step "Artístico" se não for artista
+    const proximoStep = stepAtual + 1;
+    const pularArtistico = proximoStep === 1 && form.tipo_usuario !== "artista";
+
+    const formComRedes = { ...form, _redesSociais: redesSociais };
+    const errosStep = validarStep(stepAtual, formComRedes);
+
+    if (Object.keys(errosStep).length > 0) { setErros(errosStep); return; }
+
+    setStepsOk((prev) => prev.includes(stepAtual) ? prev : [...prev, stepAtual]);
+    setErros({});
+    setStepAtual(pularArtistico ? proximoStep + 1 : proximoStep);
+  }
+
+  function voltar() {
+    const stepAnterior = stepAtual - 1;
+    const pularArtistico = stepAnterior === 1 && form.tipo_usuario !== "artista";
+    setErros({});
+    setStepAtual(pularArtistico ? stepAnterior - 1 : stepAnterior);
+  }
+
+  function irParaStep(i) {
+    if (stepsOk.includes(i)) { setErros({}); setStepAtual(i); }
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────────────
   async function handleSubmit(e) {
     e.preventDefault();
-    setErro("");
+    const formComRedes = { ...form, _redesSociais: redesSociais };
+    const errosStep = validarStep(stepAtual, formComRedes);
+    if (Object.keys(errosStep).length > 0) { setErros(errosStep); return; }
 
-    if (!validarFormulario()) {
-      setErro("Corrija os campos destacados antes de continuar.");
-      return;
-    }
-
-    // Formata data dd/mm/aaaa → aaaa-mm-dd
+    setErroGlobal("");
     let dataFormatada = form.data_nasc;
     if (form.data_nasc.includes("/")) {
       const [dia, mes, ano] = form.data_nasc.split("/");
-      if (!dia || !mes || !ano) {
-        setErro("Data de nascimento inválida. Use o formato dd/mm/aaaa.");
-        return;
-      }
+      if (!dia || !mes || !ano) { setErroGlobal("Data de nascimento inválida."); return; }
       dataFormatada = `${ano}-${mes}-${dia}`;
     }
 
     try {
       setCarregando(true);
-
       const usuario = {
-        nome:             form.nome,
-        email:            form.email,
-        senha:            form.senha,
-        cpf:              form.cpf.replace(/\D/g, ""),
-        telefone:         form.telefone.replace(/\D/g, ""),
-        cep:              form.cep.replace(/\D/g, ""),
-        data_nasc:        dataFormatada,
+        nome: form.nome, email: form.email, senha: form.senha,
+        cpf: form.cpf.replace(/\D/g, ""),
+        telefone: form.telefone.replace(/\D/g, ""),
+        cep: form.cep.replace(/\D/g, ""),
+        data_nasc: dataFormatada,
         nacionalidade_id: Number(form.nacionalidade_id),
-        genero_id:        Number(form.genero_id),
-        tipo_usuario:     form.tipo_usuario,
-        nome_artistico:   form.nome_artistico,
-        descricao:        form.descricao,
+        genero_id: Number(form.genero_id),
+        tipo_usuario: form.tipo_usuario,
+        nome_artistico: form.nome_artistico,
+        descricao: form.descricao,
         generos_musicais: form.generos_musicais,
-        cidade:           form.cidade,
-        estado:           form.estado,
-        logradouro:       form.logradouro,
-        numero:           form.numero,
-        complemento:      form.complemento,
-        bairro:           form.bairro,
+        cidade: form.cidade, estado: form.estado,
+        logradouro: form.logradouro, numero: form.numero,
+        complemento: form.complemento, bairro: form.bairro,
       };
 
-      const respostaUsuario = await cadastrarUsuario(usuario, form.foto || null);
-
-      if (respostaUsuario.status_code !== 201) {
-        const mensagemTraduzida = traduzirErroCadastro(respostaUsuario.message);
-        setErro(mensagemTraduzida);
+      const resp = await cadastrarUsuario(usuario, form.foto || null);
+      if (resp.status_code !== 201) {
+        setErroGlobal(traduzirErroCadastro(resp.message));
         return;
       }
 
-      const usuarioId = respostaUsuario.response?.id_usuario;
-
-      // Cadastra redes sociais (falha silenciosa — não impede o cadastro)
+      const usuarioId = resp.response?.id_usuario;
       if (usuarioId && redesSociais.length > 0) {
         const cadastros = redesSociais.map((rs) =>
-          cadastrarRedeSocial({
-            link:       rs.link,
-            tipo_id:    Number(rs.tipo_id),
-            usuario_id: usuarioId,
-          }).catch((err) => {
-            console.warn("Falha ao cadastrar rede social:", err.message);
-            return null;
-          })
+          cadastrarRedeSocial({ link: rs.link, tipo_id: Number(rs.tipo_id), usuario_id: usuarioId })
+            .catch((err) => console.warn("Falha rede social:", err.message))
         );
         await Promise.allSettled(cadastros);
       }
 
       setSucesso(true);
       setTimeout(() => navigate("/login"), 2500);
-
     } catch (err) {
-      setErro(traduzirErroCadastro(err.message));
+      setErroGlobal(traduzirErroCadastro(err.message));
     } finally {
       setCarregando(false);
     }
   }
 
-  // ─── Utilitário para exibir erro por campo ────────────────────────────────
-  const CampoErro = ({ campo }) =>
-    errosCampos[campo] ? (
-      <span style={{ color: "#ffe0e0", fontSize: "0.78rem", marginTop: "4px" }}>
-        {errosCampos[campo]}
-      </span>
-    ) : null;
+  // ── Helper: classe de campo ───────────────────────────────────────────────
+  const classCampo = (campo) => {
+    if (erros[campo]) return "cadastro-sonara-campo campo--erro";
+    if (form[campo])  return "cadastro-sonara-campo campo--ok";
+    return "cadastro-sonara-campo";
+  };
 
-  const inputStyle = (campo) =>
-    errosCampos[campo] ? { border: "2px solid #ffe0e0" } : {};
+  // Últimos steps visíveis no stepper (condicionalmente exibe "Artístico")
+  const stepsVisiveis = form.tipo_usuario === "artista"
+    ? STEPS
+    : STEPS.filter((s) => s !== "Artístico");
+
+  // Índice real ↔ índice no stepper visual
+  const stepRealParaVisivel = (real) => {
+    if (form.tipo_usuario !== "artista" && real >= 2) return real - 1;
+    return real;
+  };
 
   return (
     <div className="cadastro-sonara-container">
       <header className="header-cadastro">
         <img src={logo} alt="Logo Sonara" />
-        <p className="nome-cadastro">CADASTRO</p>
+        <p className="nome-cadastro">Cadastro</p>
       </header>
 
-      <main>
+      <main style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <form
           className="cadastro-sonara-form"
           autoComplete="off"
+          noValidate
           onSubmit={handleSubmit}
         >
-          {/* DADOS PESSOAIS */}
-          <section className="cadastro-sonara-secao">
-            <h3>Dados Pessoais</h3>
-
-            <div className="cadastro-sonara-grid">
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="nome">Nome Completo *</label>
-                <input
-                  type="text"
-                  id="nome"
-                  placeholder="Digite seu nome completo"
-                  value={form.nome}
-                  onChange={handleChange}
-                  style={inputStyle("nome")}
-                  required
-                />
-                <CampoErro campo="nome" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="cpf">CPF *</label>
-                <input
-                  type="text"
-                  id="cpf"
-                  placeholder="000.000.000-00"
-                  maxLength="14"
-                  value={form.cpf}
-                  onChange={handleChange}
-                  style={inputStyle("cpf")}
-                  required
-                />
-                <CampoErro campo="cpf" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="data_nasc">Data de Nascimento *</label>
-                <input
-                  type="text"
-                  id="data_nasc"
-                  placeholder="dd/mm/aaaa"
-                  maxLength="10"
-                  value={form.data_nasc}
-                  onChange={handleChange}
-                  style={inputStyle("data_nasc")}
-                  required
-                />
-                <CampoErro campo="data_nasc" />
-              </div>
-            </div>
-
-            <div className="cadastro-sonara-grid">
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="email">E-mail *</label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="seu@email.com"
-                  value={form.email}
-                  onChange={handleChange}
-                  style={inputStyle("email")}
-                  required
-                />
-                <CampoErro campo="email" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="confirm-email">Confirmar E-mail *</label>
-                <input
-                  type="email"
-                  id="confirm-email"
-                  placeholder="Repita o e-mail"
-                  value={form["confirm-email"]}
-                  onChange={handleChange}
-                  style={inputStyle("confirm-email")}
-                  required
-                />
-                <CampoErro campo="confirm-email" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="telefone">Telefone *</label>
-                <input
-                  type="tel"
-                  id="telefone"
-                  placeholder="(00) 00000-0000"
-                  maxLength="15"
-                  value={form.telefone}
-                  onChange={handleChange}
-                  style={inputStyle("telefone")}
-                  required
-                />
-                <CampoErro campo="telefone" />
-              </div>
-            </div>
-
-            <div className="cadastro-sonara-grid">
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="senha">Senha *</label>
-                <input
-                  type="password"
-                  id="senha"
-                  placeholder="Mín. 8 caracteres, maiúscula, número e especial"
-                  value={form.senha}
-                  onChange={handleChange}
-                  style={inputStyle("senha")}
-                  required
-                />
-                <CampoErro campo="senha" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="confirm-senha">Confirmar Senha *</label>
-                <input
-                  type="password"
-                  id="confirm-senha"
-                  placeholder="Repita a senha"
-                  value={form["confirm-senha"]}
-                  onChange={handleChange}
-                  style={inputStyle("confirm-senha")}
-                  required
-                />
-                <CampoErro campo="confirm-senha" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="genero_id">Gênero *</label>
-                <select
-                  id="genero_id"
-                  value={form.genero_id}
-                  onChange={handleChange}
-                  style={inputStyle("genero_id")}
-                  required
-                >
-                  <option value="">Selecione...</option>
-                  {generos.map((genero) => (
-                    <option key={genero.id_genero} value={genero.id_genero}>
-                      {genero.nome}
-                    </option>
-                  ))}
-                </select>
-                <CampoErro campo="genero_id" />
-              </div>
-            </div>
-
-            <div className="cadastro-sonara-grid">
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="nacionalidade_id">Nacionalidade *</label>
-                <select
-                  id="nacionalidade_id"
-                  value={form.nacionalidade_id}
-                  onChange={handleChange}
-                  style={inputStyle("nacionalidade_id")}
-                  required
-                >
-                  <option value="">Selecione...</option>
-                  {nacionalidades.map((n) => (
-                    <option key={n.id_nacionalidade} value={n.id_nacionalidade}>
-                      {n.nome}
-                    </option>
-                  ))}
-                </select>
-                <CampoErro campo="nacionalidade_id" />
-              </div>
-
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="tipo_usuario">Tipo de Usuário *</label>
-                <select
-                  id="tipo_usuario"
-                  value={form.tipo_usuario}
-                  onChange={handleChange}
-                  style={inputStyle("tipo_usuario")}
-                  required
-                >
-                  <option value="">Selecione...</option>
-                  <option value="artista">Artista</option>
-                  <option value="organizador">Organizador</option>
-                  <option value="user">Usuário</option>
-                </select>
-                <CampoErro campo="tipo_usuario" />
-              </div>
-
-              {form.tipo_usuario === "artista" && (
-                <div className="cadastro-sonara-campo">
-                  <label htmlFor="generos_musicais">Gêneros Musicais *</label>
-                  <select
-                    id="generos_musicais"
-                    multiple
-                    value={form.generos_musicais}
-                    onChange={handleGeneroMusicalChange}
-                    style={inputStyle("generos_musicais")}
-                    required
+          {/* ── STEPPER ── */}
+          <div className="cadastro-stepper" role="list">
+            {stepsVisiveis.map((label, vi) => {
+              const realIdx  = form.tipo_usuario === "artista" ? vi : (vi >= 1 ? vi + 1 : vi);
+              const ativo    = stepAtual === realIdx;
+              const concluido = stepsOk.includes(realIdx);
+              return (
+                <>
+                  <div
+                    key={label}
+                    role="listitem"
+                    className={[
+                      "cadastro-step",
+                      ativo     ? "cadastro-step--ativo"    : "",
+                      concluido ? "cadastro-step--concluido" : "",
+                      concluido ? "cadastro-step--clicavel"  : "",
+                    ].join(" ").trim()}
+                    onClick={() => irParaStep(realIdx)}
+                    title={concluido ? `Voltar para ${label}` : undefined}
                   >
-                    {generosMusical.map((genero) => (
-                      <option key={genero.id_genero_musical} value={genero.id_genero_musical}>
-                        {genero.nome}
-                      </option>
-                    ))}
-                  </select>
-                  <small>Segure Ctrl para selecionar mais de um</small>
-                  <CampoErro campo="generos_musicais" />
-                </div>
-              )}
-            </div>
+                    <div className="cadastro-step__num">
+                      {concluido ? "✓" : vi + 1}
+                    </div>
+                    <span className="cadastro-step__label">{label}</span>
+                  </div>
+                  {vi < stepsVisiveis.length - 1 && (
+                    <div className="cadastro-step__line" />
+                  )}
+                </>
+              );
+            })}
+          </div>
 
-            {form.tipo_usuario === "artista" && (
+          {/*step dados pessoais*/}
+          {stepAtual === 0 && (
+            <div className="cadastro-step-painel">
+              <p className="cadastro-sonara-secao-titulo">Identificação</p>
+
               <div className="cadastro-sonara-grid">
+                <div className={classCampo("nome")}>
+                  <label htmlFor="nome">Nome Completo *</label>
+                  <input type="text" id="nome" placeholder="Seu nome completo"
+                    value={form.nome} onChange={handleChange} />
+                  {erros.nome && <span className="campo-mensagem-erro">{erros.nome}</span>}
+                </div>
+
+                <div className={classCampo("cpf")}>
+                  <label htmlFor="cpf">CPF *</label>
+                  <input type="text" id="cpf" placeholder="000.000.000-00"
+                    maxLength="14" value={form.cpf} onChange={handleChange} />
+                  {erros.cpf && <span className="campo-mensagem-erro">{erros.cpf}</span>}
+                </div>
+
+                <div className={classCampo("data_nasc")}>
+                  <label htmlFor="data_nasc">Data de Nascimento *</label>
+                  <input type="text" id="data_nasc" placeholder="dd/mm/aaaa"
+                    maxLength="10" value={form.data_nasc} onChange={handleChange} />
+                  {erros.data_nasc && <span className="campo-mensagem-erro">{erros.data_nasc}</span>}
+                </div>
+              </div>
+
+              <p className="cadastro-sonara-secao-titulo" style={{ marginTop: "0.5rem" }}>Contato</p>
+
+              <div className="cadastro-sonara-grid">
+                <div className={classCampo("email")}>
+                  <label htmlFor="email">E-mail *</label>
+                  <input type="email" id="email" placeholder="seu@email.com"
+                    value={form.email} onChange={handleChange} />
+                  {erros.email && <span className="campo-mensagem-erro">{erros.email}</span>}
+                </div>
+
+                <div className={classCampo("confirm-email")}>
+                  <label htmlFor="confirm-email">Confirmar E-mail *</label>
+                  <input type="email" id="confirm-email" placeholder="Repita o e-mail"
+                    value={form["confirm-email"]} onChange={handleChange} />
+                  {erros["confirm-email"] && <span className="campo-mensagem-erro">{erros["confirm-email"]}</span>}
+                </div>
+
+                <div className={classCampo("telefone")}>
+                  <label htmlFor="telefone">Telefone</label>
+                  <input type="tel" id="telefone" placeholder="(00) 00000-0000"
+                    maxLength="15" value={form.telefone} onChange={handleChange} />
+                </div>
+              </div>
+
+              <p className="cadastro-sonara-secao-titulo" style={{ marginTop: "0.5rem" }}>Acesso</p>
+
+              <div className="cadastro-sonara-grid">
+                <div className={classCampo("senha")}>
+                  <label htmlFor="senha">Senha *</label>
+                  <input type="password" id="senha"
+                    placeholder="Mín. 8 chars, maiúscula, número e especial"
+                    value={form.senha} onChange={handleChange} />
+                  {erros.senha && <span className="campo-mensagem-erro">{erros.senha}</span>}
+                </div>
+
+                <div className={classCampo("confirm-senha")}>
+                  <label htmlFor="confirm-senha">Confirmar Senha *</label>
+                  <input type="password" id="confirm-senha" placeholder="Repita a senha"
+                    value={form["confirm-senha"]} onChange={handleChange} />
+                  {erros["confirm-senha"] && <span className="campo-mensagem-erro">{erros["confirm-senha"]}</span>}
+                </div>
+              </div>
+
+              <p className="cadastro-sonara-secao-titulo" style={{ marginTop: "0.5rem" }}>Perfil</p>
+
+              <div className="cadastro-sonara-grid">
+                <div className={classCampo("genero_id")}>
+                  <label htmlFor="genero_id">Gênero *</label>
+                  <div className="select-wrapper">
+                    <select id="genero_id" value={form.genero_id} onChange={handleChange}>
+                      <option value="">Selecione…</option>
+                      {generos.map((g) => (
+                        <option key={g.id_genero} value={g.id_genero}>{g.nome}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {erros.genero_id && <span className="campo-mensagem-erro">{erros.genero_id}</span>}
+                </div>
+
+                <div className={classCampo("nacionalidade_id")}>
+                  <label htmlFor="nacionalidade_id">Nacionalidade *</label>
+                  <div className="select-wrapper">
+                    <select id="nacionalidade_id" value={form.nacionalidade_id} onChange={handleChange}>
+                      <option value="">Selecione…</option>
+                      {nacionalidades.map((n) => (
+                        <option key={n.id_nacionalidade} value={n.id_nacionalidade}>{n.nome}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {erros.nacionalidade_id && <span className="campo-mensagem-erro">{erros.nacionalidade_id}</span>}
+                </div>
+
+                <div className={classCampo("tipo_usuario")}>
+                  <label htmlFor="tipo_usuario">Tipo de Usuário *</label>
+                  <div className="select-wrapper">
+                    <select id="tipo_usuario" value={form.tipo_usuario} onChange={handleChange}>
+                      <option value="">Selecione…</option>
+                      <option value="artista">Artista</option>
+                      <option value="organizador">Organizador</option>
+                      <option value="user">Usuário</option>
+                    </select>
+                  </div>
+                  {erros.tipo_usuario && <span className="campo-mensagem-erro">{erros.tipo_usuario}</span>}
+                </div>
+              </div>
+
+              <div className="cadastro-sonara-grid cadastro-sonara-grid--full">
                 <div className="cadastro-sonara-campo">
+                  <label htmlFor="foto">Foto de perfil (opcional, máx. 5 MB)</label>
+                  <input type="file" id="foto" accept="image/jpeg,image/png,image/webp"
+                    onChange={handleFotoChange} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/*step dados artista*/}
+          {stepAtual === 1 && form.tipo_usuario === "artista" && (
+            <div className="cadastro-step-painel">
+              <p className="cadastro-sonara-secao-titulo">Identidade Artística</p>
+
+              <div className="cadastro-sonara-grid cadastro-sonara-grid--2">
+                <div className={classCampo("nome_artistico")}>
                   <label htmlFor="nome_artistico">Nome Artístico *</label>
-                  <input
-                    type="text"
-                    id="nome_artistico"
-                    placeholder="Seu nome artístico"
-                    value={form.nome_artistico}
-                    onChange={handleChange}
-                    style={inputStyle("nome_artistico")}
-                    required
-                  />
-                  <CampoErro campo="nome_artistico" />
+                  <input type="text" id="nome_artistico" placeholder="Seu nome no palco"
+                    value={form.nome_artistico} onChange={handleChange} />
+                  {erros.nome_artistico && <span className="campo-mensagem-erro">{erros.nome_artistico}</span>}
                 </div>
 
                 <div className="cadastro-sonara-campo">
                   <label htmlFor="descricao">Descrição</label>
-                  <input
-                    type="text"
-                    id="descricao"
-                    placeholder="Fale sobre você"
-                    value={form.descricao}
-                    onChange={handleChange}
-                  />
+                  <input type="text" id="descricao" placeholder="Fale sobre você"
+                    value={form.descricao} onChange={handleChange} />
                 </div>
               </div>
-            )}
 
-            <div className="cadastro-sonara-grid">
-              <div className="cadastro-sonara-campo">
-                <label htmlFor="foto">Foto de perfil (opcional, máx. 5MB)</label>
-                <input
-                  type="file"
-                  id="foto"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={handleFotoChange}
-                />
+              <div className="cadastro-sonara-grid cadastro-sonara-grid--full">
+                <div className={erros.generos_musicais ? "cadastro-sonara-campo campo--erro" : "cadastro-sonara-campo"}>
+                  <label htmlFor="generos_musicais">Gêneros Musicais *</label>
+                  <div className="select-wrapper select-wrapper--multiple">
+                    <select id="generos_musicais" multiple
+                      value={form.generos_musicais} onChange={handleGeneroMusicalChange}>
+                      {generosMusical.map((g) => (
+                        <option key={g.id_genero_musical} value={g.id_genero_musical}>{g.nome}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <small>Segure Ctrl (ou Cmd) para selecionar mais de um.</small>
+                  {erros.generos_musicais && <span className="campo-mensagem-erro">{erros.generos_musicais}</span>}
+                </div>
               </div>
             </div>
-          </section>
+          )}
 
-          {/* REDES SOCIAIS */}
-          <section className="cadastro-sonara-secao">
-            <h3>
-              Redes Sociais{" "}
-              <span style={{ fontSize: "0.85rem", fontWeight: "normal" }}>
-                (opcional)
-              </span>
-            </h3>
+          {/* step endereco */}
+          {stepAtual === 2 && (
+            <div className="cadastro-step-painel">
+              <p className="cadastro-sonara-secao-titulo">Localização</p>
 
-            {redesSociais.map((rs, index) => (
-              <div className="cadastro-sonara-grid" key={index}>
-                <div className="cadastro-sonara-campo">
-                  <label>Plataforma</label>
-                  <select
-                    value={rs.tipo_id}
-                    onChange={(e) => handleRedeSocialChange(index, "tipo_id", e.target.value)}
-                  >
-                    <option value="">Selecione...</option>
-                    {tiposRedesSociais.map((tipo) => (
-                      <option key={tipo.id_tipo_redes_sociais} value={tipo.id_tipo_redes_sociais}>
-                        {tipo.nome}
-                      </option>
-                    ))}
-                  </select>
+              <div className="cadastro-sonara-grid">
+                <div className={`cadastro-sonara-campo${statusCep === "erro" ? " campo--erro" : statusCep === "ok" ? " campo--ok" : ""}`}>
+                  <label htmlFor="cep">CEP *</label>
+                  <input type="text" id="cep" placeholder="00000-000"
+                    maxLength="9" value={form.cep}
+                    onChange={handleChange} onBlur={handleCepBlur} />
+                  {msgCep && (
+                    <span className={`cep-hint cep-hint--${buscandoCep ? "buscando" : statusCep}`}>
+                      {msgCep}
+                    </span>
+                  )}
+                  {erros.cep && <span className="campo-mensagem-erro">{erros.cep}</span>}
+                </div>
+
+                <div className={classCampo("logradouro")} style={{ gridColumn: "span 2" }}>
+                  <label htmlFor="logradouro">Rua / Avenida *</label>
+                  <input type="text" id="logradouro" placeholder="Nome da rua"
+                    value={form.logradouro} onChange={handleChange} />
+                  {erros.logradouro && <span className="campo-mensagem-erro">{erros.logradouro}</span>}
+                </div>
+              </div>
+
+              <div className="cadastro-sonara-grid">
+                <div className={classCampo("numero")}>
+                  <label htmlFor="numero">Número *</label>
+                  <input type="text" id="numero" maxLength="10"
+                    value={form.numero} onChange={handleChange} />
+                  {erros.numero && <span className="campo-mensagem-erro">{erros.numero}</span>}
                 </div>
 
                 <div className="cadastro-sonara-campo">
-                  <label>Link</label>
-                  <input
-                    type="url"
-                    placeholder="https://..."
-                    value={rs.link}
-                    onChange={(e) => handleRedeSocialChange(index, "link", e.target.value)}
-                  />
+                  <label htmlFor="complemento">Complemento</label>
+                  <input type="text" id="complemento" placeholder="Sala, bloco… (opcional)"
+                    maxLength="100" value={form.complemento} onChange={handleChange} />
                 </div>
 
-                <div className="cadastro-sonara-campo" style={{ display: "flex", alignItems: "flex-end" }}>
-                  <button
-                    type="button"
-                    className="cadastro-sonara-btn-secundario"
-                    onClick={() => removerRedeSocial(index)}
-                  >
-                    Remover
+                <div className={classCampo("bairro")}>
+                  <label htmlFor="bairro">Bairro *</label>
+                  <input type="text" id="bairro"
+                    value={form.bairro} onChange={handleChange} />
+                  {erros.bairro && <span className="campo-mensagem-erro">{erros.bairro}</span>}
+                </div>
+              </div>
+
+              <div className="cadastro-sonara-grid cadastro-sonara-grid--2">
+                <div className={classCampo("cidade")}>
+                  <label htmlFor="cidade">Cidade *</label>
+                  <input type="text" id="cidade"
+                    value={form.cidade} onChange={handleChange} />
+                  {erros.cidade && <span className="campo-mensagem-erro">{erros.cidade}</span>}
+                </div>
+
+                <div className={classCampo("estado")}>
+                  <label htmlFor="estado">UF *</label>
+                  <input type="text" id="estado" maxLength="2" placeholder="SP"
+                    value={form.estado} onChange={handleChange} />
+                  {erros.estado && <span className="campo-mensagem-erro">{erros.estado}</span>}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* step redes sociais */}
+          {stepAtual === 3 && (
+            <div className="cadastro-step-painel">
+              <p className="cadastro-sonara-secao-titulo">Redes Sociais (opcional)</p>
+
+              {redesSociais.map((rs, index) => (
+                <div className="rede-social-row" key={index}>
+                  <div className="cadastro-sonara-campo">
+                    <label>Plataforma</label>
+                    <div className="select-wrapper">
+                      <select value={rs.tipo_id}
+                        onChange={(e) => handleRedeSocialChange(index, "tipo_id", e.target.value)}>
+                        <option value="">Selecione…</option>
+                        {tiposRedesSociais.map((tipo) => (
+                          <option key={tipo.id_tipo_redes_sociais} value={tipo.id_tipo_redes_sociais}>
+                            {tipo.nome}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="cadastro-sonara-campo">
+                    <label>Link</label>
+                    <input type="url" placeholder="https://…"
+                      value={rs.link}
+                      onChange={(e) => handleRedeSocialChange(index, "link", e.target.value)} />
+                  </div>
+
+                  <button type="button" className="btn-remover"
+                    onClick={() => removerRedeSocial(index)} aria-label="Remover rede social">
+                    ×
                   </button>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            {errosCampos.redesSociais && (
-              <span style={{ color: "#ffe0e0", fontSize: "0.78rem" }}>
-                {errosCampos.redesSociais}
-              </span>
-            )}
+              {erros.redesSociais && (
+                <span className="campo-mensagem-erro">{erros.redesSociais}</span>
+              )}
 
-            <button
-              type="button"
-              className="cadastro-sonara-btn-secundario"
-              onClick={adicionarRedeSocial}
-            >
-              + Adicionar rede social
-            </button>
-          </section>
-
-          {/* ENDEREÇO */}
-          <section className="cadastro-sonara-endereco">
-            <h3>Endereço</h3>
-
-            <div className="cadastro-sonara-endereco-grid">
-              <div className="cadastro-sonara-campo cep">
-                <label htmlFor="cep">
-                  CEP *{" "}
-                  {buscandoCep && (
-                    <span className="buscando-cep"> Buscando…</span>
-                  )}
-                </label>
-                <input
-                  type="text"
-                  id="cep"
-                  placeholder="00000-000"
-                  maxLength="9"
-                  value={form.cep}
-                  onChange={handleChange}
-                  onBlur={handleCepBlur}
-                  style={inputStyle("cep")}
-                  required
-                />
-                {erroCep && (
-                  <span style={{ color: "#ffe0e0", fontSize: "0.78rem" }}>
-                    {erroCep}
-                  </span>
-                )}
-                <CampoErro campo="cep" />
-              </div>
-
-              <div className="cadastro-sonara-campo rua">
-                <label htmlFor="logradouro">Rua *</label>
-                <input
-                  type="text"
-                  id="logradouro"
-                  placeholder="Rua, Avenida..."
-                  value={form.logradouro}
-                  onChange={handleChange}
-                  style={inputStyle("logradouro")}
-                  required
-                />
-                <CampoErro campo="logradouro" />
-              </div>
-
-              <div className="cadastro-sonara-campo numero">
-                <label htmlFor="numero">Nº *</label>
-                <input
-                  type="text"
-                  id="numero"
-                  maxLength="10"
-                  value={form.numero}
-                  onChange={handleChange}
-                  style={inputStyle("numero")}
-                  required
-                />
-                <CampoErro campo="numero" />
-              </div>
-
-              <div className="cadastro-sonara-campo bairro">
-                <label htmlFor="bairro">Bairro *</label>
-                <input
-                  type="text"
-                  id="bairro"
-                  value={form.bairro}
-                  onChange={handleChange}
-                  style={inputStyle("bairro")}
-                  required
-                />
-                <CampoErro campo="bairro" />
-              </div>
-
-              <div className="cadastro-sonara-campo cidade">
-                <label htmlFor="cidade">Cidade *</label>
-                <input
-                  type="text"
-                  id="cidade"
-                  value={form.cidade}
-                  onChange={handleChange}
-                  style={inputStyle("cidade")}
-                  required
-                />
-                <CampoErro campo="cidade" />
-              </div>
-
-              <div className="cadastro-sonara-campo uf">
-                <label htmlFor="estado">UF *</label>
-                <input
-                  type="text"
-                  id="estado"
-                  maxLength="2"
-                  value={form.estado}
-                  onChange={handleChange}
-                  style={inputStyle("estado")}
-                  required
-                />
-                <CampoErro campo="estado" />
-              </div>
-
-              <div className="cadastro-sonara-campo complemento">
-                <label htmlFor="complemento">Complemento</label>
-                <input
-                  type="text"
-                  id="complemento"
-                  maxLength="100"
-                  value={form.complemento}
-                  onChange={handleChange}
-                />
-              </div>
+              <button type="button" className="btn-inline-secundario"
+                onClick={adicionarRedeSocial}>
+                + Adicionar rede social
+              </button>
             </div>
-          </section>
-
-          {erro && (
-            <p
-              role="alert"
-              className="cadastro-sonara-erro"
-              style={{
-                background: "rgba(0,0,0,0.18)",
-                borderRadius: "8px",
-                padding: "10px 14px",
-              }}
-            >
-              {erro}
-            </p>
           )}
 
+          {/* ── Mensagens globais ── */}
+          {erroGlobal && (
+            <div role="alert" className="msg-feedback msg-feedback--erro">{erroGlobal}</div>
+          )}
           {sucesso && (
-            <p className="cadastro-sonara-sucesso">
-              Cadastro realizado com sucesso! Redirecionando para o login…
-            </p>
+            <div className="msg-feedback msg-feedback--sucesso">
+              Cadastro realizado! Redirecionando para o login…
+            </div>
           )}
 
-          <div className="cadastro-sonara-botoes">
-            <button
-              type="button"
-              className="cadastro-sonara-btn-secundario"
-              onClick={() => navigate("/login")}
-            >
-              Já tenho conta
+          {/* ── Navegação ── */}
+          <div className="cadastro-step-nav">
+            <button type="button" className="btn-nav btn-nav--voltar"
+              onClick={stepAtual === 0 ? () => navigate("/") : voltar}>
+              {stepAtual === 0 ? "Já tenho conta" : "← Voltar"}
             </button>
 
-            <button
-              type="submit"
-              className="cadastro-sonara-btn-primario"
-              disabled={carregando || buscandoCep}
-            >
-              {carregando ? "Cadastrando…" : "Cadastrar"}
-            </button>
+            {stepAtual < 3 ? (
+              <button type="button" className="btn-nav btn-nav--avancar" onClick={avancar}>
+                Próximo →
+              </button>
+            ) : (
+              <button type="submit" className="btn-nav btn-nav--enviar"
+                disabled={carregando || sucesso}>
+                {carregando ? "Cadastrando…" : "Cadastrar"}
+              </button>
+            )}
           </div>
         </form>
       </main>

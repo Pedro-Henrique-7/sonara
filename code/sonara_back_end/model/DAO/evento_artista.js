@@ -63,15 +63,14 @@ const getSelectLastID = async function () {
 // Insere vínculo artista/evento
 const setInsertArtistEvent = async function (evento_artista, trx = null) {
     try {
-
         const result = await db(trx)('tb_evento_artista')
             .insert({
                 artista_id: evento_artista.artista_id,
                 evento_id: evento_artista.evento_id,
                 cache_esperado: evento_artista.cache_esperado,
-                cache_ofertado: evento_artista.cache_ofertado,
-                cache_final: evento_artista.cache_final,
-                contra_proposta: evento_artista.contra_proposta || null,
+                cache_ofertado: evento_artista.cache_ofertado ?? null,
+                cache_final: evento_artista.cache_final ?? null,
+                contra_proposta: evento_artista.contra_proposta ?? null,
                 sobre_artista: evento_artista.sobre_artista || null,
                 motivo_inscricao: evento_artista.motivo_inscricao || null
             })
@@ -79,6 +78,14 @@ const setInsertArtistEvent = async function (evento_artista, trx = null) {
         return result[0]
 
     } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            return {
+                erro: true,
+                tipo: 'DUPLICADO',
+                message: 'Este artista já está inscrito neste evento.'
+            }
+        }
+
         console.error('[DAO artistEvent] setInsertArtistEvent:', error.message)
         return false
     }
