@@ -153,7 +153,7 @@ const setUpdateOrganizerEvent = async function (
             .update(dados)
 
         return result > 0
-
+console.log(result)
     } catch (error) {
         console.error('[DAO organizerEvent] setUpdateOrganizerEvent:', error.message)
         return false

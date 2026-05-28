@@ -39,6 +39,23 @@ const setInsertArtistGendersSong = async function (artista_genero_musical, trx =
         return false
     }
 }
+const getSelectLastId= async function () {
+    try {
+
+        const result = await knexDatabase('tb_artista_genero_musical')
+            .select('id_artista_genero_musical')
+            .orderBy('id_artista_genero_musical', 'desc')
+            .first()
+
+        return result
+            ? result.id_artista_genero_musical
+            : false
+
+    } catch (error) {
+        console.error('[DAO artista_genero_musical] getSelectLastIDArtistGendersSong:', error.message)
+        return false
+    }
+}
 
 const setUpdateArtistGendersSong = async function (artista_genero_musical, trx = null) {
     try {
@@ -84,5 +101,6 @@ module.exports = {
     getSelectByIdArtistGendersSong,
     setInsertArtistGendersSong,
     setUpdateArtistGendersSong,
+    getSelectLastId,
     setDeleteArtistGendersSong
 }

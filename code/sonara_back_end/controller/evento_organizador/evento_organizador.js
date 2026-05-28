@@ -137,7 +137,7 @@ const atualizarEventoOrganizador = async function(eventoOrganizador, id, content
                 
                     //Validação de ID válido, chama a função da controller que verifica no BD se o ID existe e valida o ID
                      let validarID = await buscarEventoOrganizadorId(id)
-                  
+             
                     if(validarID.status_code == 200){
                         
                         //Adiciona o ID do eventoOrganizador no JSON de dados para ser encaminhado ao DAO

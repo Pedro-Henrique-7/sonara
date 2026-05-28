@@ -137,7 +137,7 @@ const atualizarAvaliacaoArtista = async function(AvaliacaoArtista, id, contentTy
                 
                     //Validação de ID válido, chama a função da controller que verifica no BD se o ID existe e valida o ID
                      let validarID = await buscarAvaliacaoArtistaId(id)
-                  
+                  console.log(validarID)
                     if(validarID.status_code == 200){
                         
                         //Adiciona o ID do AvaliacaoArtista no JSON de dados para ser encaminhado ao DAO

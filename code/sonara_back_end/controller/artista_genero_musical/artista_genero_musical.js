@@ -92,7 +92,7 @@ const inserirArtistaGeneroMusical = async function(ArtistaGeneroMusical, content
 
                 if(resultArtistaGeneroMusical){
                     //Chama a função para receber o ID gerado no BD
-                    let lastID = await ArtistaGeneroMusicalDAO.getSelectLastID()
+                    let lastID = await ArtistaGeneroMusicalDAO.getSelectLastId()
          
                     if(lastID){
                         //Adiciona o ID no JSON com os dados do ArtistaGeneroMusical
