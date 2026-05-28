@@ -32,7 +32,7 @@ html,
   width: 100%;
   min-height: 100vh;
 
-  background-color: var(--bg-box);
+  background-color: var(--bg-main);
 }
 
 /* =========================
@@ -47,7 +47,7 @@ html,
 }
 
 .search-bar {
-  background-color: var(--bg-main);
+  background-color: var(--bg-box);
 
   display: flex;
   align-items: center;
@@ -263,6 +263,7 @@ html,
   max-width: 340px;
 
   min-height: 420px;
+  height: 27rem;
 
   border-radius: 24px;
 
