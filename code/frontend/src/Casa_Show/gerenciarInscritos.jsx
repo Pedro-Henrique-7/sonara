@@ -170,7 +170,9 @@ export default function GerenciarInscritos() {
               return (
                 <div key={inscricao.id_evento_artista} className="inscrito-card">
                   <div className="inscrito-header">
-                    <div className="inscrito-foto"></div>
+                    <div className="inscrito-foto">
+                      <img src={inscricao.foto_artista} alt="" />
+                    </div>
                     <div className="inscrito-info">
                       <h3>{inscricao.nome_artistico || inscricao.artista_nome || "Artista"}</h3>
                       <span className={`status-badge ${statusInfo.class}`}>

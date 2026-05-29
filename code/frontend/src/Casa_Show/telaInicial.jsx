@@ -5,14 +5,16 @@ import FooterSonara from "../Artista/footer.jsx";
 
 export default function TelaInicial() {
   const navigate = useNavigate();
-
+  const usuarioSalvo = sessionStorage.getItem("usuario") 
+    ? JSON.parse(sessionStorage.getItem("usuario")) 
+    : null; 
   return (
     <div className="home-container">
       <HeaderCasaShow />
       <main className="main">
         <section className="painel">
           <div className="painel-titulo">
-            <h1>Olá Usuario</h1>
+            <h1>Olá {usuarioSalvo?.nome || "usuário"}</h1>
             <h2>O que vamos fazer hoje?</h2>
           </div>
 
@@ -21,7 +23,7 @@ export default function TelaInicial() {
               Criar Eventos
             </div>
 
-            <div className="card" onClick={() => navigate("/contratarArtista")}>
+            <div className="card" onClick={() => navigate(`/gerenciarInscritos/${usuarioSalvo?.organizador?.eventos[0]?.id_evento || ""}`)}>
               Contratar Artistas
             </div>
 
