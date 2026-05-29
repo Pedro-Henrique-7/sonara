@@ -37,7 +37,7 @@
 
   border-radius: 2rem;
 
-  background: linear-gradient(180deg, #b70000 0%, #ff2d00 100%);
+  background: var(--bg-box);
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
@@ -68,7 +68,7 @@
 
   border-radius: 2rem;
 
-  background: linear-gradient(180deg, #111111 0%, #5e5e5e 100%);
+  background: var(--bg-main);
 
   display: flex;
   flex-direction: column;
@@ -306,7 +306,7 @@
   border: none;
   border-radius: 999px;
 
-  background: linear-gradient(90deg, #ef620c 0%, #ff7a00 100%);
+  background: var(--btn-color);
 
   color: white;
 

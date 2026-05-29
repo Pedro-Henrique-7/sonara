@@ -56,102 +56,90 @@ export default function PerfilArtista() {
   });
 
   // Fecha dropdown ao clicar fora
-useEffect(() => {
-  async function carregarPerfil() {
-    try {
-      const usuarioSalvo = sessionStorage.getItem("usuario");
+  useEffect(() => {
+    async function carregarPerfil() {
+      try {
+        const usuarioSalvo = sessionStorage.getItem("usuario");
 
-      if (!usuarioSalvo) {
-        navigate("/login");
-        return;
-      }
+        if (!usuarioSalvo) {
+          navigate("/login");
+          return;
+        }
 
-      const usuarioSession = JSON.parse(usuarioSalvo);
+        const usuarioSession = JSON.parse(usuarioSalvo);
 
-      // BUSCA SEMPRE DADOS NOVOS DO BACKEND
-      const response = await buscarUsuarioPorId(
-        usuarioSession.id_usuario
-      );
+        // BUSCA SEMPRE DADOS NOVOS DO BACKEND
+        const response = await buscarUsuarioPorId(usuarioSession.id_usuario);
 
-      const u = response.response.usuario;
+        const u = response.response.usuario;
 
-      // atualiza session storage
-      sessionStorage.setItem(
-        "usuario",
-        JSON.stringify(u)
-      );
+        // atualiza session storage
+        sessionStorage.setItem("usuario", JSON.stringify(u));
 
-      setIdUsuario(u.id_usuario);
-      setTipoUsuario(u.tipo_usuario || "");
+        setIdUsuario(u.id_usuario);
+        setTipoUsuario(u.tipo_usuario || "");
 
-      if (u.foto) {
-        setFotoPerfilUrl(u.foto);
-      }
+        if (u.foto) {
+          setFotoPerfilUrl(u.foto);
+        }
 
-      const end = u.endereco || {};
-      const artista = u.artista || {};
+        const end = u.endereco || {};
+        const artista = u.artista || {};
 
-      const generosMusicalIds =
-        artista.generos_musicais?.map((g) => g.id) ?? [];
+        const generosMusicalIds =
+          artista.generos_musicais?.map((g) => g.id) ?? [];
 
-      const generoId = u.genero?.id_genero ?? "";
-      const nacionalidadeId =
-        u.nacionalidade?.id_nacionalidade ?? "";
+        const generoId = u.genero?.id_genero ?? "";
+        const nacionalidadeId = u.nacionalidade?.id_nacionalidade ?? "";
 
-      setForm({
-        nome: u.nome || "",
-        data_nasc: u.data_nasc?.split("T")[0] || "",
-        email: u.email || "",
-        telefone: u.telefone || "",
-        cpf: u.cpf || "",
-        nacionalidade_id: nacionalidadeId,
-        genero_id: generoId,
+        setForm({
+          nome: u.nome || "",
+          data_nasc: u.data_nasc?.split("T")[0] || "",
+          email: u.email || "",
+          telefone: u.telefone || "",
+          cpf: u.cpf || "",
+          nacionalidade_id: nacionalidadeId,
+          genero_id: generoId,
 
-        cep: end.cep || "",
-        logradouro: end.logradouro || "",
-        numero: end.numero || "",
-        complemento: end.complemento || "",
-        bairro: end.bairro || "",
-        cidade: end.cidade || "",
-        estado: end.estado || "",
+          cep: end.cep || "",
+          logradouro: end.logradouro || "",
+          numero: end.numero || "",
+          complemento: end.complemento || "",
+          bairro: end.bairro || "",
+          cidade: end.cidade || "",
+          estado: end.estado || "",
 
-        nome_artistico: artista.nome_artistico || "",
-        descricao: artista.descricao || "",
+          nome_artistico: artista.nome_artistico || "",
+          descricao: artista.descricao || "",
 
-        generos_musicais: generosMusicalIds,
-      });
+          generos_musicais: generosMusicalIds,
+        });
 
-      // EVENTOS ATUALIZADOS
-      setMeusEventos(artista.eventos || []);
+        // EVENTOS ATUALIZADOS
+        setMeusEventos(artista.eventos || []);
 
-      buscarGeneros()
-        .then((data) =>
-          setGeneros(data.response?.generos ?? [])
-        )
-        .catch(() => {});
+        buscarGeneros()
+          .then((data) => setGeneros(data.response?.generos ?? []))
+          .catch(() => {});
 
-      buscarNacionalidades()
-        .then((data) =>
-          setNacionalidades(
-            data.response?.nacionalidades ?? []
+        buscarNacionalidades()
+          .then((data) =>
+            setNacionalidades(data.response?.nacionalidades ?? []),
           )
-        )
-        .catch(() => {});
+          .catch(() => {});
 
-      buscarGeneroMusical()
-        .then((data) =>
-          setGenerosMusicais(
-            data.response?.GeneroMusical ?? []
+        buscarGeneroMusical()
+          .then((data) =>
+            setGenerosMusicais(data.response?.GeneroMusical ?? []),
           )
-        )
-        .catch(() => {});
-    } catch (error) {
-      console.log(error);
+          .catch(() => {});
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }
 
-  carregarPerfil();
-}, [navigate]);
+    carregarPerfil();
+  }, [navigate]);
 
   useEffect(() => {
     const usuarioSalvo = sessionStorage.getItem("usuario");
@@ -166,15 +154,11 @@ useEffect(() => {
 
     if (u.foto) setFotoPerfilUrl(u.foto);
 
-
     const end = u.endereco || {};
-
 
     const artista = u.artista || {};
 
-
     const generosMusicalIds = artista.generos_musicais?.map((g) => g.id) ?? [];
-
 
     const generoId = u.genero?.id_genero ?? "";
     const nacionalidadeId = u.nacionalidade?.id_nacionalidade ?? "";
@@ -202,7 +186,7 @@ useEffect(() => {
     });
 
     // Eventos do artista (se houver)
-  
+
     if (artista.eventos && artista.eventos.length > 0) {
       setMeusEventos(artista.eventos);
     }
@@ -225,7 +209,6 @@ useEffect(() => {
     setSucesso("");
     setForm({ ...form, [e.target.id]: e.target.value });
   }
-
 
   function handleToggleGeneroMusical(idGeneroMusical) {
     setErro("");
@@ -466,47 +449,6 @@ useEffect(() => {
               accept="image/*"
               onChange={handleFileChange}
             />
-          </div>
-
-          <div className="pa-plano-card">
-            <div className="pa-plano-header">
-              <span className="pa-plano-titulo">Plano Diamante</span>
-              <svg
-                className="pa-plano-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-              </svg>
-            </div>
-            <p className="pa-plano-desc">
-              O plano definitivo para artistas estabelecidos. Tenha acesso
-              ilimitado a todas as ferramentas da plataforma, analytics
-              avançados, posicionamento premium nas buscas e suporte dedicado
-              24/7.
-            </p>
-          </div>
-
-          <div className="pa-plano-card pa-plano-card--secondary">
-            <div className="pa-plano-header">
-              <span className="pa-plano-titulo">Plano Platina</span>
-              <svg
-                className="pa-plano-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
-              </svg>
-            </div>
-            <p className="pa-plano-desc">
-              Acesse recursos exclusivos para artistas em crescimento. Divulgue
-              seus eventos para um público maior e tenha destaque nas buscas da
-              plataforma.
-            </p>
           </div>
         </div>
 
@@ -751,7 +693,9 @@ useEffect(() => {
                                   className="pa-generos-cb"
                                   checked={selecionado}
                                   onChange={() =>
-                                    handleToggleGeneroMusical(g.id_genero_musical)
+                                    handleToggleGeneroMusical(
+                                      g.id_genero_musical,
+                                    )
                                   }
                                 />
                                 <span>{g.nome}</span>

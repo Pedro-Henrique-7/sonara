@@ -31,6 +31,7 @@ body {
   object-fit: cover;
   display: block;
   border-radius: 20px;
+  color: aqua;
 }
 
 .stars {

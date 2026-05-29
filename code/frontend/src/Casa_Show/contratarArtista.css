@@ -28,30 +28,27 @@
 
   border-radius: 24px;
 
-  background: linear-gradient(to bottom, #7a0606 0%, #d82f12 55%, #f46a12 100%);
+  background: var(--bg-box);
 
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.35),
-    0 4px 0 #9f2f00;
+    0 4px 0 #00309f;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* =========================================================
    TÍTULO
 ========================================================= */
 .sonaraContratarTitulo {
-  margin-bottom: 45px;
-
-  color: #ffffff;
-
-  font-size: 2.5rem;
+  font-size: 2.4rem;
   font-weight: 700;
-
+  color: var(--text-color);
   text-align: center;
+  margin-bottom: 40px;
 }
 
-/* =========================================================
-   GRID DOS CARDS
-========================================================= */
 .sonaraContratarGrid {
   width: 100%;
 
@@ -63,7 +60,6 @@
 
   justify-items: center;
 }
-
 /* =========================================================
    CARD
 ========================================================= */
@@ -109,7 +105,7 @@
   justify-content: center;
   align-items: flex-end;
 
-  background: linear-gradient(to right, #ff4d11, #ff7a1a);
+  background: var(--bg-main);
 }
 
 /* =========================================================
@@ -231,7 +227,7 @@
   border: none;
   border-radius: 10px;
 
-  background: linear-gradient(to right, #ff4d11, #ff6a00);
+  background: #2e1760;
 
   color: #ffffff;
 
@@ -253,7 +249,7 @@
 }
 
 .sonaraContratarBtnVerMais:hover {
-  background: linear-gradient(to right, #e64100, #ff5500);
+  background: var(--btn-hover-color);
 
   transform: scale(1.04);
 
