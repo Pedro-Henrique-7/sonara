@@ -572,6 +572,53 @@ const atualizarEventoArtista = async function(EventoArtista, id, contentType){
 
 }
 
+const buscarInscricoesPorEvento = async function (evento_id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+
+    try {
+        if (isNaN(evento_id) || evento_id == '' || evento_id == null || evento_id <= 0) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [evento_id]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+
+        const resultInscricoes = await EventoArtistaDAO.getSelectByEventoId(Number(evento_id))
+
+        if (!resultInscricoes) {
+            MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+            MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+            MESSAGES.HEADER.response.Inscricoes = []
+            return MESSAGES.HEADER
+        }
+
+        const STATUS_MAP = {
+            1: 'Pendente',
+            2: 'Aprovado',
+            3: 'Reprovado',
+            4: 'Contra proposta',
+            5: 'Contra proposta aceita',
+            6: 'Contra proposta recusada',
+            7: 'Finalizado',
+            8: 'Cancelado'
+        }
+
+        const inscricoesComStatus = resultInscricoes.map(inscricao => ({
+            ...inscricao,
+            status_nome: STATUS_MAP[Number(inscricao.status_atual)] || 'Desconhecido'
+        }))
+
+        MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+        MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+        MESSAGES.HEADER.response.Inscricoes = inscricoesComStatus
+
+        return MESSAGES.HEADER
+
+    } catch (error) {
+        console.error('[Controller evento_artista] buscarInscricoesPorEvento:', error.message)
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
+
 
 const excluirEventoArtista = async function(id){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -662,5 +709,6 @@ module.exports = {
     reprovarArtistaEvento,
     enviarContraProposta,
     aceitarContraProposta,
-    recusarContraProposta
+    recusarContraProposta,
+    buscarInscricoesPorEvento
 }

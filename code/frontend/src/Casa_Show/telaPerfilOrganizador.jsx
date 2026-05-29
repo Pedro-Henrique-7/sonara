@@ -115,7 +115,7 @@ export default function PerfilArtista() {
         setForm(formMontado);
         setFormOriginal(formMontado);
 
-        setMeusEventos(u.artista?.eventos || []);
+        setMeusEventos(u.organizador?.eventos || []);
 
         buscarGeneros()
           .then((data) => setGeneros(data.response?.generos ?? []))
@@ -146,8 +146,8 @@ export default function PerfilArtista() {
         setForm(formMontado);
         setFormOriginal(formMontado);
 
-        if (u.artista?.eventos?.length > 0) {
-          setMeusEventos(u.artista.eventos);
+        if (u.organizador?.eventos?.length > 0) {
+          setMeusEventos(u.organizador.eventos);
         }
 
         buscarGeneros()
@@ -410,7 +410,7 @@ export default function PerfilArtista() {
                     <div
                       key={ev.id_evento}
                       className="pa-evento-thumb"
-                      onClick={() => navigate(`/sobreEvento/${ev.id_evento}`)}
+                      onClick={() => navigate(`/editarEvento/${ev.id_evento}`)}
                       style={{ cursor: "pointer" }}
                     >
                       <img

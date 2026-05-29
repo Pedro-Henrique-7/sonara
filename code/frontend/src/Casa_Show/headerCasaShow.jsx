@@ -43,7 +43,7 @@ export default function Header() {
 
             <span
               className="nav-item"
-              onClick={() => navigate("/listaEventos")}
+              onClick={() => navigate("/listaMeusEventos")}
             >
               Meus Eventos
             </span>

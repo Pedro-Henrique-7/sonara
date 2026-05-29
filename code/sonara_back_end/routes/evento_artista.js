@@ -22,6 +22,38 @@ router.use((request, response, next) => {
     next()
 })
 
+
+
+// listar inscrições por evento (para o organizador ver inscritos)
+router.get('/listar_por_evento/:idEvento', cors(), async function (request, response) {
+    const idEvento = request.params.idEvento
+
+    const resultado = await controllerEventoArtista.buscarInscricoesPorEvento(
+        idEvento
+    )
+
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
+
+// listar minhas candidaturas (para o artista ver suas candidaturas)
+router.get('/minhas_candidaturas/:artistaId', cors(), async function (request, response) {
+    const artistaId = request.params.artistaId
+
+    const resultado = await controllerEventoArtista.buscarMinhasCandidaturas(
+        artistaId
+    )
+
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
+
+
+
+
+
+
+
 // retornar todos os vínculos artista/evento
 router.get('/', cors(), async function (request, response) {
     const eventoArtista = await controllerEventoArtista.listarEventoArtista()

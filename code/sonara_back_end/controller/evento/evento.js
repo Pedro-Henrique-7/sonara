@@ -222,7 +222,8 @@ const atualizarEvento = async function (evento, id, contentType) {
             numero: evento.numero,
             complemento: evento.complemento || '',
             bairro: evento.bairro,
-            evento_id: evento.id_evento
+            evento_id: evento.id_evento,
+            id_endereco_evento: evento.id_endereco_evento || null
         }
 
         await enderecoEventoDAO.setUpdateAddressEvent(enderecoEvento)

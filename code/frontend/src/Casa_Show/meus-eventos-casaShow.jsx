@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import HeaderCasaShow from "./headerCasaShow.jsx";
 import "./meus-eventos-casaShow.css";
 import FooterSonara from "../Artista/footer.jsx";
+import { buscarUsuarioPorId } from "../services/usuarioService";
 
 const PLACEHOLDER_IMG =
   "https://placehold.co/600x300/1a1a2e/ffffff?text=Sem+Foto";
 
 function formatarData(dataISO) {
   if (!dataISO) return "Data não informada";
-
   return new Date(dataISO).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",
@@ -27,45 +26,39 @@ export default function ListaMeusEventos() {
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
 
-  /* animação inicial */
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 50);
-
     return () => clearTimeout(timer);
   }, []);
 
-  /* carregar eventos */
+  useEffect(() => {
+    carregarEventos();
+  }, [location.pathname]);
+
   async function carregarEventos() {
     try {
       setLoading(true);
       setErro(null);
 
-      const usuario = sessionStorage.getItem("usuario");
+      const usuarioStorage = sessionStorage.getItem("usuario");
 
-      if (!usuario) {
+      if (!usuarioStorage) {
         navigate("/login");
         return;
       }
 
-      const u = JSON.parse(usuario);
-      const organizador_id = u.id_usuario;
+      const usuarioSession = JSON.parse(usuarioStorage);
 
-      const resposta = await fetch(
-        `${import.meta.env.VITE_API_URL}/eventosDoOrganizador/${organizador_id}`
-      );
+      const response = await buscarUsuarioPorId(usuarioSession.id_usuario);
+      const usuarioAtualizado =
+        response?.response?.usuario ||
+        response?.response ||
+        response;
 
-      const json = await resposta.json();
+      sessionStorage.setItem("usuario", JSON.stringify(usuarioAtualizado));
 
-      const dados = json?.response?.Organizador;
+      const listaEventos = usuarioAtualizado?.organizador?.eventos || [];
 
-      if (!dados) {
-        setEventos([]);
-        return;
-      }
-
-      const listaEventos = Array.isArray(dados) ? dados : [dados];
-
-      /* evita eventos duplicados */
       const eventosUnicos = listaEventos.filter(
         (evento, index, self) =>
           index === self.findIndex((e) => e.id_evento === evento.id_evento)
@@ -74,27 +67,19 @@ export default function ListaMeusEventos() {
       setEventos(eventosUnicos);
     } catch (err) {
       console.error(err);
-
       setErro("Não foi possível carregar seus eventos.");
     } finally {
       setLoading(false);
     }
   }
 
-  /* recarrega sempre que voltar para a rota */
-  useEffect(() => {
-    carregarEventos();
-  }, [location.pathname]);
-
-  function obterImagem(ev) {
-    if (ev.fotos?.length > 0 && ev.fotos[0].caminho) {
-      return ev.fotos[0].caminho;
+  function obterImagem(evento) {
+    if (evento.fotos?.length > 0 && evento.fotos[0].url) {
+      return evento.fotos[0].url;
     }
-
-    if (ev.url_foto) {
-      return ev.url_foto;
+    if (evento.url_foto) {
+      return evento.url_foto;
     }
-
     return PLACEHOLDER_IMG;
   }
 
@@ -109,30 +94,16 @@ export default function ListaMeusEventos() {
           visible ? "meus-eventos-casa-show__main--visible" : ""
         }`}
       >
-        {/* loading */}
         {loading && (
-          <p
-            style={{
-              color: "rgba(255,255,255,0.7)",
-            }}
-          >
+          <p style={{ color: "rgba(255,255,255,0.7)" }}>
             Carregando eventos...
           </p>
         )}
 
-        {/* erro */}
         {erro && (
-          <p
-            style={{
-              color: "#ffb3a7",
-              marginBottom: "1rem",
-            }}
-          >
-            {erro}
-          </p>
+          <p style={{ color: "#ffb3a7", marginBottom: "1rem" }}>{erro}</p>
         )}
 
-        {/* vazio */}
         {!loading && !erro && eventos.length === 0 && (
           <div
             style={{
@@ -141,12 +112,7 @@ export default function ListaMeusEventos() {
               paddingTop: "4rem",
             }}
           >
-            <p
-              style={{
-                fontSize: "1.1rem",
-                marginBottom: "1rem",
-              }}
-            >
+            <p style={{ fontSize: "1.1rem", marginBottom: "1rem" }}>
               Você ainda não criou nenhum evento.
             </p>
 
@@ -169,65 +135,48 @@ export default function ListaMeusEventos() {
           </div>
         )}
 
-        {/* lista */}
-        {!loading && eventos.length > 0 && (
+        {!loading && !erro && eventos.length > 0 && (
           <div className="meus-eventos-casa-show__grid">
             {eventos.map((evento, index) => (
               <div
                 key={evento.id_evento ?? index}
                 className="meus-eventos-casa-show__card"
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  cursor: "pointer",
-                }}
+                style={{ animationDelay: `${index * 0.1}s`, cursor: "pointer" }}
                 onClick={() => navigate(`/editarEvento/${evento.id_evento}`)}
               >
-                {/* imagem */}
                 <div className="meus-eventos-casa-show__img-wrapper">
                   <img
                     src={obterImagem(evento)}
                     alt={evento.nome ?? evento.evento_nome ?? "Evento"}
                     className="meus-eventos-casa-show__img"
-                    onError={(e) => {
-                      e.target.src = PLACEHOLDER_IMG;
-                    }}
+                    onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMG; }}
                   />
                 </div>
 
-                {/* infos */}
                 <div className="meus-eventos-casa-show__info">
                   <span className="meus-eventos-casa-show__nome">
-                    {evento.evento_nome ?? "Sem título"}
+                    {evento.nome ?? evento.evento_nome ?? "Sem título"}
                   </span>
 
-                  {/* local */}
-                  {evento.local && (
+                  {(evento.local || evento.cidade) && (
                     <p
                       className="meus-eventos-casa-show__descricao"
-                      style={{
-                        fontSize: "0.78rem",
-                        opacity: 0.8,
-                      }}
+                      style={{ fontSize: "0.78rem", opacity: 0.8 }}
                     >
                       📍 {evento.local}
                       {evento.cidade ? `, ${evento.cidade}` : ""}
                     </p>
                   )}
 
-                  {/* data */}
-                  {evento.data_evento && (
+                  {(evento.data_evento || evento.data) && (
                     <p
                       className="meus-eventos-casa-show__descricao"
-                      style={{
-                        fontSize: "0.78rem",
-                        opacity: 0.8,
-                      }}
+                      style={{ fontSize: "0.78rem", opacity: 0.8 }}
                     >
-                      📅 {formatarData(evento.data_evento)}
+                      📅 {formatarData(evento.data_evento || evento.data)}
                     </p>
                   )}
 
-                  {/* descrição */}
                   {evento.descricao && (
                     <p className="meus-eventos-casa-show__descricao">
                       {evento.descricao.length > 100
@@ -236,7 +185,6 @@ export default function ListaMeusEventos() {
                     </p>
                   )}
 
-                  {/* ações */}
                   <div
                     style={{
                       display: "flex",
@@ -248,7 +196,6 @@ export default function ListaMeusEventos() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-
                         navigate(`/editarEvento/${evento.id_evento}`);
                       }}
                       style={{
@@ -270,7 +217,6 @@ export default function ListaMeusEventos() {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-
                         navigate(`/evento/${evento.id_evento}/inscritos`);
                       }}
                       style={{
@@ -285,7 +231,7 @@ export default function ListaMeusEventos() {
                         height: "auto",
                       }}
                     >
-                      Ver detalhes
+                      Ver Inscritos
                     </button>
                   </div>
                 </div>

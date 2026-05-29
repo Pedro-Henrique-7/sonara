@@ -1,5 +1,3 @@
-// src/services/eventoArtistaService.js
-
 const URL_BASE = `${import.meta.env.VITE_API_URL}/eventoArtista`;
 
 export async function candidatarArtista(dados) {
@@ -18,6 +16,17 @@ export async function candidatarArtista(dados) {
   }
 
   throw new Error(json.message ?? "Erro ao enviar candidatura.");
+}
+
+export async function buscarInscricoesPorEvento(idEvento) {
+  const response = await fetch(`${URL_BASE}/listar_por_evento/${idEvento}`);
+  const json = await response.json();
+
+  if (response.ok) {
+    return json;
+  }
+
+  throw new Error(json.message ?? "Erro ao buscar inscrições.");
 }
 
 export async function buscarEventoArtista() {
@@ -111,4 +120,15 @@ export async function recusarContraProposta(idEventoArtista) {
   }
 
   throw new Error(json.message ?? "Erro ao recusar contra proposta.");
+}
+
+export async function buscarMinhasCandidaturas(artistaId) {
+  const response = await fetch(`${URL_BASE}/minhas_candidaturas/${artistaId}`);
+  const json = await response.json();
+
+  if (response.ok) {
+    return json;
+  }
+
+  throw new Error(json.message ?? "Erro ao buscar candidaturas.");
 }

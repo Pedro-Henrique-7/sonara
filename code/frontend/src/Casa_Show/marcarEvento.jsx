@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "./marcarEvento.css";
 import HeaderCasaShow from "./headerCasaShow.jsx";
 import FooterSonara from "../Artista/footer.jsx";
-import { cadastrarEvento } from "../services/eventoService";
+import { cadastrarEvento, uploadFotoEvento } from "../services/eventoService";
 import { buscarCep } from "../services/enderecoService.js";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 const STEPS = ["Evento", "Horário", "Endereço"];
 
@@ -26,7 +24,6 @@ const FORM_INICIAL = {
   estado: "",
 };
 
-// Validação por step
 function validarStep(step, form) {
   const erros = {};
   if (step === 0) {
@@ -42,7 +39,6 @@ function validarStep(step, form) {
       erros.hora_fim = "Hora de fim deve ser após o início.";
   }
   if (step === 2) {
-    if (!form.cep.replace(/\D/g, "").length === 8) erros.cep = "CEP inválido.";
     if (!form.logradouro.trim()) erros.logradouro = "Rua obrigatória.";
     if (!form.numero.trim())     erros.numero     = "Número obrigatório.";
     if (!form.bairro.trim())     erros.bairro     = "Bairro obrigatório.";
@@ -53,37 +49,35 @@ function validarStep(step, form) {
 }
 
 export default function MarcarEvento() {
-  const navigate   = useNavigate();
+  const navigate = useNavigate();
   const usuarioObj = JSON.parse(sessionStorage.getItem("usuario") ?? "null");
   const organizador_id = usuarioObj?.id_usuario ?? null;
 
   const inputFotoRef = useRef(null);
 
-  const [form, setForm]         = useState(FORM_INICIAL);
-  const [erros, setErros]       = useState({});
-  const [stepAtual, setStep]    = useState(0);
-  const [stepsOk, setStepsOk]   = useState([]);
+  const [form, setForm]       = useState(FORM_INICIAL);
+  const [erros, setErros]     = useState({});
+  const [stepAtual, setStep]  = useState(0);
+  const [stepsOk, setStepsOk] = useState([]);
 
-  const [previews, setPreviews] = useState([]);
+  const [previews, setPreviews]   = useState([]);
   const [fotoAtiva, setFotoAtiva] = useState(0);
-  const [drag, setDrag]         = useState(false);
+  const [drag, setDrag]           = useState(false);
 
   const [buscandoCep, setBuscandoCep] = useState(false);
-  const [statusCep, setStatusCep]     = useState(null); // null | "ok" | "erro"
+  const [statusCep, setStatusCep]     = useState(null);
   const [msgCep, setMsgCep]           = useState("");
 
-  const [enviando, setEnviando] = useState(false);
-  const [erroGlobal, setErroGlobal]   = useState(null);
-  const [sucesso, setSucesso]         = useState(false);
+  const [enviando, setEnviando]     = useState(false);
+  const [erroGlobal, setErroGlobal] = useState(null);
+  const [sucesso, setSucesso]       = useState(false);
 
-  // ── Campo change ────────────────────────────────────────────────────────────
   function handleChange(e) {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
     if (erros[name]) setErros(prev => ({ ...prev, [name]: undefined }));
   }
 
-  // ── CEP ─────────────────────────────────────────────────────────────────────
   async function handleCepBlur() {
     const cepLimpo = form.cep.replace(/\D/g, "");
     if (cepLimpo.length !== 8) return;
@@ -115,7 +109,6 @@ export default function MarcarEvento() {
     }
   }
 
-  // ── Fotos ────────────────────────────────────────────────────────────────────
   function adicionarArquivos(arquivos) {
     const novas = Array.from(arquivos)
       .filter(f => f.type.startsWith("image/"))
@@ -143,22 +136,17 @@ export default function MarcarEvento() {
     });
   }
 
-  // Drag & drop
-  const onDragOver  = useCallback(e => { e.preventDefault(); setDrag(true);  }, []);
-  const onDragLeave = useCallback(()  => setDrag(false), []);
-  const onDrop      = useCallback(e   => {
+  const onDragOver  = useCallback(e => { e.preventDefault(); setDrag(true); }, []);
+  const onDragLeave = useCallback(() => setDrag(false), []);
+  const onDrop      = useCallback(e => {
     e.preventDefault();
     setDrag(false);
     adicionarArquivos(e.dataTransfer.files);
   }, []);
 
-  // ── Navegação de steps ────────────────────────────────────────────────────────
   function avancar() {
     const errosStep = validarStep(stepAtual, form);
-    if (Object.keys(errosStep).length > 0) {
-      setErros(errosStep);
-      return;
-    }
+    if (Object.keys(errosStep).length > 0) { setErros(errosStep); return; }
     setStepsOk(prev => prev.includes(stepAtual) ? prev : [...prev, stepAtual]);
     setStep(s => s + 1);
   }
@@ -167,7 +155,6 @@ export default function MarcarEvento() {
     setStep(s => s - 1);
   }
 
-  // ── Submit ───────────────────────────────────────────────────────────────────
   async function handleSubmit(e) {
     e.preventDefault();
     const errosStep = validarStep(stepAtual, form);
@@ -178,30 +165,29 @@ export default function MarcarEvento() {
 
     setEnviando(true);
     try {
-      const json     = await cadastrarEvento({ ...form, organizador_id });
+      const json = await cadastrarEvento({ ...form, organizador_id });
       const idCriado = json?.response?.evento?.id_evento ?? null;
 
       if (idCriado && previews.length > 0) {
         const snapshot = [...previews];
         for (let i = 0; i < snapshot.length; i++) {
           if (snapshot[i].status !== "pendente") continue;
-          setPreviews(prev => prev.map((p, idx) =>
-            idx === i ? { ...p, status: "enviando" } : p));
+
+          setPreviews(prev =>
+            prev.map((p, idx) => idx === i ? { ...p, status: "enviando" } : p)
+          );
+
           try {
-            const fd = new FormData();
-            fd.append("foto", snapshot[i].file);
-            fd.append("evento_id", String(idCriado));
-            const res = await fetch(`${API_URL}/foto`, { method: "POST", body: fd });
-            const fj  = await res.json();
-            setPreviews(prev => prev.map((p, idx) =>
-              idx === i ? {
-                ...p,
-                status: res.ok ? "ok" : "erro",
-                erro:   res.ok ? null : (fj.message ?? "Erro ao enviar"),
-              } : p));
+            await uploadFotoEvento(idCriado, snapshot[i].file);
+            setPreviews(prev =>
+              prev.map((p, idx) => idx === i ? { ...p, status: "ok" } : p)
+            );
           } catch (err) {
-            setPreviews(prev => prev.map((p, idx) =>
-              idx === i ? { ...p, status: "erro", erro: err.message } : p));
+            setPreviews(prev =>
+              prev.map((p, idx) =>
+                idx === i ? { ...p, status: "erro", erro: err.message } : p
+              )
+            );
           }
         }
       }
@@ -217,7 +203,6 @@ export default function MarcarEvento() {
 
   const fotoPrincipalUrl = previews[fotoAtiva]?.url ?? null;
 
-  // ── Render ───────────────────────────────────────────────────────────────────
   return (
     <div className="pagina">
       <HeaderCasaShow />
@@ -225,7 +210,6 @@ export default function MarcarEvento() {
       <main className="main">
         <section className="card-evento">
 
-          {/* ── GALERIA ── */}
           <div className="galeria">
             <div
               className={`upload-zone${drag ? " upload-zone--drag" : ""}`}
@@ -274,7 +258,6 @@ export default function MarcarEvento() {
                     onClick={() => setFotoAtiva(i)}
                   >
                     <img src={item.url} alt={`preview ${i + 1}`} />
-
                     {item.status === "enviando" && (
                       <div className="preview-overlay"><span className="spinner" /></div>
                     )}
@@ -308,10 +291,8 @@ export default function MarcarEvento() {
             )}
           </div>
 
-          {/* ── FORMULÁRIO ── */}
           <form className="formulario" onSubmit={handleSubmit} noValidate>
 
-            {/* Stepper */}
             <div className="stepper" role="list">
               {STEPS.map((label, i) => {
                 const concluido = stepsOk.includes(i);
@@ -325,9 +306,7 @@ export default function MarcarEvento() {
                       onClick={() => concluido && setStep(i)}
                       title={concluido ? `Voltar para ${label}` : undefined}
                     >
-                      <div className="step__num">
-                        {concluido ? "✓" : i + 1}
-                      </div>
+                      <div className="step__num">{concluido ? "✓" : i + 1}</div>
                       <span className="step__label">{label}</span>
                     </div>
                     {i < STEPS.length - 1 && <div className="step__line" />}
@@ -336,7 +315,6 @@ export default function MarcarEvento() {
               })}
             </div>
 
-            {/* ── STEP 0: EVENTO ── */}
             {stepAtual === 0 && (
               <div className="step-painel">
                 <div className="campo-grupo">
@@ -386,7 +364,6 @@ export default function MarcarEvento() {
               </div>
             )}
 
-            {/* ── STEP 1: HORÁRIO ── */}
             {stepAtual === 1 && (
               <div className="step-painel">
                 <div className="campo-grupo">
@@ -426,7 +403,6 @@ export default function MarcarEvento() {
               </div>
             )}
 
-            {/* ── STEP 2: ENDEREÇO ── */}
             {stepAtual === 2 && (
               <div className="step-painel">
                 <div className="campo-grupo">
@@ -529,7 +505,6 @@ export default function MarcarEvento() {
               </div>
             )}
 
-            {/* Feedback global */}
             {erroGlobal && (
               <div className="msg-feedback msg-feedback--erro">{erroGlobal}</div>
             )}
@@ -539,7 +514,6 @@ export default function MarcarEvento() {
               </div>
             )}
 
-            {/* Navegação */}
             <div className="step-nav">
               <button
                 type="button"

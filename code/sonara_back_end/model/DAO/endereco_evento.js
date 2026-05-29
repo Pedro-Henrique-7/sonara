@@ -133,6 +133,7 @@ const setUpdateAddressEvent = async function (endereco_evento, trx = null) {
         const result = await db(trx)('tb_endereco_evento')
             .where({
                 id_endereco_evento: endereco_evento.id_endereco_evento
+
             })
             .update(dados)
 
