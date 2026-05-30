@@ -1,361 +1,465 @@
-/* =========================================================
-   RESET
-========================================================= */
-.sobreEventoPagina * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* =============================================================
+   sobreEventoCasaShow.css
+   Usa apenas variáveis definidas no index.css (--bg-main,
+   --bg-box, --btn-color, --text-color, --bg-card-secodary,
+   --bg-placeholder, --bg-secondary, --text-main, --text-soft,
+   --hover-main, --border-main, --shadow-main)
+   ============================================================= */
 
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
-.sobreEventoPagina {
-  --cor-card: linear-gradient(
-    180deg,
-    rgba(180, 0, 0, 0.96) 0%,
-    rgba(255, 72, 0, 0.96) 100%
-  );
-
-  --cor-box: rgba(130, 45, 0, 0.88);
-
-  --cor-borda: rgba(255, 255, 255, 0.08);
-
-  --cor-texto: #ffffff;
-  --cor-texto-soft: rgba(255, 255, 255, 0.82);
-
-  --cor-botao: #9e1400;
-  --cor-botao-hover: #7c0f00;
-
-  --cor-fundo-final: #090909;
-
-  --radius-card: 22px;
-  --radius-box: 16px;
-
-  --sombra-card: 0 10px 35px rgba(0, 0, 0, 0.35);
-
+/* ── PÁGINA ─────────────────────────────────────────────────── */
+.secs-pagina {
   width: 100%;
   min-height: 100vh;
-
-  font-family: "Segoe UI", sans-serif;
-  color: var(--cor-texto);
-
-  background: linear-gradient(
-    180deg,
-    var(--cor-fundo-topo) 0%,
-    var(--cor-fundo-meio) 45%,
-    var(--cor-fundo-final) 100%
-  );
-
-  padding-bottom: 50px;
-}
-
-/* =========================================================
-   CONTAINER PRINCIPAL
-========================================================= */
-.sobreEventoConteudoPrincipal {
-  width: 100%;
-  max-width: 1350px;
-  margin-top: 10vh;
-  margin: 0 auto;
-
-  padding: 40px 30px;
-}
-
-/* =========================================================
-   TÍTULO
-========================================================= */
-.sobreEventoConteudoPrincipal > h2 {
-  margin-bottom: 30px;
-
-  font-size: 34px;
-  font-weight: 700;
-}
-
-/* =========================================================
-   CARD PRINCIPAL
-========================================================= */
-.sobreEventoContainerInformacoes {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-
-  gap: 35px;
-
-  padding: 35px;
-
-  background: var(--cor-card);
-
-  border-radius: var(--radius-card);
-
-  box-shadow: var(--sombra-card);
-
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* =========================================================
-   COLUNAS
-========================================================= */
-.sobreEventoTopoSecao,
-.sobreEventoContainerSobre {
+  background-color: var(--bg-main);
   display: flex;
   flex-direction: column;
-
-  gap: 24px;
 }
 
-/* =========================================================
-   LABELS
-========================================================= */
-.sobreEventoFormularioContainer label,
-.sobreEventoInfoCacheContainer label,
-.sobreEventoNomeArea label,
-.sobreEventoDescricaoArea label,
-.sobreEventoLocalizacao label,
-.sobreEventoMapaArea label {
-  margin-bottom: 8px;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  color: var(--cor-texto-soft);
-}
-
-/* =========================================================
-   IMAGEM PRINCIPAL
-========================================================= */
-.sobreEventoCardImagem {
+/* ── MAIN ────────────────────────────────────────────────────── */
+.secs-main {
+  flex: 1;
   width: 100%;
-  height: 320px;
-
-  overflow: hidden;
-
-  border-radius: 18px;
-
-  border: 2px solid rgba(255, 255, 255, 0.08);
-
-  background: rgba(0, 0, 0, 0.25);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
 }
 
-.sobreEventoImagemPrincipal {
+/* ── WRAPPER (galeria + form lado a lado no desktop) ─────────── */
+.secs-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ── MENSAGENS DE ESTADO ─────────────────────────────────────── */
+.secs-msg {
+  color: var(--text-soft);
+  padding: 2rem;
+}
+
+.secs-msg--erro {
+  color: #ffb3a7;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GALERIA
+═══════════════════════════════════════════════════════════════ */
+.secs-galeria {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Foto principal */
+.secs-galeria__principal {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.secs-galeria__img-principal {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-
-  transition: 0.3s ease;
+  display: block;
+  transition: transform 0.35s ease;
 }
 
-.sobreEventoImagemPrincipal:hover {
-  transform: scale(1.03);
+.secs-galeria__img-principal:hover {
+  transform: scale(1.02);
 }
 
-/* =========================================================
-   LINHAS
-========================================================= */
-.sobreEventoLinhaCampos,
-.sobreEventoLinhaInfo,
-.sobreEventoInfoHorario {
+/* Badge "Não salva" */
+.secs-galeria__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(200, 120, 0, 0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+  letter-spacing: 0.04em;
+}
+
+/* Overlay com botões Trocar / Remover */
+.secs-galeria__overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
 
-  gap: 14px;
+.secs-galeria__principal:hover .secs-galeria__overlay {
+  opacity: 1;
+}
 
+.secs-galeria__btn-acao {
+  height: 36px;
+  padding: 0 16px;
+  min-width: unset;
+  width: auto;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease;
+}
+
+.secs-galeria__btn-acao:hover {
+  background: rgba(255, 255, 255, 0.32);
+  transform: none;
+  box-shadow: none;
+}
+
+.secs-galeria__btn-acao--danger:hover {
+  background: rgba(180, 30, 20, 0.75);
+}
+
+/* Estado vazio */
+.secs-galeria__vazia {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 15px;
+}
+
+/* Ações abaixo das miniaturas */
+.secs-galeria__acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-height: 0;
+}
+
+/* Linha de miniaturas */
+.secs-galeria__thumbnails {
+  display: flex;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-/* =========================================================
-   BOXES
-========================================================= */
-.sobreEventoFormularioContainer section,
-.sobreEventoInfoCacheContainer section,
-.sobreEventoCampoData div,
-.sobreEventoCampoInicio div,
-.sobreEventoBoxInfo,
-.sobreEventoNomeBox,
-.sobreEventoDescricaoBox,
-.sobreEventoBoxLocalizacao {
-  background: var(--cor-box);
-
-  border: 1px solid var(--cor-borda);
-
-  border-radius: var(--radius-box);
-
-  color: white;
-
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+/* Miniatura base */
+.secs-galeria__thumb {
+  width: 80px;
+  height: 60px;
+  min-width: unset;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
-/* =========================================================
-   CAMPOS PEQUENOS
-========================================================= */
-.sobreEventoFormularioContainer section,
-.sobreEventoInfoCacheContainer section,
-.sobreEventoCampoData div,
-.sobreEventoCampoInicio div,
-.sobreEventoBoxInfo {
+.secs-galeria__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.secs-galeria__thumb:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-main);
+}
+
+/* Miniatura ativa */
+.secs-galeria__thumb--ativa {
+  border-color: var(--text-main);
+}
+
+/* Miniatura pendente (laranja) */
+.secs-galeria__thumb--pendente {
+  border-color: rgba(200, 120, 0, 0.7);
+}
+
+/* Botão adicionar foto */
+.secs-galeria__thumb--add {
+  background: var(--bg-card-secodary);
   display: flex;
   align-items: center;
-
-  min-height: 46px;
-
-  padding-inline: 15px;
-
-  font-size: 14px;
+  justify-content: center;
+  font-size: 26px;
+  color: var(--text-main);
+  opacity: 0.75;
 }
 
-.sobreEventoFormularioContainer section {
-  flex: 1;
-  min-width: 220px;
+.secs-galeria__thumb--add:hover {
+  opacity: 1;
+  border-color: var(--border-main);
 }
 
-.sobreEventoCampoData div {
-  width: 140px;
-}
-
-.sobreEventoCampoInicio div,
-.sobreEventoBoxInfo {
-  width: 110px;
-}
-
-/* =========================================================
-   ÁREAS
-========================================================= */
-.sobreEventoNomeArea,
-.sobreEventoDescricaoArea,
-.sobreEventoLocalizacao,
-.sobreEventoMapaArea {
+/* ═══════════════════════════════════════════════════════════════
+   CARD / FORMULÁRIO
+═══════════════════════════════════════════════════════════════ */
+.secs-card {
+  background: var(--bg-box);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px var(--shadow-main);
+  padding: 32px;
   display: flex;
   flex-direction: column;
-
-  gap: 8px;
+  gap: 28px;
 }
 
-.sobreEventoNomeBox,
-.sobreEventoDescricaoBox,
-.sobreEventoBoxLocalizacao {
-  padding: 18px;
-
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.sobreEventoDescricaoBox {
-  min-height: 140px;
-}
-
-.sobreEventoBoxLocalizacao {
-  min-height: 140px;
-}
-
-/* =========================================================
-   MAPA
-========================================================= */
-.sobreEventoMapaImagem {
-  width: 100%;
-  height: 260px;
-
-  object-fit: cover;
-
-  border-radius: 18px;
-
-  border: 2px solid rgba(255, 255, 255, 0.08);
-}
-
-/* =========================================================
-   RODAPÉ / ARTISTA
-========================================================= */
-.sobreEventoRodapeSecao {
+/* ── Seção interna ────────────────────────────────────────────── */
+.secs-secao {
   display: flex;
   flex-direction: column;
-
-  gap: 18px;
+  gap: 12px;
 }
 
-.sobreEventoRodapeSecao img {
-  width: 130px;
-  height: 130px;
-
-  object-fit: cover;
-
-  border-radius: 18px;
-
-  border: 2px solid rgba(255, 255, 255, 0.08);
-}
-
-/* =========================================================
-   BOTÃO
-========================================================= */
-.sobreEventoBotaoInscricao {
-  width: fit-content;
-
-  padding: 14px 28px;
-
-  border: none;
-  border-radius: 999px;
-
-  background: var(--cor-botao);
-
-  color: white;
-
-  font-size: 14px;
+.secs-secao__titulo {
+  font-size: 13px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-soft);
+  opacity: 0.75;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
+/* ── Grids ────────────────────────────────────────────────────── */
+.secs-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.secs-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.secs-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ── Label + input ────────────────────────────────────────────── */
+.secs-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-soft);
+  opacity: 0.85;
+}
+
+.secs-label--wide {
+  grid-column: 1 / -1;
+}
+
+.secs-input {
+  background: var(--bg-secondary);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.secs-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.secs-input:focus {
+  border-color: var(--border-main);
+}
+
+.secs-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ── Feedback ─────────────────────────────────────────────────── */
+.secs-feedback {
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.secs-feedback--erro {
+  background: rgba(200, 30, 20, 0.18);
+  color: #ffb3a7;
+}
+
+.secs-feedback--sucesso {
+  background: rgba(30, 160, 80, 0.18);
+  color: #a8f0c0;
+}
+
+/* ── Ações ────────────────────────────────────────────────────── */
+.secs-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+/* ── Botões ───────────────────────────────────────────────────── */
+.secs-btn {
+  height: 44px;
+  padding: 0 22px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-
-  transition: 0.25s ease;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  min-width: 120px;
+  width: auto;
 }
 
-.sobreEventoBotaoInscricao:hover {
-  background: var(--cor-botao-hover);
-
+.secs-btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-main);
 }
 
-/* =========================================================
+.secs-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.secs-btn--primario {
+  background: var(--btn-color);
+  color: var(--text-color);
+}
+
+.secs-btn--primario:hover {
+  background: var(--hover-main);
+}
+
+.secs-btn--secundario {
+  background: var(--bg-card-secodary);
+  color: var(--text-main);
+}
+
+.secs-btn--secundario:hover {
+  background: var(--bg-secondary);
+}
+
+.secs-btn--neutro {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.secs-btn--neutro:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* ═══════════════════════════════════════════════════════════════
    RESPONSIVO
-========================================================= */
-@media (max-width: 1000px) {
-  .sobreEventoContainerInformacoes {
-    grid-template-columns: 1fr;
-  }
-
-  .sobreEventoCardImagem,
-  .sobreEventoMapaImagem {
-    height: 260px;
-  }
-}
-
-@media (max-width: 700px) {
-  .sobreEventoConteudoPrincipal {
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .secs-card {
     padding: 20px;
   }
 
-  .sobreEventoContainerInformacoes {
-    padding: 22px;
-
-    gap: 24px;
+  .secs-grid--2,
+  .secs-grid--3 {
+    grid-template-columns: 1fr;
   }
 
-  .sobreEventoConteudoPrincipal > h2 {
-    font-size: 28px;
+  .secs-label--wide {
+    grid-column: unset;
   }
 
-  .sobreEventoCardImagem,
-  .sobreEventoMapaImagem {
-    height: 220px;
+  .secs-galeria__thumb {
+    width: 64px;
+    height: 48px;
   }
 
-  .sobreEventoLinhaCampos,
-  .sobreEventoLinhaInfo,
-  .sobreEventoInfoHorario {
+  .secs-acoes {
     flex-direction: column;
   }
 
-  .sobreEventoCampoData div,
-  .sobreEventoCampoInicio div,
-  .sobreEventoBoxInfo,
-  .sobreEventoFormularioContainer section {
+  .secs-btn {
     width: 100%;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DRAG & DROP
+═══════════════════════════════════════════════════════════════ */
+
+/* Estado ativo de drag na foto principal */
+.secs-galeria__principal--drag {
+  border: 2px dashed var(--border-main);
+  background: rgba(113, 128, 185, 0.15);
+}
+
+.secs-galeria__principal--drag .secs-galeria__img-principal {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Hint de drop (estado vazio OU durante drag sobre a área) */
+.secs-galeria__drop-hint {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+.secs-galeria__drop-hint:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.secs-galeria__drop-icon {
+  font-size: 36px;
+  color: var(--border-main);
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.secs-galeria__principal--drag .secs-galeria__drop-icon {
+  transform: translateY(-6px);
+  color: var(--text-main);
+}
+
+.secs-galeria__drop-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+.secs-galeria__principal--drag .secs-galeria__drop-label {
+  color: var(--text-main);
+  font-weight: 600;
 }

@@ -66,6 +66,7 @@ router.put('/:id', cors(), upload.single('foto'), async function (request, respo
     response.status(result.status_code)
     response.json(result)
 })
+
 router.delete('/:id', cors(), async function(request, response) {
     let idFoto = request.params.id
 
