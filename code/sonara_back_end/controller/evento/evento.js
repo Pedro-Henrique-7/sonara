@@ -135,7 +135,9 @@ const inserirEvento = async function (evento, contentType) {
             numero: evento.numero,
             complemento: evento.complemento || '',
             bairro: evento.bairro,
-            evento_id: idEvento
+            evento_id: idEvento,
+            latitude:    evento.latitude  ?? null,
+            longitude:   evento.longitude ?? null,
         }
 
         const resultEndereco = await enderecoEventoDAO.setInsertAddressEvent(enderecoEvento)
@@ -223,7 +225,9 @@ const atualizarEvento = async function (evento, id, contentType) {
             complemento: evento.complemento || '',
             bairro: evento.bairro,
             evento_id: evento.id_evento,
-            id_endereco_evento: evento.id_endereco_evento || null
+            id_endereco_evento: evento.id_endereco_evento || null,
+            latitude:    evento.latitude  ?? null,
+            longitude:   evento.longitude ?? null,
         }
 
         await enderecoEventoDAO.setUpdateAddressEvent(enderecoEvento)

@@ -27,6 +27,7 @@ export default function Header() {
     const tipo = tipoUsuario.toLowerCase();
     if (tipo === "artista") return "/perfil-artista";
     if (tipo === "organizador") return "/perfil-organizador";
+    if (tipo === "") return "/";
     return "/perfil";
   }
 
@@ -43,7 +44,7 @@ export default function Header() {
 
             <span
               className="nav-item"
-              onClick={() => navigate("/listaEventos")}
+              onClick={() => navigate("/minhasCandidaturas")}
             >
               Meus Eventos
             </span>

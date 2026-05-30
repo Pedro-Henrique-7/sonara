@@ -43,24 +43,24 @@ function validarStep(step, form) {
   const erros = {};
 
   if (step === 0) {
-    if (!form.nome.trim())         erros.nome = "Nome completo é obrigatório.";
-    if (!form.email.trim())        erros.email = "E-mail é obrigatório.";
+    if (!form.nome.trim()) erros.nome = "Nome completo é obrigatório.";
+    if (!form.email.trim()) erros.email = "E-mail é obrigatório.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       erros.email = "Informe um e-mail válido.";
     if (form.email !== form["confirm-email"])
       erros["confirm-email"] = "Os e-mails não coincidem.";
-    if (!form.senha)               erros.senha = "Senha é obrigatória.";
+    if (!form.senha) erros.senha = "Senha é obrigatória.";
     else if (form.senha.length < 8)
       erros.senha = "A senha deve ter pelo menos 8 caracteres.";
     else if (!/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/.test(form.senha))
       erros.senha = "Use: letra maiúscula, número e caractere especial (!@#$%^&*).";
     if (form.senha !== form["confirm-senha"])
       erros["confirm-senha"] = "As senhas não coincidem.";
-    if (!form.cpf.trim())          erros.cpf = "CPF é obrigatório.";
-    if (!form.data_nasc)           erros.data_nasc = "Data de nascimento é obrigatória.";
-    if (!form.nacionalidade_id)    erros.nacionalidade_id = "Selecione uma nacionalidade.";
-    if (!form.genero_id)           erros.genero_id = "Selecione um gênero.";
-    if (!form.tipo_usuario)        erros.tipo_usuario = "Selecione o tipo de usuário.";
+    if (!form.cpf.trim()) erros.cpf = "CPF é obrigatório.";
+    if (!form.data_nasc) erros.data_nasc = "Data de nascimento é obrigatória.";
+    if (!form.nacionalidade_id) erros.nacionalidade_id = "Selecione uma nacionalidade.";
+    if (!form.genero_id) erros.genero_id = "Selecione um gênero.";
+    if (!form.tipo_usuario) erros.tipo_usuario = "Selecione o tipo de usuário.";
   }
 
   if (step === 1 && form.tipo_usuario === "artista") {
@@ -71,12 +71,12 @@ function validarStep(step, form) {
   }
 
   if (step === 2) {
-    if (!form.cep.trim())           erros.cep = "CEP é obrigatório.";
-    if (!form.logradouro.trim())    erros.logradouro = "Rua/logradouro é obrigatório.";
-    if (!form.numero.trim())        erros.numero = "Número é obrigatório.";
-    if (!form.bairro.trim())        erros.bairro = "Bairro é obrigatório.";
-    if (!form.cidade.trim())        erros.cidade = "Cidade é obrigatória.";
-    if (!form.estado.trim())        erros.estado = "Estado é obrigatório.";
+    if (!form.cep.trim()) erros.cep = "CEP é obrigatório.";
+    if (!form.logradouro.trim()) erros.logradouro = "Rua/logradouro é obrigatório.";
+    if (!form.numero.trim()) erros.numero = "Número é obrigatório.";
+    if (!form.bairro.trim()) erros.bairro = "Bairro é obrigatório.";
+    if (!form.cidade.trim()) erros.cidade = "Cidade é obrigatória.";
+    if (!form.estado.trim()) erros.estado = "Estado é obrigatório.";
   }
 
   if (step === 3) {
@@ -95,22 +95,22 @@ function Cadastro() {
   const navigate = useNavigate();
 
   const [stepAtual, setStepAtual] = useState(0);
-  const [stepsOk, setStepsOk]     = useState([]);
-  const [erros, setErros]         = useState({});
+  const [stepsOk, setStepsOk] = useState([]);
+  const [erros, setErros] = useState({});
 
-  const [erroGlobal, setErroGlobal]     = useState("");
-  const [sucesso, setSucesso]           = useState(false);
-  const [carregando, setCarregando]     = useState(false);
+  const [erroGlobal, setErroGlobal] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+  const [carregando, setCarregando] = useState(false);
 
-  const [buscandoCep, setBuscandoCep]   = useState(false);
-  const [statusCep, setStatusCep]       = useState(null);
-  const [msgCep, setMsgCep]             = useState("");
+  const [buscandoCep, setBuscandoCep] = useState(false);
+  const [statusCep, setStatusCep] = useState(null);
+  const [msgCep, setMsgCep] = useState("");
 
-  const [generos, setGeneros]                     = useState([]);
-  const [nacionalidades, setNacionalidades]       = useState([]);
-  const [generosMusical, setGenerosMusical]       = useState([]);
+  const [generos, setGeneros] = useState([]);
+  const [nacionalidades, setNacionalidades] = useState([]);
+  const [generosMusical, setGenerosMusical] = useState([]);
   const [tiposRedesSociais, setTiposRedesSociais] = useState([]);
-  const [redesSociais, setRedesSociais]           = useState([]);
+  const [redesSociais, setRedesSociais] = useState([]);
 
   const [form, setForm] = useState({
     nome: "", email: "", "confirm-email": "",
@@ -166,19 +166,40 @@ function Cadastro() {
   }
 
   // ── CEP ───────────────────────────────────────────────────────────────────
-  async function handleCepBlur() {
+ async function handleCepBlur() {
     const cepLimpo = form.cep.replace(/\D/g, "");
     if (cepLimpo.length !== 8) return;
+ 
     setStatusCep(null);
     setBuscandoCep(true);
     setMsgCep("Buscando…");
+ 
     try {
       const dados = await buscarCep(cepLimpo);
-      if (dados.erro) { setStatusCep("erro"); setMsgCep("CEP não encontrado."); return; }
-      buscarLatLong(`${dados.logradouro}, ${dados.localidade}, ${dados.uf}, Brasil`)
-        .then((coord) => {
-          if (coord) setForm((prev) => ({ ...prev, latitude: coord.lat, longitude: coord.lng }));
-        }).catch(() => {});
+ 
+      if (dados.erro) {
+        setStatusCep("erro");
+        setMsgCep("CEP não encontrado.");
+        return;
+      }
+ 
+      const enderecoTexto = [dados.logradouro, dados.localidade, dados.uf, "Brasil"]
+        .filter(Boolean)
+        .join(", ");
+ 
+      let latitude  = null;
+      let longitude = null;
+ 
+      try {
+        const coord = await buscarLatLong(enderecoTexto);
+        if (coord) {
+          latitude  = coord.lat;
+          longitude = coord.lng;
+        }
+      } catch {
+
+      }
+
       setForm((prev) => ({
         ...prev,
         logradouro:  dados.logradouro  || "",
@@ -186,9 +207,13 @@ function Cadastro() {
         cidade:      dados.localidade  || "",
         estado:      dados.uf          || "",
         complemento: dados.complemento || "",
+        latitude,
+        longitude,
       }));
+ 
       setStatusCep("ok");
       setMsgCep("Endereço preenchido automaticamente.");
+ 
     } catch {
       setStatusCep("erro");
       setMsgCep("Erro ao buscar CEP.");
@@ -253,7 +278,9 @@ function Cadastro() {
     try {
       setCarregando(true);
       const usuario = {
-        nome: form.nome, email: form.email, senha: form.senha,
+        nome: form.nome,
+        email: form.email,
+        senha: form.senha,
         cpf: form.cpf.replace(/\D/g, ""),
         telefone: form.telefone.replace(/\D/g, ""),
         cep: form.cep.replace(/\D/g, ""),
@@ -264,9 +291,14 @@ function Cadastro() {
         nome_artistico: form.nome_artistico,
         descricao: form.descricao,
         generos_musicais: form.generos_musicais,
-        cidade: form.cidade, estado: form.estado,
-        logradouro: form.logradouro, numero: form.numero,
-        complemento: form.complemento, bairro: form.bairro,
+        cidade: form.cidade,
+        estado: form.estado,
+        logradouro: form.logradouro,
+        numero: form.numero,
+        complemento: form.complemento,
+        bairro: form.bairro,
+        latitude: form.latitude ?? null,
+        longitude: form.longitude ?? null,
       };
 
       const resp = await cadastrarUsuario(usuario, form.foto || null);
@@ -285,7 +317,7 @@ function Cadastro() {
       }
 
       setSucesso(true);
-      setTimeout(() => navigate("/login"), 2500);
+      setTimeout(() => navigate("/"), 2500);
     } catch (err) {
       setErroGlobal(traduzirErroCadastro(err.message));
     } finally {
@@ -296,7 +328,7 @@ function Cadastro() {
   // ── Helper: classe de campo ───────────────────────────────────────────────
   const classCampo = (campo) => {
     if (erros[campo]) return "cadastro-sonara-campo campo--erro";
-    if (form[campo])  return "cadastro-sonara-campo campo--ok";
+    if (form[campo]) return "cadastro-sonara-campo campo--ok";
     return "cadastro-sonara-campo";
   };
 
@@ -328,8 +360,8 @@ function Cadastro() {
           {/* ── STEPPER ── */}
           <div className="cadastro-stepper" role="list">
             {stepsVisiveis.map((label, vi) => {
-              const realIdx  = form.tipo_usuario === "artista" ? vi : (vi >= 1 ? vi + 1 : vi);
-              const ativo    = stepAtual === realIdx;
+              const realIdx = form.tipo_usuario === "artista" ? vi : (vi >= 1 ? vi + 1 : vi);
+              const ativo = stepAtual === realIdx;
               const concluido = stepsOk.includes(realIdx);
               return (
                 <>
@@ -338,9 +370,9 @@ function Cadastro() {
                     role="listitem"
                     className={[
                       "cadastro-step",
-                      ativo     ? "cadastro-step--ativo"    : "",
+                      ativo ? "cadastro-step--ativo" : "",
                       concluido ? "cadastro-step--concluido" : "",
-                      concluido ? "cadastro-step--clicavel"  : "",
+                      concluido ? "cadastro-step--clicavel" : "",
                     ].join(" ").trim()}
                     onClick={() => irParaStep(realIdx)}
                     title={concluido ? `Voltar para ${label}` : undefined}
@@ -618,7 +650,7 @@ function Cadastro() {
 
                   <button type="button" className="btn-remover"
                     onClick={() => removerRedeSocial(index)} aria-label="Remover rede social">
-                    ×
+
                   </button>
                 </div>
               ))}
@@ -651,7 +683,7 @@ function Cadastro() {
               {stepAtual === 0 ? "Já tenho conta" : "← Voltar"}
             </button>
 
-            {stepAtual < 3 ? (
+            {stepAtual <= 3 ? (
               <button type="button" className="btn-nav btn-nav--avancar" onClick={avancar}>
                 Próximo →
               </button>

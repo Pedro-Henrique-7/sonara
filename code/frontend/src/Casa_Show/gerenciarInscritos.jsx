@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./contratarArtista.css";
+import "./gerenciarInscritos.css";
 import HeaderCasaShow from "./headerCasaShow.jsx";
 import FooterSonara from "../Artista/footer.jsx";
 import {

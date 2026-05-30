@@ -23,7 +23,6 @@ router.use((request, response, next) => {
 })
 
 
-
 // listar inscrições por evento (para o organizador ver inscritos)
 router.get('/listar_por_evento/:idEvento', cors(), async function (request, response) {
     const idEvento = request.params.idEvento

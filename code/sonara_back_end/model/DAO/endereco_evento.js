@@ -86,6 +86,8 @@ const setInsertAddressEvent = async function (endereco_evento, trx = null) {
                 numero: endereco_evento.numero,
                 complemento: endereco_evento.complemento,
                 bairro: endereco_evento.bairro,
+                latitude: endereco_evento.latitude,
+                longitude: endereco_evento.longitude,
                 evento_id: endereco_evento.evento_id
             })
 
@@ -123,6 +125,12 @@ const setUpdateAddressEvent = async function (endereco_evento, trx = null) {
 
         if (endereco_evento.bairro !== undefined)
             dados.bairro = endereco_evento.bairro
+
+        if (endereco_evento.latitude !== undefined)
+            dados.latitude = endereco_evento.latitude
+
+        if (endereco_evento.longitude !== undefined)
+            dados.longitude = endereco_evento.longitude
 
         if (endereco_evento.evento_id !== undefined)
             dados.evento_id = endereco_evento.evento_id

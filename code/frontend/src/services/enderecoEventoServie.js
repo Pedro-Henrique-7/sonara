@@ -4,7 +4,7 @@ const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_API_KEY;
 const URL_BASE = `${import.meta.env.VITE_API_URL}`;
 
 export async function cadastrarEndereco(endereco) {
-  const response = await fetch(`${URL_BASE}/endereco/`, {
+  const response = await fetch(`${URL_BASE}/enderecoEvento/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

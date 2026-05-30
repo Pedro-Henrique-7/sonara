@@ -398,6 +398,8 @@ const inserirUsuario = async function (usuario, arquivo) {
             numero: usuario.numero,
             complemento: usuario.complemento || '',
             bairro: usuario.bairro,
+            latitude: usuario.latitude || null,
+            longitude: usuario.longitude || null,
             usuario_id: idUsuario
         }, trx)
 

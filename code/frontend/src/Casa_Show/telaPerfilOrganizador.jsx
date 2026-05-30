@@ -95,7 +95,7 @@ export default function PerfilArtista() {
         const usuarioSalvo = sessionStorage.getItem("usuario");
 
         if (!usuarioSalvo) {
-          navigate("/login");
+          navigate("/");
           return;
         }
 

@@ -1,0 +1,420 @@
+/* =========================================================
+   gerenciarInscritos.css
+========================================================= */
+
+/* ── Página ── */
+.sonaraContratarPagina {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header da seção (título + botão voltar) ── */
+.gerenciar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 75%;
+  margin: 40px auto 0;
+  padding: 0 4px;
+}
+
+.sonaraContratarTitulo {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.btn-voltar {
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  width: auto;
+  margin-top: 0;
+}
+
+.btn-voltar:hover {
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 4px 12px var(--shadow-main);
+}
+
+/* ── Container principal ── */
+.sonaraContratarConteudo {
+  width: 75%;
+  margin: 24px auto 60px;
+  padding: 36px 32px 48px;
+  border-radius: 20px;
+  background: var(--bg-box);
+  box-shadow: 0 4px 12px var(--shadow-main);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Grid de inscritos ── */
+.inscritos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* ── Card de inscrito ── */
+.inscrito-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-main);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inscrito-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px var(--shadow-main);
+}
+
+/* ── Topo do card (foto + nome + status) ── */
+.inscrito-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--border-main);
+}
+
+.inscrito-foto {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--border-main);
+  background: var(--bg-secondary);
+}
+
+.inscrito-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.inscrito-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.inscrito-info h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+/* ── Badges de status ── */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  width: fit-content;
+}
+
+.status-pendente       { background: rgba(255, 191, 0, 0.18); color: #ffd740; }
+.status-aprovado       { background: rgba(30, 160, 80, 0.18); color: #6ee99a; }
+.status-reprovado      { background: rgba(200, 30, 20, 0.18); color: #ffb3a7; }
+.status-contraproposta { background: rgba(80, 120, 220, 0.18); color: #9ab4ff; }
+.status-aceito         { background: rgba(30, 160, 80, 0.22); color: #6ee99a; }
+.status-recusado       { background: rgba(200, 30, 20, 0.18); color: #ffb3a7; }
+
+/* ── Conteúdo do card ── */
+.inscrito-conteudo {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.inscrito-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.inscrito-campo label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--text-color);
+  opacity: 0.55;
+  text-transform: uppercase;
+}
+
+.inscrito-campo span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.inscrito-campo p {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-color);
+  opacity: 0.8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.inscrito-campo.contraproposta span {
+  color: #9ab4ff;
+}
+
+/* ── Ações do card ── */
+.inscrito-acoes {
+  padding: 14px 18px 18px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border-main);
+}
+
+.inscrito-acoes button {
+  flex: 1;
+  min-width: 80px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 0;
+  width: auto;
+}
+
+.inscrito-acoes button:hover { transform: translateY(-1px); }
+.inscrito-acoes button:active { transform: none; }
+
+.btn-aprovar {
+  background: rgba(30, 160, 80, 0.2);
+  color: #6ee99a;
+  border: 1px solid rgba(30, 160, 80, 0.3) !important;
+}
+.btn-aprovar:hover { background: rgba(30, 160, 80, 0.32) !important; }
+
+.btn-reprovar {
+  background: rgba(200, 30, 20, 0.18);
+  color: #ffb3a7;
+  border: 1px solid rgba(200, 30, 20, 0.28) !important;
+}
+.btn-reprovar:hover { background: rgba(200, 30, 20, 0.3) !important; }
+
+.btn-proposta {
+  background: rgba(80, 120, 220, 0.18);
+  color: #9ab4ff;
+  border: 1px solid rgba(80, 120, 220, 0.28) !important;
+}
+.btn-proposta:hover { background: rgba(80, 120, 220, 0.3) !important; }
+
+/* Textos de status nas ações */
+.aguardando-resposta {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ab4ff;
+  opacity: 0.85;
+  padding: 4px 0;
+}
+
+.confirmado {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6ee99a;
+  padding: 4px 0;
+}
+
+.reprovado {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffb3a7;
+  opacity: 0.85;
+  padding: 4px 0;
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-conteudo {
+  background: var(--bg-box);
+  border: 1px solid var(--border-main);
+  border-radius: 18px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-conteudo h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.modal-artista {
+  font-size: 13px;
+  color: var(--text-color);
+  opacity: 0.75;
+  margin: 0;
+}
+
+.modal-artista strong {
+  color: var(--text-color);
+  opacity: 1;
+}
+
+.modal-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-campo label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--text-color);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.modal-campo input {
+  background: var(--bg-main);
+  color: var(--text-color);
+  border: 1px solid var(--border-main);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.modal-campo input:focus {
+  border-color: var(--btn-color);
+}
+
+.modal-acoes {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-acoes button {
+  flex: 1;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 0;
+  width: auto;
+}
+
+.btn-cancelar {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+.btn-cancelar:hover { background: rgba(255, 255, 255, 0.14) !important; }
+
+.btn-enviar {
+  background: var(--btn-color);
+  color: var(--text-color);
+}
+.btn-enviar:hover {
+  background: var(--hover-main) !important;
+  box-shadow: 0 4px 12px var(--shadow-main);
+}
+
+/* ── Responsivo ── */
+@media (max-width: 960px) {
+  .gerenciar-header,
+  .sonaraContratarConteudo {
+    width: 90%;
+  }
+
+  .inscritos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .gerenciar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 92%;
+  }
+
+  .sonaraContratarConteudo {
+    width: 92%;
+    padding: 20px 16px 32px;
+  }
+
+  .inscritos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sonaraContratarTitulo {
+    font-size: 1.3rem;
+  }
+
+  .btn-voltar {
+    width: 100%;
+    text-align: center;
+  }
+
+  .inscrito-acoes {
+    flex-direction: column;
+  }
+
+  .inscrito-acoes button {
+    width: 100%;
+    flex: none;
+  }
+}

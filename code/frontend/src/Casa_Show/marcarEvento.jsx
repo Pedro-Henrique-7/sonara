@@ -4,7 +4,7 @@ import "./marcarEvento.css";
 import HeaderCasaShow from "./headerCasaShow.jsx";
 import FooterSonara from "../Artista/footer.jsx";
 import { cadastrarEvento, uploadFotoEvento } from "../services/eventoService";
-import { buscarCep } from "../services/enderecoService.js";
+import { buscarCep, buscarLatLong } from "../services/enderecoService.js";
 
 const STEPS = ["Evento", "Horário", "Endereço"];
 
@@ -22,6 +22,8 @@ const FORM_INICIAL = {
   bairro: "",
   cidade: "",
   estado: "",
+  latitude:  null,
+  longitude: null,
 };
 
 function validarStep(step, form) {
@@ -78,19 +80,42 @@ export default function MarcarEvento() {
     if (erros[name]) setErros(prev => ({ ...prev, [name]: undefined }));
   }
 
+  // ── CEP + Geoapify ──────────────────────────────────────────────────────────
   async function handleCepBlur() {
     const cepLimpo = form.cep.replace(/\D/g, "");
     if (cepLimpo.length !== 8) return;
+ 
     setStatusCep(null);
     setBuscandoCep(true);
     setMsgCep("Buscando...");
+ 
     try {
       const dados = await buscarCep(cepLimpo);
+ 
       if (dados.erro) {
         setStatusCep("erro");
         setMsgCep("CEP não encontrado.");
         return;
       }
+ 
+      // Busca coordenadas — await garante que estão prontas antes do submit
+      const enderecoTexto = [dados.logradouro, dados.localidade, dados.uf, "Brasil"]
+        .filter(Boolean)
+        .join(", ");
+ 
+      let latitude  = null;
+      let longitude = null;
+ 
+      try {
+        const coord = await buscarLatLong(enderecoTexto);
+        if (coord) {
+          latitude  = coord.lat;
+          longitude = coord.lng;
+        }
+      } catch {
+        // falha silenciosa — coordenadas ficam null
+      }
+ 
       setForm(prev => ({
         ...prev,
         logradouro:  dados.logradouro  ?? prev.logradouro,
@@ -98,9 +123,13 @@ export default function MarcarEvento() {
         bairro:      dados.bairro      ?? prev.bairro,
         cidade:      dados.localidade  ?? prev.cidade,
         estado:      dados.uf          ?? prev.estado,
+        latitude,
+        longitude,
       }));
+ 
       setStatusCep("ok");
       setMsgCep("Endereço preenchido automaticamente.");
+ 
     } catch {
       setStatusCep("erro");
       setMsgCep("Erro ao buscar CEP.");

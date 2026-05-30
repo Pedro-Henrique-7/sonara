@@ -53,6 +53,21 @@ const getSelectByEventoId = async function (evento_id) {
     }
 }
 
+const getSelectByArtistaId = async function (artista_id) {
+    try {
+        const result = await knexDatabase('vw_evento_artista_inscritos')
+            .where('artista_id', artista_id)
+            .orderBy('id_evento_artista', 'desc')
+
+        return result.length > 0 ? result : false
+
+    } catch (error) {
+        console.error('[DAO artistEvent] getSelectByArtistaId:', error.message)
+        return false
+    }
+}
+
+
 
 // Retorna último ID cadastrado
 const getSelectLastID = async function () {
@@ -177,5 +192,6 @@ module.exports = {
     setUpdateArtistEvent,
     setDeleteArtistEvent,
     getSelectLastID,
-    getSelectByEventoId
+    getSelectByEventoId,
+    getSelectByArtistaId
 }
