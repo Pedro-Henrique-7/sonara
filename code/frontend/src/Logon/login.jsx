@@ -121,7 +121,6 @@ function Login() {
     <div>
       <header className="header-login">
         <img className="logo" src={logo} alt="Logo Sonara" />
-        <p>SONARA</p>
       </header>
 
       <main>
