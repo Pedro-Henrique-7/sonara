@@ -99,7 +99,7 @@
 
 /* Texto com destaque */
 .footerSonaraAzul {
-  color: var(--border-main);
+  color: var(--btn-color);
   font-weight: 500;
 }
 
@@ -154,7 +154,8 @@
 
 .footerSonaraIcone:hover {
   background-color: var(--btn-color);
-}
+
+
   cursor: pointer;
 
   transition:

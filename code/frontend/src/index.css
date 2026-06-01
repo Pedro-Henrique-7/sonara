@@ -4,18 +4,19 @@
   font-weight: 400;
 
   /* PALETA DE CORES CENTRALIZADA */
-  --bg-main: #171738;
-  --bg-box: #7180b9;
-  --btn-color: #2e1760;
-  --text-color: #ffffff;
+  --bg-main: linear-gradient( #464646,#121212);
+  --bg-box: #010101;
+  --btn-color: #fc4c13 ;
+  --text-color: #fc4c13;
   --bg-card-secodary: #47589f;
   --bg-placeholder: #fafafa;
+  --bg-botao:#fafafa
 
   /* VARIÁVEIS DERIVADAS */
   --bg-secondary: #2e1760;
-  --text-main: #ffffff;
-  --text-soft: #ffffff;
-  --hover-main: #3a1f7a;
+  --text-main: #fc4c13;
+  --text-soft: #fc4c13;
+  --hover-main: #fc4c13;
   --border-main: #7180b9;
   --shadow-main: rgba(0, 0, 0, 0.35);
 }
