@@ -23,7 +23,7 @@ export default function TelaInicial() {
               Criar Eventos
             </div>
 
-            <div className="card" onClick={() => navigate(`/gerenciarInscritos/${usuarioSalvo?.organizador?.eventos[0]?.id_evento || ""}`)}>
+            <div className="card" onClick={() => navigate(`/contratarArtista`)}>
               Contratar Artistas
             </div>
 

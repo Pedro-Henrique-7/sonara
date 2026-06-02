@@ -6,7 +6,7 @@ const db = (trx) => trx || knexDatabase
 
 const getSelectAllArtist = async function () {
     try {
-        return await knexDatabase('tb_artista').orderBy('id_artista', 'desc')
+        return await knexDatabase('vw_usuario').where({ tipo_usuario: 'Artista' }).orderBy('artista_id', 'desc')
     } catch (error) {
         console.error('[DAO artista] getSelectAllArtist:', error.message)
         return false
@@ -15,10 +15,9 @@ const getSelectAllArtist = async function () {
 
 const getSelectByIdArtistUser = async function (usuario_id, trx = null) {
     try {
-        const result = await db(trx)('tb_artista')
-            .where({ usuario_id })
+        const result = await db(trx)('vw_usuario')
+            .where({ id_usuario: usuario_id, tipo_usuario: 'Artista' })
             .first()
-
         return result || null
     } catch (error) {
         console.error('[DAO artista] getSelectByIdArtistUser:', error.message)
@@ -46,15 +45,15 @@ const getSelectLastID = async function () {
 }
 
 
-const getSelectByIdArtist = async function (id_artista) {
+const getSelectByIdArtist = async function (artista_id, trx = null) {
     try {
-        const result = await knexDatabase('tb_artista')
-            .where({ id_artista })
-
-        return result.length > 0 ? result : false
+        const result = await db(trx)('vw_usuario')
+            .where({ artista_id, tipo_usuario: 'Artista' })
+            .first()
+        return result || null
     } catch (error) {
-        console.error('[DAO artista] getSelectByIdArtist:', error.message)
-        return false
+        console.error('[DAO artista] getSelectByIdArtistUser:', error.message)
+        return null
     }
 }
 

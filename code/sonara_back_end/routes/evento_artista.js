@@ -48,7 +48,25 @@ router.get('/minhas_candidaturas/:artistaId', cors(), async function (request, r
 })
 
 
+// artista aceita convite do organizador
+router.put('/aceitarConvite/:id', cors(), async function (request, response) {
+    const idEventoArtista = request.params.id
 
+    const resultado = await controllerEventoArtista.aceitarConvite(idEventoArtista)
+
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
+
+// artista recusa convite do organizador
+router.put('/recusarConvite/:id', cors(), async function (request, response) {
+    const idEventoArtista = request.params.id
+
+    const resultado = await controllerEventoArtista.recusarConvite(idEventoArtista)
+
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
 
 
 

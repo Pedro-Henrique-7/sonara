@@ -21,7 +21,7 @@ import SobreEventoCasaShow from "./Casa_Show/sobreEventoCasaShow.jsx";
 import TelaPerfilOrganizador from "./Casa_Show/telaPerfilOrganizador.jsx";
 import GerenciarInscritos from "./Casa_Show/gerenciarInscritos.jsx";
 import EditarEvento from "./Casa_Show/sobreEventoCasaShow.jsx";
-
+// import ListaArtistas from "./Casa_Show/listarArtistas.jsx";
 import TelaUsuario from "./Usuario/telaUsuario.jsx";
 import SobreEventoUsuario from "./Usuario/sobreEventoUsuario.jsx";
 import MapaEvento from "./Usuario/telaMapa.jsx";
@@ -51,6 +51,7 @@ export default function RouterApp() {
         <Route path="/sobreEventoCasaShow" element={<SobreEventoCasaShow />} />
         <Route path="/editarEvento/:id" element={<EditarEvento />} />
         <Route path="/evento/:idEvento/inscritos" element={<GerenciarInscritos />} />
+        {/* <Route path="/listaArtistas" element={<ListaArtistas />} /> */}
 
         <Route path="/telaDeUsuario" element={<TelaUsuario />} />
         <Route path="/sobreEventoUsuario/:id" element={<SobreEventoUsuario />} />

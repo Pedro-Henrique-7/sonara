@@ -132,3 +132,37 @@ export async function buscarMinhasCandidaturas(artistaId) {
 
   throw new Error(json.message ?? "Erro ao buscar candidaturas.");
 }
+
+export async function aceitarConvite(idEventoArtista) {
+  const response = await fetch(
+    `${URL_BASE}/aceitarConvite/${idEventoArtista}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  const json = await response.json();
+
+  if (response.ok) {
+    return json;
+  }
+
+  throw new Error(json.message ?? "Erro ao aceitar convite.");
+}
+
+export async function recusarConvite(idEventoArtista) {
+  const response = await fetch(
+    `${URL_BASE}/recusarConvite/${idEventoArtista}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  const json = await response.json();
+
+  if (response.ok) {
+    return json;
+  }
+
+  throw new Error(json.message ?? "Erro ao recusar convite.");
+}

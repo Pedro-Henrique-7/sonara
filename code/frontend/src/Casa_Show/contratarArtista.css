@@ -36,6 +36,7 @@
 
   display: flex;
   flex-direction: column;
+  gap: 28px;
 }
 
 /* =========================================================
@@ -46,20 +47,63 @@
   font-weight: 700;
   color: var(--text-color);
   text-align: center;
-  margin-bottom: 40px;
+  margin: 0;
 }
 
+/* =========================================================
+   BUSCA
+========================================================= */
+.sonaraContratarBusca {
+  width: 100%;
+  padding: 13px 18px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+
+  transition: border-color 0.2s;
+}
+
+.sonaraContratarBusca::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.sonaraContratarBusca:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* =========================================================
+   ESTADOS (loading, erro, vazio)
+========================================================= */
+.sonaraContratarInfo {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 1rem;
+  padding: 20px 0;
+}
+
+.sonaraContratarErro {
+  color: #ffb3a7;
+}
+
+/* =========================================================
+   GRID DOS CARDS
+========================================================= */
 .sonaraContratarGrid {
   width: 100%;
 
   display: grid;
-
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
   gap: 40px 30px;
 
   justify-items: center;
 }
+
 /* =========================================================
    CARD
 ========================================================= */
@@ -68,11 +112,9 @@
   max-width: 200px;
 
   overflow: hidden;
-
   border-radius: 16px;
 
   background: #fff7f2;
-
   border: 1px solid rgba(255, 255, 255, 0.08);
 
   box-shadow:
@@ -87,9 +129,7 @@
 
 .sonaraContratarCard:hover {
   transform: translateY(-6px);
-
   background: #ffffff;
-
   box-shadow:
     0 14px 24px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 120, 60, 0.25);
@@ -100,11 +140,9 @@
 ========================================================= */
 .sonaraContratarCardTopo {
   height: 90px;
-
   display: flex;
   justify-content: center;
   align-items: flex-end;
-
   background: var(--bg-main);
 }
 
@@ -132,32 +170,20 @@
 ========================================================= */
 .sonaraContratarCardConteudo {
   padding: 50px 18px 24px;
-
   text-align: center;
-
   color: #1f1f1f;
 }
 
-/* =========================================================
-   TÍTULO DO CARD
-========================================================= */
 .sonaraContratarCardConteudo h2 {
   margin-bottom: 6px;
-
   color: #101010;
-
   font-size: 1.05rem;
   font-weight: 700;
-
   word-wrap: break-word;
 }
 
-/* =========================================================
-   SUBTÍTULO
-========================================================= */
 .sonaraContratarCardConteudo span {
   color: #5c5c5c;
-
   font-size: 0.78rem;
   font-weight: 600;
 }
@@ -168,13 +194,9 @@
 .sonaraContratarEstrelas {
   display: flex;
   justify-content: center;
-
   gap: 5px;
-
   margin: 14px 0 12px;
-
   color: #ffbf00;
-
   font-size: 1rem;
 }
 
@@ -187,27 +209,17 @@
 ========================================================= */
 .sonaraContratarCardConteudo p {
   margin-bottom: 6px;
-
   color: #2d2d2d;
-
   font-size: 0.74rem;
   font-weight: 500;
-
   line-height: 1.4;
 }
 
-/* =========================================================
-   TEXTO SECUNDÁRIO
-========================================================= */
 .sonaraContratarCardConteudo small {
   display: block;
-
   margin-bottom: 18px;
-
   color: #6f6f6f;
-
   font-size: 0.68rem;
-
   line-height: 1.4;
 }
 
@@ -218,26 +230,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   gap: 8px;
-
   margin: 0 auto;
   padding: 10px 14px;
-
   border: none;
   border-radius: 10px;
-
   background: #2e1760;
-
   color: #ffffff;
-
   font-size: 0.74rem;
   font-weight: 700;
-
   cursor: pointer;
-
   box-shadow: 0 4px 10px rgba(255, 90, 0, 0.3);
-
   transition:
     background 0.2s ease,
     transform 0.2s ease,
@@ -250,9 +253,7 @@
 
 .sonaraContratarBtnVerMais:hover {
   background: var(--btn-hover-color);
-
   transform: scale(1.04);
-
   box-shadow: 0 6px 14px rgba(255, 90, 0, 0.45);
 }
 
@@ -262,13 +263,11 @@
 @media (max-width: 1024px) {
   .sonaraContratarConteudo {
     width: 80%;
-
     padding: 32px 20px 40px;
   }
 
   .sonaraContratarGrid {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-
     gap: 32px 24px;
   }
 }
@@ -280,13 +279,10 @@
 
   .sonaraContratarTitulo {
     font-size: 1.8rem;
-
-    margin-bottom: 32px;
   }
 
   .sonaraContratarGrid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-
     gap: 24px 16px;
   }
 
@@ -298,21 +294,16 @@
 @media (max-width: 480px) {
   .sonaraContratarConteudo {
     margin-top: 20px;
-
     padding: 20px 16px 30px;
-
     border-radius: 16px;
   }
 
   .sonaraContratarTitulo {
     font-size: 1.4rem;
-
-    margin-bottom: 24px;
   }
 
   .sonaraContratarGrid {
     grid-template-columns: repeat(2, 1fr);
-
     gap: 16px 12px;
   }
 

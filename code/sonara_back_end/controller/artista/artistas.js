@@ -45,20 +45,16 @@ const buscarArtistaId = async function(id){
         //Validação da chegada do ID
         if(!isNaN(id) && id != '' && id != null && id > 0){
             let resultArtista = await artistaDAO.getSelectByIdArtist(Number(id))
-
-            if(resultArtista){
-                if(resultArtista.length > 0){
+                if(resultArtista){
                     MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.HEADER.response.Artista = resultArtista[0]
+                    MESSAGES.HEADER.response.Artista = resultArtista
 
                     return MESSAGES.HEADER //200
                 }else{
                     return MESSAGES.ERROR_NOT_FOUND //404
                 }
-            }else{
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL //500
-            }
+
         }else{
             MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [ID incorreto]'
             return MESSAGES.ERROR_REQUIRED_FIELDS //400

@@ -1,21 +1,86 @@
 import "./sobreArtista.css";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import HeaderCasaShow from "./headerCasaShow";
 import FooterSonara from "../Artista/footer";
 
 import {
-  FaFacebookF,
-  FaSpotify,
   FaInstagram,
   FaYoutube,
   FaMapMarkerAlt,
   FaStar,
+  FaArrowLeft,
 } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+
+import { candidatarArtista } from "../services/eventoArtistaSevice.js";
 
 export default function SobreArtista() {
-  const [abrirContraProposta, setAbrirContraProposta] = useState(false); // ← faltava
+  const { state } = useLocation();
+  const navigate = useNavigate();
+  const artista = state?.artista;
+
+  const usuarioSalvo = sessionStorage.getItem("usuario")
+    ? JSON.parse(sessionStorage.getItem("usuario"))
+    : null;
+
+  const eventos = usuarioSalvo?.organizador?.eventos || [];
+
+  // Modal de proposta
+  const [abrirProposta, setAbrirProposta] = useState(false);
+  const [eventoId, setEventoId] = useState("");
   const [valorProposta, setValorProposta] = useState("");
+  const [mensagem, setMensagem] = useState("");
+  const [enviando, setEnviando] = useState(false);
+  const [erroProposta, setErroProposta] = useState("");
+  const [sucesso, setSucesso] = useState(false);
+
+  // Sem artista na navegação — volta para a lista
+  if (!artista) {
+    return (
+      <div className="sonaraSobreArtistaPagina">
+        <HeaderCasaShow />
+        <main style={{ textAlign: "center", padding: "4rem", color: "white" }}>
+          <p>Artista não encontrado.</p>
+          <button
+            className="sonaraSobreArtistaBtn"
+            style={{ marginTop: "1rem", maxWidth: 200 }}
+            onClick={() => navigate("/contratarArtista")}
+          >
+            Voltar
+          </button>
+        </main>
+        <FooterSonara />
+      </div>
+    );
+  }
+
+  const generos = Array.isArray(artista.generos_musicais)
+    ? artista.generos_musicais.map((g) => g.nome).filter(Boolean).join(" & ")
+    : "";
+
+  const redes = Array.isArray(artista.redes_sociais) ? artista.redes_sociais : [];
+
+  function iconeRede(tipo) {
+    switch (tipo?.toLowerCase()) {
+      case "instagram": return <FaInstagram />;
+      case "youtube":   return <FaYoutube />;
+      case "twitter":
+      case "x":         return <FaXTwitter />;
+      default:          return null;
+    }
+  }
+
+  function renderEstrelas(media) {
+    const arredondado = Math.round(media || 0);
+    return [1, 2, 3, 4, 5].map((i) => (
+      <FaStar
+        key={i}
+        className={i > arredondado ? "sonaraSobreArtistaStarOff" : ""}
+      />
+    ));
+  }
 
   function formatarMoeda(valor) {
     const apenasDigitos = valor.replace(/\D/g, "");
@@ -28,26 +93,48 @@ export default function SobreArtista() {
 
   function handleValorChange(e) {
     setValorProposta(formatarMoeda(e.target.value));
+    setErroProposta("");
   }
 
   function handleValorKeyDown(e) {
-    const permitidos = [
-      "Backspace",
-      "Delete",
-      "ArrowLeft",
-      "ArrowRight",
-      "Tab",
-      "Home",
-      "End",
-    ];
+    const permitidos = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab","Home","End"];
     if (permitidos.includes(e.key)) return;
     if (!/^\d$/.test(e.key)) e.preventDefault();
   }
 
-  function enviarContraProposta() {
-    alert("Contra proposta enviada com sucesso!");
-    setValorProposta("");
-    setAbrirContraProposta(false);
+  // Converte "R$ 1.500,00" → 1500
+  function parseMoeda(str) {
+    const limpo = str.replace(/[R$\s.]/g, "").replace(",", ".");
+    return parseFloat(limpo) || 0;
+  }
+
+  async function handleEnviarProposta() {
+    if (!eventoId) return setErroProposta("Selecione um evento.");
+    const valor = parseMoeda(valorProposta);
+    if (!valor || valor <= 0) return setErroProposta("Informe um cachê válido.");
+    if (!mensagem.trim()) return setErroProposta("Escreva uma mensagem para o artista.");
+
+    setEnviando(true);
+    setErroProposta("");
+    try {
+      await candidatarArtista({
+        evento_id: Number(eventoId),
+        artista_id: artista.artista_id,
+        cache_ofertado: 1500, // Valor fixo para proposta inicial (pode ser ajustado conforme necessidade)
+        sobre_artista: mensagem,
+        cache_esperado: valor,
+        motivo_inscricao: "Proposta enviada pelo organizador",
+      });
+      setSucesso(true);
+      setAbrirProposta(false);
+      setValorProposta("");
+      setMensagem("");
+      setEventoId("");
+    } catch (err) {
+      setErroProposta(err.message);
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
@@ -56,113 +143,186 @@ export default function SobreArtista() {
 
       <main className="sonaraSobreArtistaPagina">
         <div className="sonaraSobreArtistaContainer">
-          <h1 className="sonaraSobreArtistaTitulo">Ver Artista</h1>
+
+          <div className="sonaraSobreArtistaCabecalho">
+            <button
+              className="sonaraSobreArtistaVoltar"
+              onClick={() => navigate("/contratarArtista")}
+            >
+              <FaArrowLeft /> Voltar
+            </button>
+            <h1 className="sonaraSobreArtistaTitulo">Ver Artista</h1>
+          </div>
+
+          {sucesso && (
+            <div className="sonaraSobreArtistaSucesso">
+              ✓ Proposta enviada com sucesso! O artista receberá a solicitação.
+            </div>
+          )}
 
           <div className="sonaraSobreArtistaCard">
+            {/* Topo: foto + info */}
             <div className="sonaraSobreArtistaTopo">
               <div className="sonaraSobreArtistaFotoArea">
-                <img
-                  src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200&auto=format&fit=crop"
-                  alt="Artista"
-                  className="sonaraSobreArtistaFoto"
-                />
+                {artista.foto ? (
+                  <img
+                    src={artista.foto}
+                    alt={artista.nome_artistico}
+                    className="sonaraSobreArtistaFoto"
+                  />
+                ) : (
+                  <div className="sonaraSobreArtistaFoto sonaraSobreArtistaFotoPlaceholder">
+                    {artista.nome_artistico?.[0]?.toUpperCase()}
+                  </div>
+                )}
               </div>
 
               <div className="sonaraSobreArtistaInfo">
-                <h2>Pedro Henrique</h2>
-                <span>Jazz e Clássica</span>
-                <p>(11) 98017-0001</p>
+                <h2>{artista.nome_artistico}</h2>
+                {generos && <span>{generos}</span>}
+                {artista.telefone && <p>{artista.telefone}</p>}
                 <div className="sonaraSobreArtistaAvaliacao">
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar className="sonaraSobreArtistaStarOff" />
+                  {renderEstrelas(artista.media_avaliacao_artista)}
+                  {artista.total_avaliacoes_artista > 0 && (
+                    <small style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem" }}>
+                      ({artista.total_avaliacoes_artista})
+                    </small>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div className="sonaraSobreArtistaLocal">
-              <FaMapMarkerAlt className="sonaraSobreArtistaLocalIcone" />
-              <p>Jandira, Street Vicent nº12</p>
-            </div>
+            {/* Localização */}
+            {(artista.cidade || artista.estado) && (
+              <div className="sonaraSobreArtistaLocal">
+                <FaMapMarkerAlt className="sonaraSobreArtistaLocalIcone" />
+                <p>
+                  {[artista.cidade, artista.estado].filter(Boolean).join(", ")}
+                </p>
+              </div>
+            )}
 
-            <div className="sonaraSobreArtistaDescricao">
-              <p>
-                Minha música mistura jazz, soul e influências modernas para
-                criar algo autêntico e cheio de sentimento.
-              </p>
-            </div>
+            {/* Descrição */}
+            {artista.descricao_artista && (
+              <div className="sonaraSobreArtistaDescricao">
+                <p>{artista.descricao_artista}</p>
+              </div>
+            )}
 
+            {/* Rodapé: cachê + redes */}
             <div className="sonaraSobreArtistaRodapeInfo">
-              <div className="sonaraSobreArtistaCache">
-                <h3>Cachê Pretendido:</h3>
-                <span>XXXXX</span>
-              </div>
+              {artista.cache_esperado > 0 && (
+                <div className="sonaraSobreArtistaCache">
+                  <h3>Cachê Pretendido:</h3>
+                  <span>
+                    {new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                    }).format(artista.cache_esperado)}
+                  </span>
+                </div>
+              )}
 
-              <div className="sonaraSobreArtistaRedes">
-                <a href="/">
-                  <FaFacebookF />
-                </a>
-                <a href="/">
-                  <FaSpotify />
-                </a>
-                <a href="/">
-                  <FaInstagram />
-                </a>
-                <a href="/">
-                  <FaYoutube />
-                </a>
-              </div>
+              {redes.length > 0 && (
+                <div className="sonaraSobreArtistaRedes">
+                  {redes.map((rede) => {
+                    const icone = iconeRede(rede.tipo);
+                    return icone ? (
+                      <a
+                        key={rede.id_redes_sociais ?? rede.id}
+                        href={rede.link}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {icone}
+                      </a>
+                    ) : null;
+                  })}
+                </div>
+              )}
             </div>
 
+            {/* Botão principal */}
             <div className="sonaraSobreArtistaBotoes">
-              <button className="sonaraSobreArtistaBtn">Reprovar</button>
-
-              <button className="sonaraSobreArtistaBtn">Aprovar</button>
               <button
                 className="sonaraSobreArtistaBtn"
-                onClick={() => setAbrirContraProposta(true)}
+                onClick={() => setAbrirProposta(true)}
               >
-                Contra Proposta
+                Fazer Proposta
               </button>
-              <button className="sonaraSobreArtistaBtn">Salvar</button>
             </div>
           </div>
         </div>
 
-        {abrirContraProposta && (
+        {/* Modal de proposta */}
+        {abrirProposta && (
           <div className="sonaraModalOverlay">
             <div className="sonaraModal">
-              <h2>Enviar Contra Proposta</h2>
+              <h2>Fazer Proposta</h2>
 
-              <input
-                type="text"
-                placeholder="R$ 0,00"
-                inputMode="numeric"
-                className="sonaraModalInput"
-                value={valorProposta}
-                onChange={handleValorChange}
-                onKeyDown={handleValorKeyDown}
-              />
+              <p className="sonaraModalArtistaNome">
+                Para: <strong>{artista.nome_artistico}</strong>
+              </p>
 
-              <textarea
-                placeholder="Escreva uma mensagem..."
-                className="sonaraModalTextarea"
-              ></textarea>
+              {/* Seletor de evento */}
+              <div className="sonaraModalCampo">
+                <label>Evento</label>
+                <select
+                  className="sonaraModalInput"
+                  value={eventoId}
+                  onChange={(e) => { setEventoId(e.target.value); setErroProposta(""); }}
+                >
+                  <option value="">Selecione um evento</option>
+                  {eventos.map((ev) => (
+                    <option key={ev.id_evento} value={ev.id_evento}>
+                      {ev.nome}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Cachê */}
+              <div className="sonaraModalCampo">
+                <label>Cachê oferecido</label>
+                <input
+                  type="text"
+                  placeholder="R$ 0,00"
+                  inputMode="numeric"
+                  className="sonaraModalInput"
+                  value={valorProposta}
+                  onChange={handleValorChange}
+                  onKeyDown={handleValorKeyDown}
+                />
+              </div>
+
+              {/* Mensagem */}
+              <div className="sonaraModalCampo">
+                <label>Mensagem</label>
+                <textarea
+                  placeholder="Conte sobre o evento, data, expectativas..."
+                  className="sonaraModalTextarea"
+                  value={mensagem}
+                  onChange={(e) => { setMensagem(e.target.value); setErroProposta(""); }}
+                />
+              </div>
+
+              {erroProposta && (
+                <p className="sonaraModalErro">{erroProposta}</p>
+              )}
 
               <div className="sonaraModalBotoes">
                 <button
                   className="sonaraModalCancelar"
-                  onClick={() => setAbrirContraProposta(false)}
+                  onClick={() => { setAbrirProposta(false); setErroProposta(""); }}
                 >
                   Cancelar
                 </button>
                 <button
                   className="sonaraModalEnviar"
-                  onClick={enviarContraProposta}
+                  onClick={handleEnviarProposta}
+                  disabled={enviando}
                 >
-                  Enviar Proposta
+                  {enviando ? "Enviando..." : "Enviar Proposta"}
                 </button>
               </div>
             </div>
