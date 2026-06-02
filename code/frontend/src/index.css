@@ -7,8 +7,8 @@
   --bg-main: linear-gradient( #464646,#121212);
   --bg-box: #010101;
   --btn-color: #fc4c13 ;
-  --text-color: #fc4c13;
-  --bg-card-secodary: #47589f;
+  --text-color:  #fafafa;
+  --bg-card-secodary: linear-gradient( #464646,#121212);
   --bg-placeholder: #fafafa;
   --bg-botao:#fafafa
 
@@ -17,7 +17,7 @@
   --text-main: #fc4c13;
   --text-soft: #fc4c13;
   --hover-main: #fc4c13;
-  --border-main: #7180b9;
+  --border-main: #a83a0e ;
   --shadow-main: rgba(0, 0, 0, 0.35);
 }
 

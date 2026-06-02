@@ -2,6 +2,8 @@
    listaEventos.css
    ============================================= */
 
+
+
 /* Main */
 .lista-eventos-main {
   flex: 1;
@@ -11,11 +13,13 @@
   transition:
     opacity 0.5s ease,
     transform 0.5s ease;
+    
 }
 
 .lista-eventos-main--visible {
   opacity: 1;
   transform: translateY(0);
+ 
 }
 
 /* Título */
@@ -27,6 +31,7 @@
   letter-spacing: 0.02em;
   margin-left: 45%;
   margin-top: 5vh;
+   background-color: aqua
 }
 
 /* Grid 2 colunas */
