@@ -92,14 +92,15 @@
   cursor: pointer;
 }
 
+
 .footerSonaraTexto:hover {
-  color: var(--text-color);
+  color: var(--btn-color);
   transform: translateX(3px);
 }
 
 /* Texto com destaque */
 .footerSonaraAzul {
-  color: var(--btn-color);
+  color: var(--text-color);
   font-weight: 500;
 }
 

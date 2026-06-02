@@ -7,6 +7,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
 }
 
 /* =========================================================
@@ -51,6 +52,7 @@
   align-items: center;
   gap: 1.5rem;
   align-self: flex-start;
+  
 }
 
 .pa-col-right {
@@ -59,6 +61,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  
 }
 
 /* =========================================================
@@ -70,6 +73,7 @@
   max-width: 200px;
   aspect-ratio: 1 / 1;
   cursor: pointer;
+  
 }
 
 .pa-foto-circle {
@@ -81,6 +85,7 @@
   box-shadow: 0 4px 12px var(--shadow-main);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 3px solid var(--border-main);
+  
 }
 
 .pa-foto-circle:hover {
@@ -185,6 +190,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+  
 }
 
 .pa-plano-titulo,
@@ -192,6 +198,7 @@
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
+  
 }
 
 .pa-plano-icon {
@@ -210,7 +217,7 @@
 ========================================================= */
 .pa-eventos-card {
   padding: 1.25rem 1.5rem;
-  background: #47589f;
+  background-color: rgb(184, 178, 175);
 }
 
 .pa-eventos-content {
