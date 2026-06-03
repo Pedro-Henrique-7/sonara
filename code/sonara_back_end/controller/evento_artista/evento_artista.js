@@ -5,8 +5,8 @@
  * Versão: 1.0
 *****************************************************************************/
 
-const EventoArtistaDAO = require('../../model/DAO/evento_artista.js')
-const EventoArtistaStatusDAO = require('../../model/DAO/evento_artista_status.js')
+const eventoArtistaDAO = require('../../model/DAO/evento_artista.js')
+const eventoArtistaStatusDAO = require('../../model/DAO/evento_artista_status.js')
 
 const DEFAULT_MESSAGES = require('../modulo/conf_message.js')
 
@@ -34,7 +34,7 @@ const buscarMinhasCandidaturas = async function (artista_id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultInscricoes = await EventoArtistaDAO.getSelectByArtistaId(Number(artista_id))
+        const resultInscricoes = await eventoArtistaDAO.getSelectByArtistaId(Number(artista_id))
 
         if (!resultInscricoes) {
             MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
@@ -80,7 +80,7 @@ const listarEventoArtista = async function () {
 
     try {
 
-        let resultEventoArtista = await EventoArtistaDAO.getSelectAllArtistEvent()
+        let resultEventoArtista = await eventoArtistaDAO.getSelectAllArtistEvent()
 
         if (resultEventoArtista) {
             if (resultEventoArtista.length > 0) {
@@ -109,7 +109,7 @@ const buscarEventoArtistaId = async function (id) {
 
         //Validação da chegada do ID
         if (!isNaN(id) && id != '' && id != null && id > 0) {
-            let resultEventoArtista = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+            let resultEventoArtista = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
             if (resultEventoArtista) {
                 if (resultEventoArtista.length > 0) {
@@ -135,7 +135,7 @@ const buscarEventoArtistaId = async function (id) {
 }
 
 //Insere um EventoArtista 
-const inserirEventoArtista = async function (EventoArtista, contentType) {
+const inserirEventoArtista = async function (eventoArtista , contentType) {
 
     //Criando um objeto novo para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -145,25 +145,25 @@ const inserirEventoArtista = async function (EventoArtista, contentType) {
         if (String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
 
             //Chama a função de validar todos os dados do EventoArtista
-            let validar = await validarDadosEventoArtista(EventoArtista)
+            let validar = await validarDadosEventoArtista(eventoArtista)
 
             if (!validar) {
 
                 //Processamento
                 //Chama a função para inserir um novo EventoArtista no BD
-                let resultEventoArtista = await EventoArtistaDAO.setInsertArtistEvent(EventoArtista)
+                let resultEventoArtista = await eventoArtistaDAO.setInsertArtistEvent(eventoArtista)
 
                 if (resultEventoArtista) {
                     //Chama a função para receber o ID gerado no BD
-                    let lastID = await EventoArtistaDAO.getSelectLastID()
+                    let lastID = await eventoArtistaDAO.getSelectLastID()
 
                     if (lastID) {
                         //Adiciona o ID no JSON com os dados do EventoArtista
-                        EventoArtista.id_evento_artista = lastID
+                        eventoArtista.id_evento_artista = lastID
                         MESSAGES.HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status
                         MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code
                         MESSAGES.HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message
-                        MESSAGES.HEADER.response = EventoArtista
+                        MESSAGES.HEADER.response = eventoArtista
 
                         return MESSAGES.HEADER //201
                     } else {
@@ -238,7 +238,7 @@ const candidatarArtista = async function (candidatura, contentType) {
             motivo_inscricao: candidatura.motivo_inscricao
         }
 
-        const idGerado = await EventoArtistaDAO.setInsertArtistEvent(eventoArtista)
+        const idGerado = await eventoArtistaDAO.setInsertArtistEvent(eventoArtista)
 
         if (idGerado?.erro && idGerado.tipo === 'DUPLICADO') {
             return {
@@ -254,7 +254,7 @@ const candidatarArtista = async function (candidatura, contentType) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: idGerado,
             status_id: STATUS.PENDENTE,
             data_hora: agora
@@ -290,7 +290,7 @@ const aprovarArtistaEvento = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -303,7 +303,7 @@ const aprovarArtistaEvento = async function (id) {
                 ? Number(inscricao.cache_ofertado)
                 : Number(inscricao.cache_esperado)
 
-        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+        const resultUpdate = await eventoArtistaDAO.setUpdateArtistEvent({
             id_evento_artista: Number(id),
             cache_final: cacheFinal
         })
@@ -314,7 +314,7 @@ const aprovarArtistaEvento = async function (id) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.APROVADO,
             data_hora: agora
@@ -350,7 +350,7 @@ const reprovarArtistaEvento = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -358,7 +358,7 @@ const reprovarArtistaEvento = async function (id) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.REPROVADO,
             data_hora: agora
@@ -402,7 +402,7 @@ const enviarContraProposta = async function (id, dados, contentType) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -410,7 +410,7 @@ const enviarContraProposta = async function (id, dados, contentType) {
 
         const valorContraProposta = Number(dados.cache_ofertado)
 
-        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+        const resultUpdate = await eventoArtistaDAO.setUpdateArtistEvent({
             id_evento_artista: Number(id),
             cache_ofertado: valorContraProposta,
             contra_proposta: valorContraProposta
@@ -422,7 +422,7 @@ const enviarContraProposta = async function (id, dados, contentType) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.CONTRA_PROPOSTA,
             data_hora: agora
@@ -459,7 +459,7 @@ const aceitarContraProposta = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -474,7 +474,7 @@ const aceitarContraProposta = async function (id) {
 
         const cacheFinal = Number(inscricao.cache_ofertado)
 
-        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+        const resultUpdate = await eventoArtistaDAO.setUpdateArtistEvent({
             id_evento_artista: Number(id),
             cache_final: cacheFinal
         })
@@ -485,7 +485,7 @@ const aceitarContraProposta = async function (id) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatusAceita = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatusAceita = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.CONTRA_PROPOSTA_ACEITA,
             data_hora: agora
@@ -495,7 +495,7 @@ const aceitarContraProposta = async function (id) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
         }
 
-        const resultStatusAprovado = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatusAprovado = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.APROVADO,
             data_hora: agora
@@ -531,7 +531,7 @@ const recusarContraProposta = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -539,7 +539,7 @@ const recusarContraProposta = async function (id) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.CONTRA_PROPOSTA_RECUSADA,
             data_hora: agora
@@ -574,7 +574,7 @@ const aceitarConvite = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -583,7 +583,7 @@ const aceitarConvite = async function (id) {
         const inscricao = resultBusca[0]
         const cacheFinal = Number(inscricao.cache_esperado)
 
-        const resultUpdate = await EventoArtistaDAO.setUpdateArtistEvent({
+        const resultUpdate = await eventoArtistaDAO.setUpdateArtistEvent({
             id_evento_artista: Number(id),
             cache_final: cacheFinal
         })
@@ -592,7 +592,7 @@ const aceitarConvite = async function (id) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.CONVITE_ACEITO,
             data_hora: agora
@@ -622,7 +622,7 @@ const recusarConvite = async function (id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultBusca = await EventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
+        const resultBusca = await eventoArtistaDAO.getSelectByIdArtistEvent(Number(id))
 
         if (!resultBusca || resultBusca.length === 0) {
             return MESSAGES.ERROR_NOT_FOUND
@@ -630,7 +630,7 @@ const recusarConvite = async function (id) {
 
         const agora = new Date().toISOString().slice(0, 19).replace('T', ' ')
 
-        const resultStatus = await EventoArtistaStatusDAO.setInsertArtistEventStatus({
+        const resultStatus = await eventoArtistaStatusDAO.setInsertArtistEventStatus({
             evento_artista_id: Number(id),
             status_id: STATUS.CONVITE_RECUSADO,
             data_hora: agora
@@ -652,7 +652,7 @@ const recusarConvite = async function (id) {
 }
 
 //Atualiza um EventoArtista buscando pelo ID
-const atualizarEventoArtista = async function (EventoArtista, id, contentType) {
+const atualizarEventoArtista = async function (eventoArtista, id, contentType) {
     //Criando um objeto novo para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
 
@@ -661,7 +661,7 @@ const atualizarEventoArtista = async function (EventoArtista, id, contentType) {
         if (String(contentType).toUpperCase().includes('APPLICATION/JSON')) {
 
             //Chama a função de validar todos os dados do EventoArtista
-            let validar = await validarDadosEventoArtista(EventoArtista)
+            let validar = await validarDadosEventoArtista(eventoArtista)
 
             if (!validar) {
 
@@ -671,10 +671,10 @@ const atualizarEventoArtista = async function (EventoArtista, id, contentType) {
                 if (validarID.status_code == 200) {
 
                     //Adiciona o ID do EventoArtista no JSON de dados para ser encaminhado ao DAO
-                    EventoArtista.id_evento_artista = Number(id)
+                    eventoArtista.id_evento_artista = Number(id)
 
                     //Chama a função para inserir um novo EventoArtista no BD
-                    let resultEventoArtista = await EventoArtistaDAO.setUpdateArtistEvent(EventoArtista)
+                    let resultEventoArtista = await eventoArtistaDAO.setUpdateArtistEvent(eventoArtista)
 
                     if (resultEventoArtista) {
                         MESSAGES.HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status
@@ -711,7 +711,7 @@ const buscarInscricoesPorEvento = async function (evento_id) {
             return MESSAGES.ERROR_REQUIRED_FIELDS
         }
 
-        const resultInscricoes = await EventoArtistaDAO.getSelectByEventoId(Number(evento_id))
+        const resultInscricoes = await eventoArtistaDAO.getSelectByEventoId(Number(evento_id))
 
         if (!resultInscricoes) {
             MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status

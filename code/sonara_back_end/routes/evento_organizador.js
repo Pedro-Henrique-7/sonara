@@ -8,7 +8,7 @@ const controllereventoOrganizador = require('../controller/evento_organizador/ev
 
 //configurção do cors 
 const router = express.Router()
-router.use((request, response, next ) => {
+router.use((request, response, next) => {
     response.header('Access-Control-Allow-Origin', '*')
     response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
     next()
@@ -18,23 +18,31 @@ router.use((request, response, next ) => {
 
 
 // retornar todos os eventoOrganizadors
-router.get('/', cors(), async function (request, response){
+router.get('/', cors(), async function (request, response) {
+    /*  #swagger.tags = ['Evento x Organizador']
+        #swagger.summary = 'Listar todos os vínculos evento-organizador'
+        #swagger.responses[200] = { description: 'Lista retornada' } */
+    let eventoOrganizador = await controllereventoOrganizador.listarEventoOrganizador()
 
-  let eventoOrganizador  = await controllereventoOrganizador.listarEventoOrganizador()
-    
     response.status(eventoOrganizador.status_code)
     response.json(eventoOrganizador)
 })
-module.exports = router 
+module.exports = router
 
 
 // pegar eventoOrganizador por id
-router.get('/:id', cors(), async function (request, response){
+router.get('/:id', cors(), async function (request, response) {
+
+    /*  #swagger.tags = ['Evento x Organizador']
+    #swagger.summary = 'Buscar vínculo evento-organizador por ID'
+    #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
+    #swagger.responses[200] = { description: 'Vínculo encontrado' }
+    #swagger.responses[404] = { description: 'Não encontrado' } */
     let ideventoOrganizador = request.params.id
 
     let eventoOrganizador = await controllereventoOrganizador.buscarEventoOrganizadorId(ideventoOrganizador)
     response.status(eventoOrganizador.status_code)
-    response.json(eventoOrganizador)  
+    response.json(eventoOrganizador)
 
 
 })
@@ -42,7 +50,11 @@ router.get('/:id', cors(), async function (request, response){
 
 //inserir eventoOrganizador
 router.post('/', cors(), bodyParserJson, async function (request, response) {
-
+    /*  #swagger.tags = ['Evento x Organizador']
+    #swagger.summary = 'Criar vínculo evento-organizador'
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/EventoOrganizador' } }
+    #swagger.responses[201] = { description: 'Vínculo criado' }
+    #swagger.responses[415] = { description: 'Content-Type deve ser application/json' } */
 
     let dadosBody = request.body
     let contentType = request.headers['content-type']
@@ -54,9 +66,15 @@ router.post('/', cors(), bodyParserJson, async function (request, response) {
 })
 
 
-router.put('/:id', cors(), bodyParserJson, async function(request, response) {
+router.put('/:id', cors(), bodyParserJson, async function (request, response) {
+
+    /*  #swagger.tags = ['Evento x Organizador']
+    #swagger.summary = 'Atualizar vínculo evento-organizador'
+    #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/EventoOrganizador' } }
+    #swagger.responses[200] = { description: 'Atualizado' } */
     let dadosBody = request.body
-    
+
     let ideventoOrganizador = request.params.id
 
     let contentType = request.headers['content-type']
@@ -66,7 +84,12 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response) {
     response.json(eventoOrganizador)
 })
 
-router.delete('/:id', cors(), async function(request, response) {
+router.delete('/:id', cors(), async function (request, response) {
+    /*  #swagger.tags = ['Evento x Organizador']
+    #swagger.summary = 'Excluir vínculo evento-organizador'
+    #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer' }
+    #swagger.responses[200] = { description: 'Excluído' } */
+ 
     let ideventoOrganizador = request.params.id
 
     let eventoOrganizador = await controllereventoOrganizador.excluirEventoOrganizador(ideventoOrganizador)

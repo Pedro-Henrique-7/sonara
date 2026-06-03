@@ -4,6 +4,8 @@
  * Autor: Davi de Almeida Santos
  * Versão: 1.0
  **********************************************************************************************/
+const setupSwagger = require('./swagger/swagger')
+
 
 require('dotenv').config()
 
@@ -21,7 +23,7 @@ const storage = multer.diskStorage({
 const PORT = process.env.PORT || 8080
 
 const app = express()
-
+setupSwagger(app)
 // Middlewares globais
 app.use(cors())
 app.use(express.json())

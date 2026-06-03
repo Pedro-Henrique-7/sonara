@@ -1,0 +1,4309 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sonara API",
+    "description": "\nAPI do projeto **Sonara** — plataforma de conexão entre artistas e organizadores de eventos.\n\n## Autenticação\nAlgumas rotas exigem **Bearer Token** (JWT). Faça login em `POST /v1/sonara/usuario/login` e use o token retornado no header:\n`Authorization: Bearer <token>`\n\n## Fluxo principal\n1. Cadastre um usuário (artista ou organizador)\n2. Faça login para obter o token\n3. Crie eventos (organizador) ou candidate-se a eventos (artista)\n4. Gerencie candidaturas, contra-propostas e convites\n        ",
+    "version": "1.0.10",
+    "contact": {
+      "name": "Davi de Almeida Santos"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Usuário",
+      "description": "Cadastro, login, perfil e foto de usuários"
+    },
+    {
+      "name": "Artista",
+      "description": "Gerenciamento de artistas"
+    },
+    {
+      "name": "Organizador",
+      "description": "Gerenciamento de organizadores"
+    },
+    {
+      "name": "Evento",
+      "description": "Criação e gerenciamento de eventos"
+    },
+    {
+      "name": "Evento x Artista",
+      "description": "Candidaturas, aprovações, convites e negociação de cachê"
+    },
+    {
+      "name": "Evento x Organizador",
+      "description": "Vínculo entre eventos e organizadores"
+    },
+    {
+      "name": "Evento Status",
+      "description": "Histórico de status dos eventos"
+    },
+    {
+      "name": "Evento Artista Status",
+      "description": "Histórico de status do artista no evento"
+    },
+    {
+      "name": "Avaliacao Artista",
+      "description": "Avaliações de artistas por usuários"
+    },
+    {
+      "name": "Avaliacao Evento",
+      "description": "Avaliações de eventos por usuários"
+    },
+    {
+      "name": "Foto",
+      "description": "Upload e gerenciamento de fotos de eventos"
+    },
+    {
+      "name": "Endereco",
+      "description": "Endereços de usuários"
+    },
+    {
+      "name": "Endereco Evento",
+      "description": "Endereços de eventos"
+    },
+    {
+      "name": "Genero",
+      "description": "Gêneros (masculino/feminino/etc)"
+    },
+    {
+      "name": "Genero Musical",
+      "description": "Estilos musicais cadastrados"
+    },
+    {
+      "name": "Artista Genero Musical",
+      "description": "Relação entre artistas e gêneros musicais"
+    },
+    {
+      "name": "Nacionalidade",
+      "description": "Nacionalidades disponíveis"
+    },
+    {
+      "name": "Status",
+      "description": "Status disponíveis no sistema"
+    },
+    {
+      "name": "Redes Sociais",
+      "description": "Links de redes sociais dos usuários"
+    },
+    {
+      "name": "Tipo Redes Sociais",
+      "description": "Tipos de redes sociais (Instagram, TikTok...)"
+    },
+    {
+      "name": "Recuperacao Senha",
+      "description": "Tokens de recuperação de senha"
+    },
+    {
+      "name": "Views",
+      "description": "Endpoints de views consolidadas"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Insira: Bearer <token>"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/sonara/genero/": {
+      "get": {
+        "tags": [
+          "Genero"
+        ],
+        "summary": "Listar gêneros",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Genero"
+        ],
+        "summary": "Cadastrar gênero",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Genero"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Gênero criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/genero/{id}": {
+      "get": {
+        "tags": [
+          "Genero"
+        ],
+        "summary": "Buscar gênero por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gênero encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Genero"
+        ],
+        "summary": "Atualizar gênero",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Genero"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gênero atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Genero"
+        ],
+        "summary": "Excluir gênero",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gênero excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/usuario/login": {
+      "post": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Login de usuário",
+        "description": "Autentica o usuário e retorna um Bearer Token JWT.",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UsuarioLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso — retorna token JWT"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "E-mail ou senha ausentes"
+          },
+          "401": {
+            "description": "Credenciais inválidas"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/usuario/": {
+      "post": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Cadastrar novo usuário",
+        "description": "Cria um usuário do tipo artista, organizador ou user. Envie os dados como multipart/form-data com o campo \"dados\" contendo um JSON e o campo \"foto\" com a imagem (opcional).",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "dados",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "description": "JSON stringificado com os dados do usuário (ver UsuarioCadastro)"
+          },
+          {
+            "name": "foto",
+            "in": "formData",
+            "type": "file",
+            "description": "Foto do usuário (JPG, PNG ou WEBP, máx 5MB)"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dados": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "senha": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Usuário criado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Campos obrigatórios ausentes ou inválidos"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "500": {
+            "description": "Erro interno ao cadastrar"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Listar todos os usuários",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token ausente ou inválido"
+          },
+          "404": {
+            "description": "Nenhum usuário encontrado"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/sonara/usuario/{id}/foto": {
+      "patch": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Atualizar foto do usuário",
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "foto",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Nova foto (JPG, PNG ou WEBP)"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "senha": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foto atualizada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Nenhuma imagem enviada"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          }
+        }
+      }
+    },
+    "/v1/sonara/usuario/{id}": {
+      "put": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Atualizar usuário",
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "dados",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "description": "JSON com os dados a atualizar"
+          },
+          {
+            "name": "foto",
+            "in": "formData",
+            "type": "file",
+            "description": "Nova foto (opcional)"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "dados": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "senha": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Excluir usuário",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "senha": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário excluído com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token ausente ou inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Buscar usuário por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token ausente ou inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/sonara/usuario/organizador/{id}": {
+      "get": {
+        "tags": [
+          "Usuário"
+        ],
+        "summary": "Buscar organizador pelo ID do usuário",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organizador encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Organizador não encontrado"
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          }
+        }
+      }
+    },
+    "/v1/sonara/endereco/": {
+      "get": {
+        "tags": [
+          "Endereco"
+        ],
+        "summary": "Listar todos os endereços",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Endereco"
+        ],
+        "summary": "Cadastrar endereço",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Endereco"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Endereço criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/endereco/{id}": {
+      "get": {
+        "tags": [
+          "Endereco"
+        ],
+        "summary": "Buscar endereço por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Endereço encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Endereco"
+        ],
+        "summary": "Atualizar endereço",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Endereco"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Endereço atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Endereco"
+        ],
+        "summary": "Excluir endereço",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Endereço excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/artista/": {
+      "get": {
+        "tags": [
+          "Artista"
+        ],
+        "summary": "Listar todos os artistas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Nenhum artista encontrado"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Artista"
+        ],
+        "summary": "Cadastrar artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Artista"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Artista criado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Campos inválidos"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/artista/{id}": {
+      "get": {
+        "tags": [
+          "Artista"
+        ],
+        "summary": "Buscar artista por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artista encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Artista não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Artista"
+        ],
+        "summary": "Atualizar artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do artista"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Artista"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artista atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Artista não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Artista"
+        ],
+        "summary": "Excluir artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artista excluído"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Artista não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/organizador/": {
+      "get": {
+        "tags": [
+          "Organizador"
+        ],
+        "summary": "Listar todos os organizadores",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Nenhum organizador encontrado"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Organizador"
+        ],
+        "summary": "Cadastrar organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Organizador"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Organizador criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/organizador/{id}": {
+      "get": {
+        "tags": [
+          "Organizador"
+        ],
+        "summary": "Buscar organizador por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do organizador"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organizador encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Organizador não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Organizador"
+        ],
+        "summary": "Atualizar organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do organizador"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Organizador"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organizador atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Organizador não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Organizador"
+        ],
+        "summary": "Excluir organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do organizador"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organizador excluído"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Organizador não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/generoMusical/": {
+      "get": {
+        "tags": [
+          "Genero Musical"
+        ],
+        "summary": "Listar gêneros musicais",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Genero Musical"
+        ],
+        "summary": "Cadastrar gênero musical",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GeneroMusical"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Gênero musical criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/generoMusical/{id}": {
+      "get": {
+        "tags": [
+          "Genero Musical"
+        ],
+        "summary": "Buscar gênero musical por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gênero musical encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Genero Musical"
+        ],
+        "summary": "Atualizar gênero musical",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GeneroMusical"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Genero Musical"
+        ],
+        "summary": "Excluir gênero musical",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/nacionalidade/": {
+      "get": {
+        "tags": [
+          "Nacionalidade"
+        ],
+        "summary": "Listar nacionalidades",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Nacionalidade"
+        ],
+        "summary": "Cadastrar nacionalidade",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Nacionalidade"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Nacionalidade criada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/nacionalidade/{id}": {
+      "get": {
+        "tags": [
+          "Nacionalidade"
+        ],
+        "summary": "Buscar nacionalidade por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Nacionalidade"
+        ],
+        "summary": "Atualizar nacionalidade",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Nacionalidade"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Nacionalidade"
+        ],
+        "summary": "Excluir nacionalidade",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluída"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/status/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/status/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/redesSociais/": {
+      "get": {
+        "tags": [
+          "Redes Sociais"
+        ],
+        "summary": "Listar redes sociais",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Redes Sociais"
+        ],
+        "summary": "Cadastrar rede social",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RedesSociais"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Rede social criada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/redesSociais/{id}": {
+      "get": {
+        "tags": [
+          "Redes Sociais"
+        ],
+        "summary": "Buscar rede social por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Redes Sociais"
+        ],
+        "summary": "Atualizar rede social",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RedesSociais"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Redes Sociais"
+        ],
+        "summary": "Excluir rede social",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluída"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/tipoRedesSociais/": {
+      "get": {
+        "tags": [
+          "Tipo Redes Sociais"
+        ],
+        "summary": "Listar tipos de redes sociais",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tipo Redes Sociais"
+        ],
+        "summary": "Cadastrar tipo de rede social",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TipoRedesSociais"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Tipo criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/tipoRedesSociais/{id}": {
+      "get": {
+        "tags": [
+          "Tipo Redes Sociais"
+        ],
+        "summary": "Buscar tipo de rede social por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tipo Redes Sociais"
+        ],
+        "summary": "Atualizar tipo de rede social",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TipoRedesSociais"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tipo Redes Sociais"
+        ],
+        "summary": "Excluir tipo de rede social",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/foto/": {
+      "get": {
+        "tags": [
+          "Foto"
+        ],
+        "summary": "Listar todas as fotos",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Foto"
+        ],
+        "summary": "Upload de foto para evento",
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "foto",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Imagem (JPG, PNG ou JPEG, máx 5MB)"
+          },
+          {
+            "name": "evento_id",
+            "in": "formData",
+            "type": "integer",
+            "required": true,
+            "description": "ID do evento"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Foto enviada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Arquivo ou evento_id ausente/inválido"
+          },
+          "502": {
+            "description": "Erro ao enviar para o Azure"
+          }
+        }
+      }
+    },
+    "/v1/sonara/foto/{id}": {
+      "get": {
+        "tags": [
+          "Foto"
+        ],
+        "summary": "Buscar foto por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foto encontrada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Foto não encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Foto"
+        ],
+        "summary": "Atualizar foto de evento",
+        "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "foto",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description": "Nova imagem"
+          },
+          {
+            "name": "evento_id",
+            "in": "formData",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foto atualizada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Foto não encontrada"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Foto"
+        ],
+        "summary": "Excluir foto",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foto excluída"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Foto não encontrada"
+          }
+        }
+      }
+    },
+    "/v1/sonara/evento/": {
+      "get": {
+        "tags": [
+          "Evento"
+        ],
+        "summary": "Listar todos os eventos",
+        "description": "Retorna todos os eventos cadastrados com fotos, endereço e organizador.",
+        "responses": {
+          "200": {
+            "description": "Lista de eventos retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Nenhum evento encontrado"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evento"
+        ],
+        "summary": "Criar evento",
+        "description": "Cria evento com endereço e vínculo ao organizador.",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoCadastro"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Evento criado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Campos obrigatórios ausentes ou inválidos"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/evento/{id}": {
+      "get": {
+        "tags": [
+          "Evento"
+        ],
+        "summary": "Buscar evento por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do evento"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evento encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Evento não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Evento"
+        ],
+        "summary": "Atualizar evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do evento"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoCadastro"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evento atualizado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Evento não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Evento"
+        ],
+        "summary": "Excluir evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do evento"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evento excluído com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Evento não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/recuperacao/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/recuperacao/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/enderecoEvento/": {
+      "get": {
+        "tags": [
+          "Endereco Evento"
+        ],
+        "summary": "Listar endereços de eventos",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Endereco Evento"
+        ],
+        "summary": "Cadastrar endereço de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EnderecoEvento"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Endereço criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/enderecoEvento/{id}": {
+      "get": {
+        "tags": [
+          "Endereco Evento"
+        ],
+        "summary": "Buscar endereço de evento por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Endereço encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Endereco Evento"
+        ],
+        "summary": "Atualizar endereço de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EnderecoEvento"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Endereco Evento"
+        ],
+        "summary": "Excluir endereço de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/avaliacaoArtista/": {
+      "get": {
+        "tags": [
+          "Avaliacao Artista"
+        ],
+        "summary": "Listar avaliações de artistas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Avaliacao Artista"
+        ],
+        "summary": "Criar avaliação de artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AvaliacaoArtista"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Avaliação criada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/avaliacaoArtista/{id}": {
+      "get": {
+        "tags": [
+          "Avaliacao Artista"
+        ],
+        "summary": "Buscar avaliação de artista por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Avaliacao Artista"
+        ],
+        "summary": "Atualizar avaliação de artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AvaliacaoArtista"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avaliação atualizada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Avaliacao Artista"
+        ],
+        "summary": "Excluir avaliação de artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avaliação excluída"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/avaliacaoEvento/": {
+      "get": {
+        "tags": [
+          "Avaliacao Evento"
+        ],
+        "summary": "Listar avaliações de eventos",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Avaliacao Evento"
+        ],
+        "summary": "Criar avaliação de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AvaliacaoEvento"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Avaliação criada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/avaliacaoEvento/{id}": {
+      "get": {
+        "tags": [
+          "Avaliacao Evento"
+        ],
+        "summary": "Buscar avaliação de evento por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avaliação encontrada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Avaliacao Evento"
+        ],
+        "summary": "Atualizar avaliação de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AvaliacaoEvento"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avaliação atualizada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Avaliacao Evento"
+        ],
+        "summary": "Excluir avaliação de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avaliação excluída"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoOrganizador/": {
+      "get": {
+        "tags": [
+          "Evento x Organizador"
+        ],
+        "summary": "Listar todos os vínculos evento-organizador",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evento x Organizador"
+        ],
+        "summary": "Criar vínculo evento-organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoOrganizador"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Vínculo criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoOrganizador/{id}": {
+      "get": {
+        "tags": [
+          "Evento x Organizador"
+        ],
+        "summary": "Buscar vínculo evento-organizador por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vínculo encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Evento x Organizador"
+        ],
+        "summary": "Atualizar vínculo evento-organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoOrganizador"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Evento x Organizador"
+        ],
+        "summary": "Excluir vínculo evento-organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoStatus/": {
+      "get": {
+        "tags": [
+          "Evento Status"
+        ],
+        "summary": "Listar histórico de status dos eventos",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evento Status"
+        ],
+        "summary": "Registrar status de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Status registrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoStatus/{id}": {
+      "get": {
+        "tags": [
+          "Evento Status"
+        ],
+        "summary": "Buscar status de evento por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Evento Status"
+        ],
+        "summary": "Atualizar status de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Evento Status"
+        ],
+        "summary": "Excluir status de evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/artistaGeneroMusical/": {
+      "get": {
+        "tags": [
+          "Artista Genero Musical"
+        ],
+        "summary": "Listar relações artista-gênero musical",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Artista Genero Musical"
+        ],
+        "summary": "Vincular artista a gênero musical",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArtistaGeneroMusical"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Vínculo criado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/artistaGeneroMusical/{id}": {
+      "get": {
+        "tags": [
+          "Artista Genero Musical"
+        ],
+        "summary": "Buscar relação artista-gênero por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Relação encontrada"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Artista Genero Musical"
+        ],
+        "summary": "Atualizar vínculo artista-gênero musical",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArtistaGeneroMusical"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Artista Genero Musical"
+        ],
+        "summary": "Excluir vínculo artista-gênero musical",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/listar_por_evento/{idEvento}": {
+      "get": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Listar inscrições por evento",
+        "description": "Retorna todos os artistas inscritos em um evento específico. Usado pelo organizador.",
+        "parameters": [
+          {
+            "name": "idEvento",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do evento"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de inscrições retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Nenhuma inscrição encontrada para este evento"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/minhas_candidaturas/{artistaId}": {
+      "get": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Listar candidaturas do artista",
+        "description": "Retorna todas as candidaturas de um artista. Usado pelo próprio artista.",
+        "parameters": [
+          {
+            "name": "artistaId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de candidaturas retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Nenhuma candidatura encontrada"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/aceitarConvite/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Artista aceita convite do organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Convite aceito com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/recusarConvite/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Artista recusa convite do organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Convite recusado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/": {
+      "get": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Listar todos os vínculos evento-artista",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Nenhum vínculo encontrado"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Criar vínculo evento-artista manualmente",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoArtista"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Vínculo criado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Campos inválidos"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/candidatar": {
+      "post": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Artista se candidata a um evento",
+        "description": "O artista se inscreve em um evento informando o cachê esperado, motivação e descrição.",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Candidatura"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Candidatura realizada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Campos obrigatórios ausentes ou inválidos"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/aprovar/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Organizador aprova artista no evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artista aprovado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/reprovar/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Organizador reprova artista no evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artista reprovado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/contraProposta/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Organizador envia contra proposta de cachê ao artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContraProposta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contra proposta enviada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/aceitarContraProposta/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Artista aceita contra proposta do organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contra proposta aceita com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/recusarContraProposta/{id}": {
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Artista recusa contra proposta do organizador",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contra proposta recusada com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtista/{id}": {
+      "get": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Buscar vínculo evento-artista por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vínculo encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "ID inválido"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Atualizar vínculo evento-artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoArtista"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vínculo atualizado com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Evento x Artista"
+        ],
+        "summary": "Excluir vínculo evento-artista",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do vínculo evento-artista"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vínculo excluído com sucesso"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Vínculo não encontrado"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtistaStatus/": {
+      "get": {
+        "tags": [
+          "Evento Artista Status"
+        ],
+        "summary": "Listar histórico de status do artista no evento",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista retornada"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Evento Artista Status"
+        ],
+        "summary": "Registrar status do artista no evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoArtistaStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Status registrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "415": {
+            "description": "Content-Type deve ser application/json"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventoArtistaStatus/{id}": {
+      "get": {
+        "tags": [
+          "Evento Artista Status"
+        ],
+        "summary": "Buscar status artista-evento por ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Encontrado"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Não encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Evento Artista Status"
+        ],
+        "summary": "Atualizar status do artista no evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "content-type",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/EventoArtistaStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Evento Artista Status"
+        ],
+        "summary": "Excluir status do artista no evento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Excluído"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/usuarioPerfil/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/v1/sonara/eventosDoOrganizador/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UsuarioCadastro": {
+      "type": "object",
+      "properties": {
+        "tipo_usuario": {
+          "type": "string",
+          "example": "artista"
+        },
+        "nome": {
+          "type": "string",
+          "example": "João Silva"
+        },
+        "email": {
+          "type": "string",
+          "example": "joao@email.com"
+        },
+        "senha": {
+          "type": "string",
+          "example": "Senha@123"
+        },
+        "cpf": {
+          "type": "string",
+          "example": "123.456.789-00"
+        },
+        "data_nasc": {
+          "type": "string",
+          "example": "1995-06-15"
+        },
+        "nacionalidade_id": {
+          "type": "number",
+          "example": 1
+        },
+        "genero_id": {
+          "type": "number",
+          "example": 1
+        },
+        "telefone": {
+          "type": "string",
+          "example": "(11) 99999-9999"
+        },
+        "cep": {
+          "type": "string",
+          "example": "01310-100"
+        },
+        "cidade": {
+          "type": "string",
+          "example": "São Paulo"
+        },
+        "estado": {
+          "type": "string",
+          "example": "SP"
+        },
+        "logradouro": {
+          "type": "string",
+          "example": "Av. Paulista"
+        },
+        "numero": {
+          "type": "string",
+          "example": "1000"
+        },
+        "bairro": {
+          "type": "string",
+          "example": "Bela Vista"
+        },
+        "complemento": {
+          "type": "string",
+          "example": "Apto 10"
+        },
+        "nome_artistico": {
+          "type": "string",
+          "example": "DJ João"
+        },
+        "descricao": {
+          "type": "string",
+          "example": "DJ de música eletrônica"
+        },
+        "generos_musicais": {
+          "type": "array",
+          "example": [
+            1,
+            2
+          ],
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "tipo_usuario",
+        "nome",
+        "email",
+        "senha",
+        "cpf",
+        "data_nasc",
+        "nacionalidade_id",
+        "genero_id",
+        "telefone",
+        "cep",
+        "cidade",
+        "estado",
+        "logradouro",
+        "numero"
+      ]
+    },
+    "UsuarioLogin": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "joao@email.com"
+        },
+        "senha": {
+          "type": "string",
+          "example": "Senha@123"
+        }
+      },
+      "required": [
+        "email",
+        "senha"
+      ]
+    },
+    "EventoCadastro": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Festival Sonara 2026"
+        },
+        "descricao": {
+          "type": "string",
+          "example": "Festival de música ao ar livre"
+        },
+        "local": {
+          "type": "string",
+          "example": "Parque Ibirapuera"
+        },
+        "data": {
+          "type": "string",
+          "example": "2026-08-15"
+        },
+        "hora_inicio": {
+          "type": "string",
+          "example": "18:00"
+        },
+        "hora_fim": {
+          "type": "string",
+          "example": "23:00"
+        },
+        "organizador_id": {
+          "type": "number",
+          "example": 1
+        },
+        "cep": {
+          "type": "string",
+          "example": "04094-050"
+        },
+        "cidade": {
+          "type": "string",
+          "example": "São Paulo"
+        },
+        "estado": {
+          "type": "string",
+          "example": "SP"
+        },
+        "logradouro": {
+          "type": "string",
+          "example": "Av. Pedro Álvares Cabral"
+        },
+        "numero": {
+          "type": "string",
+          "example": "S/N"
+        },
+        "bairro": {
+          "type": "string",
+          "example": "Vila Mariana"
+        },
+        "complemento": {
+          "type": "string",
+          "example": "Portão 3"
+        }
+      },
+      "required": [
+        "nome",
+        "descricao",
+        "local",
+        "data",
+        "hora_inicio",
+        "hora_fim",
+        "organizador_id",
+        "cep",
+        "cidade",
+        "estado",
+        "logradouro",
+        "numero",
+        "bairro"
+      ]
+    },
+    "AvaliacaoArtista": {
+      "type": "object",
+      "properties": {
+        "numero_estrelas": {
+          "type": "number",
+          "example": 5
+        },
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        },
+        "artista_id": {
+          "type": "number",
+          "example": 1
+        },
+        "data_avaliacao": {
+          "type": "string",
+          "example": "2026-06-01 20:00:00"
+        }
+      },
+      "required": [
+        "numero_estrelas",
+        "usuario_id",
+        "artista_id",
+        "data_avaliacao"
+      ]
+    },
+    "AvaliacaoEvento": {
+      "type": "object",
+      "properties": {
+        "numero_estrelas": {
+          "type": "number",
+          "example": 4
+        },
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        },
+        "evento_id": {
+          "type": "number",
+          "example": 1
+        },
+        "data_avaliacao": {
+          "type": "string",
+          "example": "2026-06-01 22:00:00"
+        }
+      },
+      "required": [
+        "numero_estrelas",
+        "usuario_id",
+        "evento_id",
+        "data_avaliacao"
+      ]
+    },
+    "Genero": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Masculino"
+        }
+      },
+      "required": [
+        "nome"
+      ]
+    },
+    "GeneroMusical": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Rock"
+        }
+      },
+      "required": [
+        "nome"
+      ]
+    },
+    "Nacionalidade": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Brasileira"
+        }
+      },
+      "required": [
+        "nome"
+      ]
+    },
+    "Status": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Ativo"
+        }
+      },
+      "required": [
+        "nome"
+      ]
+    },
+    "RedesSociais": {
+      "type": "object",
+      "properties": {
+        "link": {
+          "type": "string",
+          "example": "https://instagram.com/joaosilva"
+        },
+        "tipo_id": {
+          "type": "number",
+          "example": 1
+        },
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "link",
+        "tipo_id",
+        "usuario_id"
+      ]
+    },
+    "TipoRedesSociais": {
+      "type": "object",
+      "properties": {
+        "nome": {
+          "type": "string",
+          "example": "Instagram"
+        }
+      },
+      "required": [
+        "nome"
+      ]
+    },
+    "RecuperacaoSenha": {
+      "type": "object",
+      "properties": {
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        },
+        "codigo": {
+          "type": "string",
+          "example": "ABC123"
+        },
+        "expira_em": {
+          "type": "string",
+          "example": "2026-06-01 23:59:59"
+        },
+        "usado": {
+          "type": "number",
+          "example": 0
+        },
+        "tentativas": {
+          "type": "number",
+          "example": 0
+        },
+        "criado_em": {
+          "type": "string",
+          "example": "2026-06-01 20:00:00"
+        }
+      },
+      "required": [
+        "usuario_id",
+        "codigo",
+        "expira_em",
+        "usado",
+        "tentativas",
+        "criado_em"
+      ]
+    },
+    "ArtistaGeneroMusical": {
+      "type": "object",
+      "properties": {
+        "genero_musical_id": {
+          "type": "number",
+          "example": 1
+        },
+        "artista_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "genero_musical_id",
+        "artista_id"
+      ]
+    },
+    "Endereco": {
+      "type": "object",
+      "properties": {
+        "cep": {
+          "type": "string",
+          "example": "01310-100"
+        },
+        "cidade": {
+          "type": "string",
+          "example": "São Paulo"
+        },
+        "estado": {
+          "type": "string",
+          "example": "SP"
+        },
+        "logradouro": {
+          "type": "string",
+          "example": "Av. Paulista"
+        },
+        "numero": {
+          "type": "string",
+          "example": "1000"
+        },
+        "bairro": {
+          "type": "string",
+          "example": "Bela Vista"
+        },
+        "complemento": {
+          "type": "string",
+          "example": "Apto 10"
+        }
+      },
+      "required": [
+        "cep",
+        "cidade",
+        "estado",
+        "logradouro",
+        "numero"
+      ]
+    },
+    "Artista": {
+      "type": "object",
+      "properties": {
+        "nome_artistico": {
+          "type": "string",
+          "example": "DJ João"
+        },
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        },
+        "descricao": {
+          "type": "string",
+          "example": "DJ com 5 anos de experiência"
+        }
+      },
+      "required": [
+        "nome_artistico",
+        "usuario_id",
+        "descricao"
+      ]
+    },
+    "Organizador": {
+      "type": "object",
+      "properties": {
+        "usuario_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "usuario_id"
+      ]
+    },
+    "EventoArtista": {
+      "type": "object",
+      "properties": {
+        "artista_id": {
+          "type": "number",
+          "example": 1
+        },
+        "evento_id": {
+          "type": "number",
+          "example": 1
+        },
+        "cache_esperado": {
+          "type": "number",
+          "example": 1500
+        },
+        "cache_ofertado": {
+          "type": "number",
+          "example": 1200
+        },
+        "cache_final": {
+          "type": "number",
+          "example": 1300
+        },
+        "contra_proposta": {
+          "type": "number",
+          "example": 1100
+        },
+        "sobre_artista": {
+          "type": "string",
+          "example": "Artista experiente"
+        },
+        "motivo_inscricao": {
+          "type": "string",
+          "example": "Quero participar"
+        }
+      },
+      "required": [
+        "artista_id",
+        "evento_id",
+        "cache_esperado",
+        "cache_ofertado",
+        "cache_final"
+      ]
+    },
+    "EventoOrganizador": {
+      "type": "object",
+      "properties": {
+        "evento_id": {
+          "type": "number",
+          "example": 1
+        },
+        "organizador_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "evento_id",
+        "organizador_id"
+      ]
+    },
+    "EventoStatus": {
+      "type": "object",
+      "properties": {
+        "evento_id": {
+          "type": "number",
+          "example": 1
+        },
+        "status_id": {
+          "type": "number",
+          "example": 1
+        },
+        "data_hora": {
+          "type": "string",
+          "example": "2026-06-01 18:00:00"
+        }
+      },
+      "required": [
+        "evento_id",
+        "status_id",
+        "data_hora"
+      ]
+    },
+    "EventoArtistaStatus": {
+      "type": "object",
+      "properties": {
+        "evento_artista_id": {
+          "type": "number",
+          "example": 1
+        },
+        "status_id": {
+          "type": "number",
+          "example": 1
+        },
+        "data_hora": {
+          "type": "string",
+          "example": "2026-06-01 18:00:00"
+        }
+      },
+      "required": [
+        "evento_artista_id",
+        "status_id",
+        "data_hora"
+      ]
+    },
+    "EnderecoEvento": {
+      "type": "object",
+      "properties": {
+        "cep": {
+          "type": "string",
+          "example": "04094-050"
+        },
+        "cidade": {
+          "type": "string",
+          "example": "São Paulo"
+        },
+        "estado": {
+          "type": "string",
+          "example": "SP"
+        },
+        "logradouro": {
+          "type": "string",
+          "example": "Av. Pedro Álvares Cabral"
+        },
+        "numero": {
+          "type": "string",
+          "example": "S/N"
+        },
+        "complemento": {
+          "type": "string",
+          "example": "Portão 3"
+        },
+        "bairro": {
+          "type": "string",
+          "example": "Vila Mariana"
+        },
+        "evento_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "cep",
+        "cidade",
+        "estado",
+        "logradouro",
+        "numero",
+        "complemento",
+        "bairro",
+        "evento_id"
+      ]
+    },
+    "Foto": {
+      "type": "object",
+      "properties": {
+        "evento_id": {
+          "type": "number",
+          "example": 1
+        }
+      },
+      "required": [
+        "evento_id"
+      ]
+    }
+  }
+}

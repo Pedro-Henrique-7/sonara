@@ -20,6 +20,11 @@ router.use((request, response, next ) => {
 // retornar todos os Organizadors
 router.get('/', cors(), async function (request, response){
 
+    /*  #swagger.tags = ['Organizador']
+    #swagger.summary = 'Listar todos os organizadores'
+    #swagger.responses[200] = { description: 'Lista retornada com sucesso' }
+    #swagger.responses[404] = { description: 'Nenhum organizador encontrado' } */
+
   let organizador  = await controllerOrganizador.listarOrganizador()
     
     response.status(organizador.status_code)
@@ -30,6 +35,13 @@ module.exports = router
 
 // pegar Organizador por id
 router.get('/:id', cors(), async function (request, response){
+
+    /*  #swagger.tags = ['Organizador']
+    #swagger.summary = 'Buscar organizador por ID'
+    #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer', description: 'ID do organizador' }
+    #swagger.responses[200] = { description: 'Organizador encontrado' }
+    #swagger.responses[404] = { description: 'Organizador não encontrado' } */
+
     let idOrganizador = request.params.id
 
     let organizador = await controllerOrganizador.buscarOrganizadorId(idOrganizador)
@@ -41,7 +53,11 @@ router.get('/:id', cors(), async function (request, response){
 //inserir Organizador
 router.post('/', cors(), bodyParserJson, async function (request, response) {
 
-
+    /*  #swagger.tags = ['Organizador']
+    #swagger.summary = 'Cadastrar organizador'
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/Organizador' } }
+    #swagger.responses[201] = { description: 'Organizador criado' }
+    #swagger.responses[415] = { description: 'Content-Type deve ser application/json' } */
     let dadosBody = request.body
     let contentType = request.headers['content-type']
 
@@ -53,6 +69,13 @@ router.post('/', cors(), bodyParserJson, async function (request, response) {
 
 
 router.put('/:id', cors(), bodyParserJson, async function(request, response) {
+
+    /*  #swagger.tags = ['Organizador']
+    #swagger.summary = 'Atualizar organizador'
+    #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer', description: 'ID do organizador' }
+    #swagger.parameters['body'] = { in: 'body', required: true, schema: { $ref: '#/definitions/Organizador' } }
+    #swagger.responses[200] = { description: 'Organizador atualizado' }
+    #swagger.responses[404] = { description: 'Organizador não encontrado' } */
     let dadosBody = request.body
     
     let idOrganizador = request.params.id
@@ -65,6 +88,11 @@ router.put('/:id', cors(), bodyParserJson, async function(request, response) {
 })
 
 router.delete('/:id', cors(), async function(request, response) {
+    /*  #swagger.tags = ['Organizador']
+    #swagger.summary = 'Excluir organizador'
+    #swagger.parameters['id'] = { in: 'path', required: true, type: 'integer', description: 'ID do organizador' }
+    #swagger.responses[200] = { description: 'Organizador excluído' }
+    #swagger.responses[404] = { description: 'Organizador não encontrado' } */
     let idOrganizador = request.params.id
 
     let organizador = await controllerOrganizador.excluirOrganizador(idOrganizador)
