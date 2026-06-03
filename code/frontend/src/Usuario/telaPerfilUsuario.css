@@ -1,0 +1,371 @@
+/* =========================================================
+   RESET
+========================================================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   BASE
+========================================================= */
+.pu-wrapper {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 1.5rem;
+
+  font-family: "Poppins", sans-serif;
+
+  color: var(--text-color);
+}
+
+/* =========================================================
+   CONTAINER PRINCIPAL
+========================================================= */
+.pu-central {
+  flex: 1;
+
+  width: 100%;
+  max-width: 1400px;
+  min-height: 85vh;
+
+  margin: 0 auto;
+  padding: 2rem;
+
+  display: flex;
+  gap: 2rem;
+
+  border-radius: 24px;
+
+  background-color: var(--bg-box);
+
+  overflow: hidden;
+
+  border: 1px solid var(--border-main);
+
+  box-shadow: 0 4px 12px var(--shadow-main);
+}
+
+/* =========================================================
+   COLUNAS
+========================================================= */
+.pu-col-left {
+  flex: 0 0 280px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pu-col-right {
+  flex: 1;
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* =========================================================
+   FOTO PERFIL
+========================================================= */
+.pu-foto-wrapper {
+  position: relative;
+
+  width: 100%;
+  max-width: 220px;
+
+  aspect-ratio: 1 / 1;
+
+  cursor: pointer;
+}
+
+.pu-foto-circle {
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+
+  background-color: var(--bg-main);
+
+  border: 3px solid var(--border-main);
+
+  box-shadow: 0 4px 12px var(--shadow-main);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.pu-foto-circle:hover {
+  transform: scale(1.02);
+}
+
+.pu-foto-circle img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  transition: transform 0.3s ease;
+}
+
+.pu-foto-circle img:hover {
+  transform: scale(1.03);
+}
+
+/* =========================================================
+   BOTÃO FOTO
+========================================================= */
+.pu-edit-btn {
+  position: absolute;
+
+  right: -5px;
+  bottom: 8px;
+
+  z-index: 2;
+
+  height: 42px;
+  min-width: 90px;
+
+  padding: 0 1rem;
+
+  border: none;
+  border-radius: 999px;
+
+  background-color: var(--btn-color);
+
+  color: #fff;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px var(--shadow-main);
+
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    filter 0.2s ease;
+  margin-bottom: -4rem;
+}
+
+.pu-edit-btn:hover {
+  transform: scale(1.05);
+
+  filter: brightness(1.08);
+}
+
+.pu-edit-btn:active {
+  transform: scale(0.96);
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+.pu-dados-card {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  padding: 2rem;
+
+  border-radius: 20px;
+
+  background: var(--bg-main);
+}
+
+/* =========================================================
+   TITULOS
+========================================================= */
+.pu-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+
+  color: #fff;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+.pu-dados-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+  gap: 1rem;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+.pu-input {
+  width: 100%;
+  height: 52px;
+
+  padding: 0 1rem;
+
+  border: 2px solid transparent;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #000000;
+
+  font-size: 0.95rem;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.pu-input:focus {
+  border-color: #ff0000;
+}
+
+.pu-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pu-input option {
+  background: #5a2808;
+  color: #fff;
+}
+
+/* =========================================================
+   BOTÕES
+========================================================= */
+.pu-dados-actions {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+}
+
+.pu-btn {
+  min-width: 180px;
+  height: 50px;
+
+  padding: 0 1rem;
+
+  border: none;
+  border-radius: 12px;
+
+  color: #fff;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.pu-btn:hover {
+  filter: brightness(1.08);
+}
+
+.pu-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   BOTÕES INDIVIDUAIS
+========================================================= */
+.pu-btn-salvar {
+  background: #27ae60;
+}
+
+.pu-btn-cancelar {
+  background: #7f8c8d;
+}
+
+.pu-btn-sair {
+  background: #555;
+}
+
+.pu-btn-deletar {
+  background: #c0392b;
+}
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+@media (max-width: 900px) {
+  .pu-central {
+    flex-direction: column;
+  }
+
+  .pu-col-left,
+  .pu-col-right {
+    width: 100%;
+  }
+
+  .pu-col-left {
+    flex: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .pu-wrapper {
+    padding: 1rem;
+  }
+
+  .pu-central {
+    padding: 1.2rem;
+  }
+
+  .pu-dados-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pu-dados-actions {
+    flex-direction: column;
+  }
+
+  .pu-btn {
+    width: 100%;
+  }
+
+  .pu-foto-wrapper {
+    max-width: 170px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pu-dados-card {
+    padding: 1rem;
+  }
+
+  .pu-input {
+    height: 48px;
+    font-size: 0.9rem;
+  }
+
+  .pu-btn {
+    min-width: 100%;
+  }
+}

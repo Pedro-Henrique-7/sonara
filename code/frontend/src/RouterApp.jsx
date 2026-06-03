@@ -25,6 +25,7 @@ import EditarEvento from "./Casa_Show/sobreEventoCasaShow.jsx";
 import TelaUsuario from "./Usuario/telaUsuario.jsx";
 import SobreEventoUsuario from "./Usuario/sobreEventoUsuario.jsx";
 import MapaEvento from "./Usuario/telaMapa.jsx";
+import PerfilUsuario from "./Usuario/telaPerfilUsuario.jsx";
 
 export default function RouterApp() {
   return (
@@ -50,12 +51,19 @@ export default function RouterApp() {
         <Route path="/perfil-organizador" element={<TelaPerfilOrganizador />} />
         <Route path="/sobreEventoCasaShow" element={<SobreEventoCasaShow />} />
         <Route path="/editarEvento/:id" element={<EditarEvento />} />
-        <Route path="/evento/:idEvento/inscritos" element={<GerenciarInscritos />} />
+        <Route
+          path="/evento/:idEvento/inscritos"
+          element={<GerenciarInscritos />}
+        />
         {/* <Route path="/listaArtistas" element={<ListaArtistas />} /> */}
 
         <Route path="/telaDeUsuario" element={<TelaUsuario />} />
-        <Route path="/sobreEventoUsuario/:id" element={<SobreEventoUsuario />} />
+        <Route
+          path="/sobreEventoUsuario/:id"
+          element={<SobreEventoUsuario />}
+        />
         <Route path="/mapaDoEvento" element={<MapaEvento />} />
+        <Route path="/perfil-usuario" element={<PerfilUsuario />} />
       </Routes>
     </BrowserRouter>
   );

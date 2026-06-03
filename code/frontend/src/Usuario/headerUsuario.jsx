@@ -9,25 +9,47 @@ export default function Header() {
 
   function carregarUsuario() {
     const salvo = sessionStorage.getItem("usuario");
-    setUsuarioObj(salvo ? JSON.parse(salvo) : null);
+
+    if (salvo) {
+      const usuario = JSON.parse(salvo);
+      setUsuarioObj(usuario);
+    }
   }
 
   useEffect(() => {
     carregarUsuario();
-    // Atualiza o header quando PerfilArtista salvar os dados
+
     window.addEventListener("usuarioAtualizado", carregarUsuario);
-    return () =>
+
+    return () => {
       window.removeEventListener("usuarioAtualizado", carregarUsuario);
+    };
   }, []);
 
-  const fotoUrl = usuarioObj?.foto_url || fotoPerfil;
+  // PEGA A FOTO NO MESMO PADRÃO DO ARTISTA
+  const fotoUrl =
+    usuarioObj?.foto ||
+    usuarioObj?.foto_url ||
+    usuarioObj?.usuario?.foto ||
+    fotoPerfil;
+
   const tipoUsuario = usuarioObj?.tipo_usuario || "";
+
+  // PEGA O NOME EM QUALQUER ESTRUTURA
+  const nomeUsuario =
+    usuarioObj?.nome_artistico ||
+    usuarioObj?.usuario?.nome_artistico ||
+    usuarioObj?.nome ||
+    "Usuário";
 
   function rotaPerfil() {
     const tipo = tipoUsuario.toLowerCase();
+
     if (tipo === "artista") return "/perfil-artista";
+
     if (tipo === "organizador") return "/perfil-organizador";
-    return "/perfil";
+
+    return "/perfil-usuario";
   }
 
   return (
@@ -58,8 +80,9 @@ export default function Header() {
                 className="user-name"
                 onClick={() => navigate(rotaPerfil())}
               >
-                {usuarioObj?.nome_artistico || "Usuário"}
+                {nomeUsuario}
               </span>
+
               <span className="user-role">{tipoUsuario}</span>
             </div>
 
