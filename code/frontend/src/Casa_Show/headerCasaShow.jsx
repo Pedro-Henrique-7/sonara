@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import fotoPerfil from "../img/fotoPerfil.jpg";
 import "./headerCasaShow.css";
 
-export default function Header() {
+export default function HeaderCasaShow() {
   const navigate = useNavigate();
   const [usuarioObj, setUsuarioObj] = useState(null);
 
@@ -14,10 +14,12 @@ export default function Header() {
 
   useEffect(() => {
     carregarUsuario();
-    // Atualiza o header quando PerfilArtista salvar os dados
+
     window.addEventListener("usuarioAtualizado", carregarUsuario);
-    return () =>
+
+    return () => {
       window.removeEventListener("usuarioAtualizado", carregarUsuario);
+    };
   }, []);
 
   const fotoUrl = usuarioObj?.foto || fotoPerfil;
@@ -25,50 +27,51 @@ export default function Header() {
 
   function rotaPerfil() {
     const tipo = tipoUsuario.toLowerCase();
+
     if (tipo === "artista") return "/perfil-artista";
     if (tipo === "organizador") return "/perfil-organizador";
+
     return "/perfil";
   }
 
   return (
-    <header className="header">
-      <div className="content-limit">
-        <div className="header-top">
-          <nav className="nav">
-            <span className="nav-item" onClick={() => navigate("/casaShow")}>
-              Home
-            </span>
+    <header className="cs-header">
+      <div className="cs-container">
+        <nav className="cs-nav">
+          <span className="cs-nav-item" onClick={() => navigate("/casaShow")}>
+            Home
+          </span>
 
-            <span className="nav-item">Buscar</span>
+          <span className="cs-nav-item">Buscar</span>
 
+          <span
+            className="cs-nav-item"
+            onClick={() => navigate("/listaMeusEventos")}
+          >
+            Meus Eventos
+          </span>
+        </nav>
+
+        <div className="cs-user-area">
+          <div className="cs-user-info">
             <span
-              className="nav-item"
-              onClick={() => navigate("/listaMeusEventos")}
+              className="cs-user-name"
+              onClick={() => navigate(rotaPerfil())}
             >
-              Meus Eventos
+              {usuarioObj?.nome || "Usuário"}
             </span>
-          </nav>
 
-          <div className="user">
-            <div className="user-info">
-              <span
-                className="user-name"
-                onClick={() => navigate(rotaPerfil())}
-              >
-                {usuarioObj?.nome || "Usuário"}
-              </span>
-              <span className="user-role">{tipoUsuario}</span>
-            </div>
+            <span className="cs-user-role">{tipoUsuario}</span>
+          </div>
 
-            <div className="avatar" onClick={() => navigate(rotaPerfil())}>
-              <img
-                src={fotoUrl}
-                alt="Perfil"
-                onError={(e) => {
-                  e.target.src = fotoPerfil;
-                }}
-              />
-            </div>
+          <div className="cs-avatar" onClick={() => navigate(rotaPerfil())}>
+            <img
+              src={fotoUrl}
+              alt="Perfil"
+              onError={(e) => {
+                e.target.src = fotoPerfil;
+              }}
+            />
           </div>
         </div>
       </div>

@@ -1,65 +1,93 @@
-/* HEADER */
+/* =========================================================
+   HEADER CASA SHOW
+========================================================= */
 
-.header-show {
+.cs-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}
+
+.cs-container {
   width: 90%;
-  height: 140px;
+  max-width: 1600px;
+
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 0 40px;
-  margin-top: 40px;
-  margin-left: 5%;
+
+  padding: 25px 40px;
+
+  border-radius: 20px;
 }
 
-.nav {
+/* =========================================================
+   NAV
+========================================================= */
+
+.cs-nav {
   display: flex;
   align-items: center;
-  gap: 70px;
-  margin-left: -150px;
+  gap: 60px;
 }
 
-.nav-btn {
-  border: none;
-  background: transparent;
-
+.cs-nav-item {
   color: white;
   font-size: 2rem;
-
+  font-weight: 500;
+  margin-left: 15rem;
   cursor: pointer;
   transition: 0.3s;
-  margin-left: 30px;
-  width: 25%;
 }
 
-.nav-btn:hover {
-  transform: scale(1.1);
+.cs-nav-item:hover {
+  transform: scale(1.08);
 }
 
-/* PERFIL */
+/* =========================================================
+   USUARIO
+========================================================= */
 
-.perfil-area {
+.cs-user-area {
   display: flex;
   align-items: center;
   gap: 15px;
-  margin-left: 100px;
 }
 
-.perfil-info h2 {
-  font-size: 2rem;
-  font-weight: 400;
+.cs-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.perfil-info span {
-  font-size: 1.1rem;
-}
-
-.perfil-icon {
-  font-size: 4rem;
-}
-
-.logout-icon {
-  font-size: 2.2rem;
-  margin-left: 10px;
+.cs-user-name {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
 
   cursor: pointer;
+}
+
+.cs-user-role {
+  color: #bdbdbd;
+  font-size: 0.95rem;
+}
+
+.cs-avatar {
+  width: 65px;
+  height: 65px;
+
+  border-radius: 50%;
+  overflow: hidden;
+
+  cursor: pointer;
+
+  border: 2px solid white;
+}
+
+.cs-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

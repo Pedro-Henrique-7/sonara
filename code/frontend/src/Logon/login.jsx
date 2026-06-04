@@ -194,6 +194,21 @@ function Login() {
             {loading ? "Entrando…" : "Entrar"}
           </button>
 
+          <span className="sem-conta">
+            Deseja entrar sem conta?{" "}
+            <a
+              href="#"
+              style={{ textDecoration: "none", color: "white" }}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/TelaDeUsuario");
+              }}
+            >
+              {" "}
+              entrar sem conta
+            </a>
+          </span>
+
           <div className="recuperacao">
             <span>
               Não tem conta?{" "}

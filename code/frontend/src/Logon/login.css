@@ -3,9 +3,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
-  body {
+body {
   background: var(--bg-main);
 }
 
@@ -132,15 +131,13 @@ main {
 main span {
   font-size: 14px;
   color: var(--text-color);
-
-  text-align: center;
+  text-align: start;
 }
 
 /* BOTÃO */
 button {
   width: 100%;
   height: 52px;
-  
 
   border: none;
   border-radius: 14px;
