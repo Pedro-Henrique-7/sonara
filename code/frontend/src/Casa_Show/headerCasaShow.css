@@ -29,16 +29,19 @@
 .cs-nav {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 20rem;
 }
 
 .cs-nav-item {
   color: white;
+
   font-size: 2rem;
   font-weight: 500;
-  margin-left: 15rem;
+
   cursor: pointer;
   transition: 0.3s;
+  margin-left: 19.5rem;
+  white-space: nowrap;
 }
 
 .cs-nav-item:hover {

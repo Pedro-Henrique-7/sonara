@@ -6,7 +6,7 @@ import FooterSonara from "./footer";
 import Header from "./header";
 import { buscarUsuarioPorId } from "../services/usuarioService";
 
-import { buscarEventos } from "../services/eventoService"; 
+import { buscarEventos } from "../services/eventoService";
 
 // Placeholder para eventos sem foto
 const PLACEHOLDER_IMG =
@@ -42,30 +42,27 @@ export default function Shows() {
   const [sliderIndex, setSliderIndex] = useState(0);
   const [busca, setBusca] = useState("");
 
-
-
   //busca usuario e salva na sessionStorage para manter os dados atualizados
   useEffect(() => {
-  const carregarUsuarioCompleto = async () => {
-    try {
-      const usuarioStorage = JSON.parse(sessionStorage.getItem("usuario"));
+    const carregarUsuarioCompleto = async () => {
+      try {
+        const usuarioStorage = JSON.parse(sessionStorage.getItem("usuario"));
 
-      if (!usuarioStorage?.id_usuario) return;
+        if (!usuarioStorage?.id_usuario) return;
 
-      const json = await buscarUsuarioPorId(usuarioStorage.id_usuario);
-      const usuarioCompleto = json?.response?.usuario;
+        const json = await buscarUsuarioPorId(usuarioStorage.id_usuario);
+        const usuarioCompleto = json?.response?.usuario;
 
-      if (usuarioCompleto) {
-        sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
+        if (usuarioCompleto) {
+          sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
+        }
+      } catch (error) {
+        console.error("Erro ao carregar usuário completo:", error);
       }
-    } catch (error) {
-      console.error("Erro ao carregar usuário completo:", error);
-    }
-  };
+    };
 
-  carregarUsuarioCompleto();
-}, []);
-
+    carregarUsuarioCompleto();
+  }, []);
 
   // Busca os eventos da API
   useEffect(() => {

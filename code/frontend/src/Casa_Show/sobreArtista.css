@@ -1,6 +1,7 @@
 /* =========================================================
-   RESET LOCAL
+   RESET
 ========================================================= */
+
 .sonaraSobreArtistaPagina * {
   margin: 0;
   padding: 0;
@@ -10,434 +11,587 @@
 /* =========================================================
    PÁGINA
 ========================================================= */
+
 .sonaraSobreArtistaPagina {
   width: 100%;
   min-height: 100vh;
-  padding: 3rem 1.5rem;
+
+  padding: 40px 20px;
+
   display: flex;
   justify-content: center;
   align-items: flex-start;
+
   font-family: "Poppins", sans-serif;
 }
 
 /* =========================================================
    CONTAINER
 ========================================================= */
+
 .sonaraSobreArtistaContainer {
   width: 100%;
-  max-width: 1300px;
-  padding: 2rem;
-  border-radius: 2rem;
+  max-width: 1350px;
+
   background: var(--bg-box);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+  border-radius: 32px;
+
+  padding: 32px;
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* =========================================================
-   CABEÇALHO (voltar + título)
+   CABEÇALHO
 ========================================================= */
+
 .sonaraSobreArtistaCabecalho {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  font-size: large;
+  justify-content: space-between;
+
+  margin-bottom: 28px;
 }
 
 .sonaraSobreArtistaVoltar {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.07);
+  gap: 8px;
+  width: fit-content;
+  padding: 12px 18px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.05);
+
   color: var(--text-color);
-  font-size: 0.85rem;
+
+  font-size: 0.9rem;
   font-weight: 600;
-  font-family: inherit;
+
   cursor: pointer;
-  transition: background 0.2s;
-  flex-shrink: 0;
+
+  transition: 0.3s ease;
 }
 
 .sonaraSobreArtistaVoltar:hover {
-  background: rgba(255, 255, 255, 0.13);
+  transform: translateY(-2px);
+
+  background: rgba(255, 255, 255, 0.12);
 }
 
-/* =========================================================
-   TITULO
-========================================================= */
 .sonaraSobreArtistaTitulo {
-  color: white;
-  font-size: 2rem;
-  font-weight: 600;
-  text-align: center;
   flex: 1;
+
+  text-align: start;
+
+  color: white;
+
+  font-size: 4rem;
+  font-weight: 700;
+  margin-left: 25rem;
+
+  letter-spacing: 0.5px;
 }
 
 /* =========================================================
-   SUCESSO
+   ALERTA SUCESSO
 ========================================================= */
+
 .sonaraSobreArtistaSucesso {
-  background: rgba(100, 220, 150, 0.1);
-  border: 1px solid rgba(100, 220, 150, 0.3);
-  border-radius: 12px;
-  color: #6ddc96;
-  padding: 14px 20px;
-  font-size: 0.92rem;
+  width: 100%;
+
+  padding: 16px 20px;
+
+  border-radius: 16px;
+
+  background: rgba(80, 255, 140, 0.08);
+
+  border: 1px solid rgba(80, 255, 140, 0.2);
+
+  color: #79ffb0;
+
+  font-size: 0.95rem;
   font-weight: 500;
-  margin-bottom: 1.5rem;
-  animation: aparecerModal 0.3s ease;
+
+  margin-bottom: 25px;
+
+  animation: aparecerModal 0.25s ease;
 }
 
 /* =========================================================
-   CARD
+   CARD PRINCIPAL
 ========================================================= */
+
 .sonaraSobreArtistaCard {
   width: 100%;
-  padding: 3rem;
-  border-radius: 2rem;
-  background: var(--bg-main);
+
+  padding: 45px;
+
+  border-radius: 28px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.04);
+
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+
+  gap: 45px;
 }
 
 /* =========================================================
    TOPO
 ========================================================= */
+
 .sonaraSobreArtistaTopo {
-  width: 100%;
   display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 3rem;
+  grid-template-columns: 280px 1fr;
+
+  gap: 45px;
+
   align-items: center;
 }
 
 /* =========================================================
    FOTO
 ========================================================= */
+
 .sonaraSobreArtistaFotoArea {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.sonaraSobreArtistaFoto {
-  width: 230px;
-  height: 230px;
-  border-radius: 24px;
+.sonaraSobreArtistaFoto,
+.sonaraSobreArtistaFotoPlaceholder {
+  width: 240px;
+  height: 240px;
+
+  border-radius: 28px;
+
   object-fit: cover;
-  border: 5px solid rgba(255, 255, 255, 0.15);
-  background: #ffe600;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+
+  border: 4px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
 }
 
-/* Placeholder quando não tem foto */
 .sonaraSobreArtistaFotoPlaceholder {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+
+  background: #232336;
+
+  color: white;
+
   font-size: 4rem;
   font-weight: 700;
-  color: white;
-  background: var(--bg-main, #1a1a2e);
 }
 
 /* =========================================================
    INFO
 ========================================================= */
+
 .sonaraSobreArtistaInfo {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+
+  gap: 18px;
+
   color: white;
 }
 
 .sonaraSobreArtistaInfo h2 {
-  font-size: 2.4rem;
-  font-weight: 600;
+  font-size: 2.6rem;
+  font-weight: 700;
+
+  line-height: 1.1;
 }
 
 .sonaraSobreArtistaInfo span {
-  font-size: 1.3rem;
-  opacity: 0.9;
+  font-size: 1.2rem;
+
+  opacity: 0.8;
 }
 
 .sonaraSobreArtistaInfo p {
-  font-size: 1.1rem;
-  opacity: 0.95;
+  font-size: 1.05rem;
+
+  line-height: 1.8;
+
+  opacity: 0.92;
 }
 
 /* =========================================================
    AVALIAÇÃO
 ========================================================= */
+
 .sonaraSobreArtistaAvaliacao {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.8rem;
+
+  gap: 6px;
+
   color: #ffe600;
+
+  font-size: 1.7rem;
 }
 
 .sonaraSobreArtistaStarOff {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.25);
 }
 
 /* =========================================================
    LOCAL
 ========================================================= */
+
 .sonaraSobreArtistaLocal {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  margin-top: 0.5rem;
-  color: white;
+
+  gap: 12px;
+
+  margin-top: 8px;
+
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .sonaraSobreArtistaLocalIcone {
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 }
 
 .sonaraSobreArtistaLocal p {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* =========================================================
    DESCRIÇÃO
 ========================================================= */
+
 .sonaraSobreArtistaDescricao {
   width: 100%;
+
   display: flex;
   justify-content: center;
 }
 
 .sonaraSobreArtistaDescricao p {
-  max-width: 950px;
-  color: white;
+  max-width: 1000px;
+
   text-align: center;
-  font-size: 1.1rem;
-  line-height: 1.9;
+
+  color: rgba(255, 255, 255, 0.92);
+
+  font-size: 1.08rem;
+
+  line-height: 2;
 }
 
 /* =========================================================
-   RODAPÉ INFO
+   RODAPÉ
 ========================================================= */
+
 .sonaraSobreArtistaRodapeInfo {
   width: 100%;
+
+  padding-top: 25px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+  gap: 30px;
+
   flex-wrap: wrap;
 }
 
 /* =========================================================
    CACHE
 ========================================================= */
+
 .sonaraSobreArtistaCache {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+
+  gap: 6px;
+
   color: white;
 }
 
 .sonaraSobreArtistaCache h3 {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-weight: 600;
+
+  opacity: 0.8;
 }
 
 .sonaraSobreArtistaCache span {
-  font-size: 1.8rem;
-  font-weight: 500;
+  font-size: 2rem;
+  font-weight: 700;
+
   color: #ffe600;
 }
 
 /* =========================================================
    REDES
 ========================================================= */
+
 .sonaraSobreArtistaRedes {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+
+  gap: 16px;
+
   flex-wrap: wrap;
 }
 
 .sonaraSobreArtistaRedes a {
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
+
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.8);
+
+  background: rgba(255, 255, 255, 0.06);
+
   display: flex;
   justify-content: center;
   align-items: center;
-  text-decoration: none;
+
   color: white;
-  font-size: 1.7rem;
+
+  font-size: 1.5rem;
+
+  text-decoration: none;
+
   transition: 0.3s ease;
 }
 
 .sonaraSobreArtistaRedes a:hover {
   transform: translateY(-4px) scale(1.05);
-  background: #000;
+
+  background: var(--btn-color);
 }
 
 /* =========================================================
-   BOTÕES
+   BOTÃO
 ========================================================= */
+
 .sonaraSobreArtistaBotoes {
   width: 100%;
+
   display: flex;
   justify-content: center;
 }
 
 .sonaraSobreArtistaBtn {
-  padding: 1.2rem 3rem;
+  min-width: 260px;
+
+  padding: 18px 32px;
+
   border: none;
-  border-radius: 999px;
+
+  border-radius: 18px;
+
   background: var(--btn-color);
+
   color: white;
-  font-size: 1.1rem;
-  font-weight: 600;
+
+  font-size: 1.05rem;
+  font-weight: 700;
+
   cursor: pointer;
-  transition: 0.1s ease;
+
+  transition: 0.3s ease;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
 }
 
 .sonaraSobreArtistaBtn:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
+  transform: translateY(-3px);
+
+  background: var(--hover-main);
 }
 
 /* =========================================================
    MODAL OVERLAY
 ========================================================= */
+
 .sonaraModalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
+
+  inset: 0;
+
   background: rgba(0, 0, 0, 0.7);
+
   display: flex;
   justify-content: center;
   align-items: center;
+
+  padding: 20px;
+
   z-index: 9999;
-  backdrop-filter: blur(4px);
+
+  backdrop-filter: blur(5px);
 }
 
 /* =========================================================
    MODAL
 ========================================================= */
+
 .sonaraModal {
-  width: 90%;
-  max-width: 500px;
-  background: linear-gradient(180deg, #b70000 0%, #ff2d00 100%);
-  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+
   padding: 30px;
+
+  border-radius: 24px;
+
+  background: linear-gradient(180deg, #b70000, #ff3c00);
+
+  color: white;
+
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  color: white;
+
+  gap: 18px;
+
   animation: aparecerModal 0.25s ease;
 }
 
 .sonaraModal h2 {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
 .sonaraModalArtistaNome {
-  font-size: 0.95rem;
   opacity: 0.85;
 }
 
-.sonaraModalArtistaNome strong {
-  opacity: 1;
-}
-
 /* =========================================================
-   CAMPOS DO MODAL
+   CAMPOS MODAL
 ========================================================= */
+
 .sonaraModalCampo {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+
+  gap: 7px;
 }
 
 .sonaraModalCampo label {
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+
+  letter-spacing: 1px;
+
   text-transform: uppercase;
-  opacity: 0.8;
 }
 
 .sonaraModalInput,
 .sonaraModalTextarea {
   width: 100%;
+
   border: none;
   outline: none;
-  border-radius: 12px;
-  padding: 13px 15px;
-  background: aliceblue;
-  color: #000;
+
+  border-radius: 14px;
+
+  padding: 15px;
+
   font-size: 1rem;
-  font-family: inherit;
+
+  background: white;
+
+  color: #000;
+
+  transition: 0.2s ease;
 }
 
-.sonaraModalInput option {
-  background: white;
-  color: #000;
+.sonaraModalInput:focus,
+.sonaraModalTextarea:focus {
+  transform: scale(1.01);
 }
 
 .sonaraModalTextarea {
-  min-height: 100px;
+  min-height: 110px;
+
   resize: none;
 }
 
 /* =========================================================
-   ERRO DO MODAL
+   ERRO
 ========================================================= */
+
 .sonaraModalErro {
-  font-size: 0.85rem;
-  color: #fff0a0;
+  padding: 10px 14px;
+
+  border-radius: 10px;
+
   background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  padding: 8px 12px;
+
+  color: #fff0a0;
+
+  font-size: 0.85rem;
 }
 
 /* =========================================================
-   BOTÕES DO MODAL
+   BOTÕES MODAL
 ========================================================= */
+
 .sonaraModalBotoes {
   display: flex;
   justify-content: flex-end;
-  gap: 15px;
-  margin-top: 4px;
+
+  gap: 12px;
+
+  margin-top: 5px;
 }
 
 .sonaraModalCancelar,
 .sonaraModalEnviar {
   border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
+
+  padding: 13px 20px;
+
+  border-radius: 12px;
+
+  font-weight: 700;
+
   cursor: pointer;
-  font-weight: bold;
-  font-family: inherit;
-  transition: 0.3s;
+
+  transition: 0.3s ease;
 }
 
 .sonaraModalCancelar {
-  background: #444;
+  background: #3a3a3a;
   color: white;
 }
 
+.sonaraModalCancelar:hover {
+  background: #2d2d2d;
+}
+
 .sonaraModalEnviar {
-  background: #c86100;
+  background: #ff9d00;
   color: white;
 }
 
 .sonaraModalEnviar:hover:not(:disabled) {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .sonaraModalEnviar:disabled {
@@ -448,50 +602,130 @@
 /* =========================================================
    ANIMAÇÃO
 ========================================================= */
+
 @keyframes aparecerModal {
-  from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(-15px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* =========================================================
    TABLET
 ========================================================= */
-@media (max-width: 900px) {
-  .sonaraSobreArtistaPagina { padding: 2rem 1rem; }
-  .sonaraSobreArtistaContainer { padding: 1.5rem; }
-  .sonaraSobreArtistaCard { padding: 2rem; }
-  .sonaraSobreArtistaTopo { grid-template-columns: 1fr; text-align: center; }
-  .sonaraSobreArtistaInfo { align-items: center; }
-  .sonaraSobreArtistaLocal { justify-content: center; }
-  .sonaraSobreArtistaRodapeInfo { flex-direction: column; text-align: center; }
-  .sonaraSobreArtistaCabecalho { flex-direction: column; align-items: flex-start; }
-  .sonaraSobreArtistaTitulo { text-align: left; }
+
+@media (max-width: 950px) {
+  .sonaraSobreArtistaTopo {
+    grid-template-columns: 1fr;
+
+    text-align: center;
+  }
+
+  .sonaraSobreArtistaInfo {
+    align-items: center;
+  }
+
+  .sonaraSobreArtistaLocal {
+    justify-content: center;
+  }
+
+  .sonaraSobreArtistaRodapeInfo {
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+  .sonaraSobreArtistaCabecalho {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sonaraSobreArtistaTitulo {
+    text-align: left;
+  }
 }
 
 /* =========================================================
    CELULAR
 ========================================================= */
+
 @media (max-width: 600px) {
-  .sonaraSobreArtistaPagina { padding: 1rem 0.7rem; }
-  .sonaraSobreArtistaContainer { padding: 1rem; border-radius: 1.2rem; }
-  .sonaraSobreArtistaCard { padding: 1.5rem; border-radius: 1.5rem; }
-  .sonaraSobreArtistaTitulo { font-size: 1.5rem; }
-  .sonaraSobreArtistaFoto { width: 170px; height: 170px; }
-  .sonaraSobreArtistaInfo h2 { font-size: 1.8rem; }
-  .sonaraSobreArtistaInfo span,
-  .sonaraSobreArtistaInfo p,
-  .sonaraSobreArtistaDescricao p,
-  .sonaraSobreArtistaLocal p { font-size: 1rem; }
-  .sonaraSobreArtistaRedes a { width: 52px; height: 52px; font-size: 1.4rem; }
-  .sonaraSobreArtistaBtn { font-size: 1rem; padding: 1rem 2rem; }
+  .sonaraSobreArtistaPagina {
+    padding: 20px 10px;
+  }
+
+  .sonaraSobreArtistaContainer {
+    padding: 18px;
+
+    border-radius: 22px;
+  }
+
+  .sonaraSobreArtistaCard {
+    padding: 24px;
+
+    gap: 35px;
+  }
+
+  .sonaraSobreArtistaTitulo {
+    font-size: 1.7rem;
+  }
+
+  .sonaraSobreArtistaFoto,
+  .sonaraSobreArtistaFotoPlaceholder {
+    width: 180px;
+    height: 180px;
+  }
+
+  .sonaraSobreArtistaInfo h2 {
+    font-size: 2rem;
+  }
+
+  .sonaraSobreArtistaDescricao p {
+    font-size: 0.98rem;
+
+    line-height: 1.8;
+  }
+
+  .sonaraSobreArtistaBtn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .sonaraModal {
+    padding: 22px;
+  }
+
+  .sonaraModalBotoes {
+    flex-direction: column;
+  }
+
+  .sonaraModalCancelar,
+  .sonaraModalEnviar {
+    width: 100%;
+  }
 }
 
 /* =========================================================
-   CELULAR MUITO PEQUENO
+   CELULAR PEQUENO
 ========================================================= */
+
 @media (max-width: 400px) {
-  .sonaraSobreArtistaFoto { width: 130px; height: 130px; }
-  .sonaraSobreArtistaInfo h2 { font-size: 1.4rem; }
-  .sonaraSobreArtistaDescricao p { font-size: 0.95rem; }
-  .sonaraSobreArtistaBtn { padding: 1rem; font-size: 0.95rem; }
+  .sonaraSobreArtistaInfo h2 {
+    font-size: 1.6rem;
+  }
+
+  .sonaraSobreArtistaFoto,
+  .sonaraSobreArtistaFotoPlaceholder {
+    width: 140px;
+    height: 140px;
+  }
+
+  .sonaraSobreArtistaTitulo {
+    font-size: 1.4rem;
+  }
 }

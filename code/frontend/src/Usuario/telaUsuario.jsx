@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./telaUsuario.css";
 import { Search, MapPin, Clock, Calendar } from "lucide-react";
-// import FooterSonara from "../footer";
+import FooterSonara from "../Artista/footer";
 import Header from "./headerUsuario";
+import { buscarUsuarioPorId } from "../services/usuarioService";
 
 import { buscarEventos } from "../services/eventoService";
 
+// Placeholder para eventos sem foto
 const PLACEHOLDER_IMG =
   "https://placehold.co/600x300/1a1a2e/ffffff?text=Sem+Foto";
 
@@ -25,8 +27,9 @@ function formatarHora(hora) {
   return hora.slice(0, 5);
 }
 
+// Usa o campo "caminho" que é o correto na API do usuário
 function obterImagem(fotos) {
-  if (fotos && fotos.length > 0 && fotos[0].caminho) {
+  if (fotos && fotos.length > 0 && fotos[0]?.caminho) {
     return fotos[0].caminho;
   }
   return PLACEHOLDER_IMG;
@@ -40,6 +43,29 @@ export default function TelaUsuario() {
   const [sliderIndex, setSliderIndex] = useState(0);
   const [busca, setBusca] = useState("");
 
+  // Busca usuário atualizado e salva na sessionStorage
+  useEffect(() => {
+    const carregarUsuarioCompleto = async () => {
+      try {
+        const usuarioStorage = JSON.parse(sessionStorage.getItem("usuario"));
+
+        if (!usuarioStorage?.id_usuario) return;
+
+        const json = await buscarUsuarioPorId(usuarioStorage.id_usuario);
+        const usuarioCompleto = json?.response?.usuario;
+
+        if (usuarioCompleto) {
+          sessionStorage.setItem("usuario", JSON.stringify(usuarioCompleto));
+        }
+      } catch (error) {
+        console.error("Erro ao carregar usuário completo:", error);
+      }
+    };
+
+    carregarUsuarioCompleto();
+  }, []);
+
+  // Busca os eventos da API
   useEffect(() => {
     buscarEventos()
       .then((json) => {
@@ -53,6 +79,12 @@ export default function TelaUsuario() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Reseta o índice do slider quando a lista de eventos muda
+  useEffect(() => {
+    setSliderIndex(0);
+  }, [eventos]);
+
+  // Avança o slider automaticamente
   useEffect(() => {
     if (eventos.length === 0) return;
     const interval = setInterval(() => {
@@ -61,6 +93,7 @@ export default function TelaUsuario() {
     return () => clearInterval(interval);
   }, [eventos]);
 
+  // Filtra pelo campo de busca (nome, cidade ou local)
   const eventosFiltrados = eventos.filter((ev) => {
     const termo = busca.toLowerCase();
     return (
@@ -70,6 +103,7 @@ export default function TelaUsuario() {
     );
   });
 
+  // Primeiros eventos para o slider (máx 5)
   const sliderEventos = eventos.slice(0, 5);
 
   return (
@@ -91,14 +125,14 @@ export default function TelaUsuario() {
           </div>
         </div>
 
-        {/* Loading */}
+        {/* Estado de loading */}
         {loading && (
           <div className="loading-state">
             <p>Carregando eventos...</p>
           </div>
         )}
 
-        {/* Erro */}
+        {/* Estado de erro */}
         {erro && (
           <div className="error-state">
             <p>{erro}</p>
@@ -125,9 +159,10 @@ export default function TelaUsuario() {
                     />
                     <div className="slide-info">
                       <h4>{ev.evento_nome}</h4>
-                      <span>
+                      {/* <p> em vez de <span> para evitar bloco dentro de inline */}
+                      <p className="card-detalhe">
                         <Calendar size={13} /> {formatarData(ev.data)}
-                      </span>
+                      </p>
                     </div>
                     <div className="btn-slide">
                       <button
@@ -142,10 +177,11 @@ export default function TelaUsuario() {
                 ))}
               </div>
 
+              {/* Key estável usando id_evento nos dots */}
               <div className="slider-dots">
-                {sliderEventos.map((_, i) => (
+                {sliderEventos.map((ev, i) => (
                   <span
-                    key={i}
+                    key={ev.id_evento ?? i}
                     className={`dot ${i === sliderIndex ? "active" : ""}`}
                     onClick={() => setSliderIndex(i)}
                   />
@@ -217,6 +253,8 @@ export default function TelaUsuario() {
           </>
         )}
       </div>
+
+      <FooterSonara />
     </div>
   );
 }

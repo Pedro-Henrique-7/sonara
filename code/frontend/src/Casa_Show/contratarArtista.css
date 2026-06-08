@@ -1,6 +1,7 @@
 /* =========================================================
    RESET
 ========================================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -10,81 +11,110 @@
 /* =========================================================
    PÁGINA
 ========================================================= */
+
 .sonaraContratarPagina {
   width: 100%;
+  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
+
+  padding: 30px 16px;
+
+  background: var(--bg-main);
 }
 
 /* =========================================================
    CONTAINER PRINCIPAL
 ========================================================= */
+
 .sonaraContratarConteudo {
-  width: 60%;
-  height: 100%;
+  width: 100%;
+  max-width: 1450px;
 
-  margin: 40px auto 0;
-  padding: 40px 24px 50px;
+  margin: 0 auto;
 
-  border-radius: 24px;
+  padding: 40px 32px;
+
+  border-radius: 30px;
 
   background: var(--bg-box);
 
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
   box-shadow:
-    0 10px 30px rgba(0, 0, 0, 0.35),
-    0 4px 0 #00309f;
+    0 20px 45px rgba(0, 0, 0, 0.35),
+    0 4px 0 rgba(0, 48, 159, 0.7);
 
   display: flex;
   flex-direction: column;
-  gap: 28px;
+
+  gap: 32px;
 }
 
 /* =========================================================
    TÍTULO
 ========================================================= */
+
 .sonaraContratarTitulo {
-  font-size: 2.4rem;
-  font-weight: 700;
-  color: var(--text-color);
   text-align: center;
-  margin: 0;
+
+  font-size: 2.5rem;
+  font-weight: 700;
+
+  color: var(--text-color);
+
+  letter-spacing: 0.5px;
 }
 
 /* =========================================================
    BUSCA
 ========================================================= */
+
 .sonaraContratarBusca {
   width: 100%;
-  padding: 13px 18px;
 
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
+  padding: 16px 20px;
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
 
   color: var(--text-color);
+
   font-size: 0.95rem;
-  font-family: inherit;
+
   outline: none;
 
-  transition: border-color 0.2s;
+  transition: 0.25s ease;
 }
 
 .sonaraContratarBusca::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .sonaraContratarBusca:focus {
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.22);
+
+  background: rgba(255, 255, 255, 0.06);
+
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.03);
 }
 
 /* =========================================================
-   ESTADOS (loading, erro, vazio)
+   INFO / ERRO
 ========================================================= */
+
 .sonaraContratarInfo {
   text-align: center;
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 1rem;
+
   padding: 20px 0;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 1rem;
 }
 
 .sonaraContratarErro {
@@ -92,236 +122,280 @@
 }
 
 /* =========================================================
-   GRID DOS CARDS
+   GRID
 ========================================================= */
+
 .sonaraContratarGrid {
   width: 100%;
 
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 40px 30px;
 
-  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 30px;
 }
 
 /* =========================================================
    CARD
 ========================================================= */
+
 .sonaraContratarCard {
   width: 100%;
-  max-width: 200px;
 
   overflow: hidden;
-  border-radius: 16px;
 
-  background: #fff7f2;
+  border-radius: 24px;
+
+  background: #fff;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: 0.3s ease;
+
   border: 1px solid rgba(255, 255, 255, 0.08);
 
   box-shadow:
-    0 8px 18px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease;
+    0 10px 25px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .sonaraContratarCard:hover {
-  transform: translateY(-6px);
-  background: #ffffff;
+  transform: translateY(-8px);
+
   box-shadow:
-    0 14px 24px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(255, 120, 60, 0.25);
+    0 20px 35px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 120, 60, 0.18);
 }
 
 /* =========================================================
-   TOPO DO CARD
+   TOPO CARD
 ========================================================= */
+
 .sonaraContratarCardTopo {
-  height: 90px;
+  width: 100%;
+  height: 110px;
+
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  background: var(--bg-main);
+
+  background: linear-gradient(135deg, var(--btn-color), #26104d);
 }
 
 /* =========================================================
    FOTO
 ========================================================= */
-.sonaraContratarFoto {
-  width: 90px;
-  height: 90px;
 
-  border: 4px solid #ffffff;
+.sonaraContratarFoto {
+  width: 105px;
+  height: 105px;
+
   border-radius: 50%;
+
+  border: 5px solid #fff;
 
   background-image: url("../img/show1.jfif");
   background-size: cover;
   background-position: center;
 
-  transform: translateY(34px);
+  transform: translateY(40px);
 
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* =========================================================
-   CONTEÚDO DO CARD
+   CONTEÚDO CARD
 ========================================================= */
+
 .sonaraContratarCardConteudo {
-  padding: 50px 18px 24px;
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  padding: 60px 22px 22px;
+
   text-align: center;
+
   color: #1f1f1f;
 }
 
 .sonaraContratarCardConteudo h2 {
   margin-bottom: 6px;
-  color: #101010;
-  font-size: 1.05rem;
+
+  font-size: 1.15rem;
   font-weight: 700;
-  word-wrap: break-word;
+
+  color: #121212;
+
+  word-break: break-word;
 }
 
 .sonaraContratarCardConteudo span {
-  color: #5c5c5c;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
+
+  color: #666;
 }
 
 /* =========================================================
    ESTRELAS
 ========================================================= */
+
 .sonaraContratarEstrelas {
   display: flex;
   justify-content: center;
+
   gap: 5px;
-  margin: 14px 0 12px;
+
+  margin: 16px 0 14px;
+
   color: #ffbf00;
+
   font-size: 1rem;
 }
 
 .sonaraContratarEstrelaOff {
-  color: #c9c9c9;
+  color: #d0d0d0;
 }
 
 /* =========================================================
-   DESCRIÇÃO
+   TEXTO
 ========================================================= */
+
 .sonaraContratarCardConteudo p {
-  margin-bottom: 6px;
-  color: #2d2d2d;
-  font-size: 0.74rem;
-  font-weight: 500;
-  line-height: 1.4;
+  margin-bottom: 8px;
+
+  color: #2f2f2f;
+
+  font-size: 0.82rem;
+
+  line-height: 1.6;
 }
 
 .sonaraContratarCardConteudo small {
-  display: block;
-  margin-bottom: 18px;
-  color: #6f6f6f;
-  font-size: 0.68rem;
-  line-height: 1.4;
+  margin-bottom: 22px;
+
+  color: #6b6b6b;
+
+  font-size: 0.74rem;
+
+  line-height: 1.5;
 }
 
 /* =========================================================
    BOTÃO
 ========================================================= */
+
 .sonaraContratarBtnVerMais {
+  width: 100%;
+
+  margin-top: auto;
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   gap: 8px;
-  margin: 0 auto;
-  padding: 10px 14px;
+
+  padding: 13px 16px;
+
   border: none;
-  border-radius: 10px;
-  background: #2e1760;
-  color: #ffffff;
-  font-size: 0.74rem;
+
+  border-radius: 14px;
+
+  background: var(--btn-color);
+
+  color: white;
+
+  font-size: 0.82rem;
   font-weight: 700;
+
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(255, 90, 0, 0.3);
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+
+  transition: 0.25s ease;
+
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
 }
 
 .sonaraContratarBtnVerMais svg {
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .sonaraContratarBtnVerMais:hover {
   background: var(--btn-hover-color);
-  transform: scale(1.04);
-  box-shadow: 0 6px 14px rgba(255, 90, 0, 0.45);
+
+  transform: translateY(-2px);
 }
 
 /* =========================================================
    RESPONSIVO
 ========================================================= */
+
 @media (max-width: 1024px) {
   .sonaraContratarConteudo {
-    width: 80%;
-    padding: 32px 20px 40px;
+    padding: 32px 24px;
   }
 
   .sonaraContratarGrid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 32px 24px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
+  .sonaraContratarPagina {
+    padding: 20px 12px;
+  }
+
   .sonaraContratarConteudo {
-    width: 92%;
+    padding: 24px 18px;
+
+    border-radius: 24px;
   }
 
   .sonaraContratarTitulo {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .sonaraContratarGrid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 24px 16px;
-  }
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 
-  .sonaraContratarCard {
-    max-width: 160px;
+    gap: 20px;
   }
 }
 
-@media (max-width: 480px) {
-  .sonaraContratarConteudo {
-    margin-top: 20px;
-    padding: 20px 16px 30px;
-    border-radius: 16px;
-  }
-
+@media (max-width: 520px) {
   .sonaraContratarTitulo {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 
   .sonaraContratarGrid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px 12px;
-  }
 
-  .sonaraContratarCard {
-    max-width: 100%;
+    gap: 16px;
   }
 
   .sonaraContratarCardConteudo {
-    padding: 40px 14px 18px;
+    padding: 55px 14px 16px;
   }
 
-  .sonaraContratarCardConteudo h2 {
-    font-size: 0.95rem;
+  .sonaraContratarFoto {
+    width: 85px;
+    height: 85px;
+
+    transform: translateY(34px);
   }
 
-  .sonaraContratarCardConteudo span,
-  .sonaraContratarCardConteudo p,
-  .sonaraContratarCardConteudo small {
-    font-size: 0.78rem;
+  .sonaraContratarBtnVerMais {
+    font-size: 0.75rem;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 390px) {
+  .sonaraContratarGrid {
+    grid-template-columns: 1fr;
   }
 }

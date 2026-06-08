@@ -1,65 +1,116 @@
-/* HEADER */
+.header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 14, 29, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
 
-.header-show {
-  width: 90%;
-  height: 140px;
+.content-limit {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 22px;
+}
+
+.header-top {
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  padding: 0 40px;
-  margin-top: 40px;
-  margin-left: 5%;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 70px;
-  margin-left: -150px;
+  gap: 14px;
 }
 
-.nav-btn {
-  border: none;
-  background: transparent;
-
-  color: white;
-  font-size: 2rem;
-
+.nav-item {
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 600;
+  opacity: 0.86;
   cursor: pointer;
-  transition: 0.3s;
-  margin-left: 30px;
-  width: 25%;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+  white-space: nowrap;
 }
 
-.nav-btn:hover {
-  transform: scale(1.1);
+.nav-item:hover {
+  opacity: 1;
+  transform: scale(1.02);
 }
 
-/* PERFIL */
-
-.perfil-area {
+.user {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-left: 100px;
+  gap: 12px;
+  min-width: 0;
 }
 
-.perfil-info h2 {
-  font-size: 2rem;
-  font-weight: 400;
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
 }
 
-.perfil-info span {
-  font-size: 1.1rem;
-}
-
-.perfil-icon {
-  font-size: 4rem;
-}
-
-.logout-icon {
-  font-size: 2.2rem;
-  margin-left: 10px;
-
+.user-name {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
+}
+
+.user-name:hover {
+  text-decoration: underline;
+}
+
+.user-role {
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  text-transform: capitalize;
+}
+
+.avatar {
+  width: 52px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 107, 0, 0.9);
+  cursor: pointer;
+  background: #111827;
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .content-limit {
+    padding: 14px 16px;
+  }
+
+  .header-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .user-info {
+    text-align: left;
+  }
 }

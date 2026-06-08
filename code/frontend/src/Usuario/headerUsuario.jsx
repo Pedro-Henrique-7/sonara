@@ -64,7 +64,12 @@ export default function Header() {
               Home
             </span>
 
-            <span className="nav-item">Buscar</span>
+            <span
+              className="nav-item"
+              onClick={() => navigate("/telaDeUsuario")}
+            >
+              Buscar
+            </span>
 
             <span
               className="nav-item"

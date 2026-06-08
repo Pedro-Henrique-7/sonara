@@ -1,0 +1,442 @@
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PÁGINA
+========================================================= */
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+  width: 100%;
+  max-width: 1350px;
+
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 34px;
+  background: var(--bg-main);
+}
+
+/* =========================================================
+   TÍTULOS
+========================================================= */
+
+.titulo {
+  font-size: clamp(1.7rem, 2vw, 2.3rem);
+  font-weight: 700;
+
+  color: #ffffff;
+
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 760px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 16px 20px;
+
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.search-input {
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #fff;
+
+  font-size: 1rem;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.search-icon {
+  color: #ff7b24;
+  font-size: 1.1rem;
+}
+
+/* =========================================================
+   STATES
+========================================================= */
+
+.loading-state,
+.error-state,
+.sem-resultados {
+  width: 100%;
+
+  padding: 18px 20px;
+
+  border-radius: 22px;
+
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(12px);
+}
+
+.loading-state,
+.sem-resultados {
+  color: #dbe4ee;
+}
+
+.error-state {
+  background: rgba(248, 113, 113, 0.12);
+
+  border-color: rgba(248, 113, 113, 0.25);
+
+  color: #ffd7d7;
+}
+
+/* =========================================================
+   SLIDER
+========================================================= */
+
+.slider {
+  width: 100%;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(14px);
+
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.slider-track {
+  display: flex;
+
+  transition: transform 0.45s ease;
+}
+
+.slide {
+  min-width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.slide img {
+  width: 100%;
+
+  aspect-ratio: 16 / 8;
+
+  object-fit: cover;
+
+  border-radius: 28px 28px 0 0;
+}
+
+.slide-info {
+  padding: 0 24px;
+}
+
+.slide-info h4 {
+  margin-bottom: 10px;
+
+  font-size: 1.3rem;
+  font-weight: 700;
+
+  color: white;
+}
+
+.slide-info span {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #cbd5e1;
+
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   BOTÃO SLIDE
+========================================================= */
+
+.btn-slide {
+  padding: 0 24px 24px;
+}
+
+.btn-slide button {
+  width: 100%;
+
+  padding: 14px 18px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  background: linear-gradient(135deg, #ff7b24, #ff5400);
+
+  color: white;
+
+  font-weight: 700;
+  font-size: 0.95rem;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+
+  box-shadow: 0 12px 25px rgba(255, 123, 36, 0.3);
+}
+
+.btn-slide button:hover {
+  transform: translateY(-2px);
+
+  filter: brightness(1.06);
+}
+
+/* =========================================================
+   DOTS
+========================================================= */
+
+.slider-dots {
+  display: flex;
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 0 0 22px;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.28);
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.dot.active {
+  background: #ff7b24;
+
+  transform: scale(1.18);
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+
+  gap: 24px;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 26px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(14px);
+
+  transition: 0.3s ease;
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 123, 36, 0.18);
+}
+
+.card img {
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  object-fit: cover;
+}
+
+/* =========================================================
+   BODY CARD
+========================================================= */
+
+.card-body {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  padding: 20px;
+}
+
+.card-titulo {
+  font-size: 1.15rem;
+  font-weight: 700;
+
+  color: white;
+}
+
+.card-detalhe {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #cbd5e1;
+
+  font-size: 0.92rem;
+}
+
+/* =========================================================
+   BOTÃO CARD
+========================================================= */
+
+.card-btn {
+  margin-top: auto;
+
+  border: none;
+
+  border-radius: 16px;
+
+  padding: 13px 16px;
+
+  background: linear-gradient(135deg, #1f2937, #111827);
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.card-btn:hover {
+  background: linear-gradient(135deg, #ff7b24, #ff5400);
+
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 920px) {
+  .titulo {
+    text-align: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .search-bar {
+    padding: 14px 16px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .slide-info,
+  .btn-slide {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+@media (max-width: 520px) {
+  .main-wrapper {
+    padding: 18px 10px;
+  }
+
+  .container {
+    gap: 24px;
+  }
+
+  .titulo {
+    font-size: 1.5rem;
+  }
+
+  .search-input {
+    font-size: 0.95rem;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .slide img {
+    aspect-ratio: 16 / 10;
+  }
+}

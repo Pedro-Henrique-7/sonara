@@ -32,7 +32,7 @@
 .artist-nav {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 20rem;
 }
 
 .artist-nav-item {
@@ -43,7 +43,7 @@
 
   cursor: pointer;
   transition: 0.3s;
-  margin-left: 15rem;
+  margin-left: 19.5rem;
   white-space: nowrap;
 }
 

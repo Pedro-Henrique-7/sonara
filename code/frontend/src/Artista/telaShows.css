@@ -20,7 +20,7 @@ html,
 ========================= */
 
 .container {
-  max-width: 62.5rem;
+  max-width: 110rem;
 
   margin: 0 auto;
   padding: 1.25rem;
@@ -33,6 +33,7 @@ html,
   min-height: 100vh;
 
   background-color: var(--bg-main);
+  border: 0.2px solid var(--border-main);
 }
 
 /* =========================
@@ -397,11 +398,7 @@ html,
 
 .card button:hover,
 .card-btn:hover {
-  background: var(--hover-main);
-
   transform: translateX(-50%) scale(1.03);
-
-  box-shadow: 0 14px 30px rgba(52, 35, 166, 0.35);
 }
 
 /* =========================

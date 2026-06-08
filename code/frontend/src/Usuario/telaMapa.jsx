@@ -208,8 +208,7 @@ export default function MapaEvento({ evento: eventoProp }) {
       // =========================
       // MODO EVENTO
       // =========================
-      if (evento) console.log(evento.endereco);
-      {
+      if (evento) {
         setBuscando(true);
 
         const coords = await resolverCoordenadas(evento?.endereco);

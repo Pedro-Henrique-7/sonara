@@ -177,14 +177,13 @@ export default function EventoInscricao() {
 
               <p className="inscricao-data-evento">
                 {evento.data || evento.data_evento
-                  ? new Date(evento.data || evento.data_evento).toLocaleDateString(
-                      "pt-BR",
-                      {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      }
-                    )
+                  ? new Date(
+                      evento.data || evento.data_evento,
+                    ).toLocaleDateString("pt-BR", {
+                      day: "2-digit",
+                      month: "long",
+                      year: "numeric",
+                    })
                   : ""}
 
                 {evento.local ? ` — ${evento.local}` : ""}

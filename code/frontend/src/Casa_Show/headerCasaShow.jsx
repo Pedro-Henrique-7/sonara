@@ -42,8 +42,6 @@ export default function HeaderCasaShow() {
             Home
           </span>
 
-          <span className="cs-nav-item">Buscar</span>
-
           <span
             className="cs-nav-item"
             onClick={() => navigate("/listaMeusEventos")}

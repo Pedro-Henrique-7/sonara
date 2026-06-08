@@ -43,8 +43,6 @@ export default function HeaderArtista() {
             Home
           </span>
 
-          <span className="artist-nav-item">Buscar</span>
-
           <span
             className="artist-nav-item"
             onClick={() => navigate("/minhasCandidaturas")}
