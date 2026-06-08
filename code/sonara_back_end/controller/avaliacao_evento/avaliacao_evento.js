@@ -175,6 +175,32 @@ const atualizarAvaliacaoEvento = async function(AvaliacaoEvento, id, contentType
 
 }
 
+const buscarAvaliacaoUsuarioEvento = async function (usuario_id, evento_id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    try {
+        if (!usuario_id || !evento_id) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [usuario_id e evento_id obrigatórios]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+ 
+        const result = await avaliacaoEventoDAO.getSelectByUsuarioEvento(
+            Number(usuario_id),
+            Number(evento_id)
+        )
+ 
+        if (result) {
+            MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+            MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+            MESSAGES.HEADER.response.avaliacaoEvento = result
+            return MESSAGES.HEADER
+        } else {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
 
 const excluirAvaliacaoEvento = async function(id){
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
@@ -243,5 +269,6 @@ module.exports = {
     buscarAvaliacaoEventoId,
     inserirAvaliacaoEvento,
     atualizarAvaliacaoEvento,
-    excluirAvaliacaoEvento
+    excluirAvaliacaoEvento,
+    buscarAvaliacaoUsuarioEvento
 }

@@ -4,7 +4,7 @@ const cors = require('cors')
 const bodyParserJson = express.json()
 
 
-const ccontrollerAvaliacaoEvento = require('../controller/avaliacao_evento/avaliacao_evento')
+const controllerAvaliacaoEvento = require('../controller/avaliacao_evento/avaliacao_evento')
 
 //configurção do cors 
 const router = express.Router()
@@ -23,12 +23,22 @@ router.get('/', cors(), async function (request, response) {
     #swagger.summary = 'Listar avaliações de eventos'
     #swagger.responses[200] = { description: 'Lista retornada' } */
 
-    let AvaliacaoEvento = await ccontrollerAvaliacaoEvento.listarAvaliacaoEvento()
+    let AvaliacaoEvento = await controllerAvaliacaoEvento.listarAvaliacaoEvento()
 
     response.status(AvaliacaoEvento.status_code)
     response.json(AvaliacaoEvento)
 })
-module.exports = router
+
+
+
+router.get('/usuario/:usuario_id/evento/:evento_id', cors(), async function (request, response) {
+    const { usuario_id, evento_id } = request.params
+    const resultado = await controllerAvaliacaoEvento.buscarAvaliacaoUsuarioEvento(usuario_id, evento_id)
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
+ 
+
 
 
 // pegar Artista por id
@@ -40,7 +50,7 @@ router.get('/:id', cors(), async function (request, response) {
     #swagger.responses[404] = { description: 'Não encontrada' } */
     let idAvaliacaoEvento = request.params.id
 
-    let AvaliacaoEvento = await ccontrollerAvaliacaoEvento.buscarAvaliacaoEventoId(idAvaliacaoEvento)
+    let AvaliacaoEvento = await controllerAvaliacaoEvento.buscarAvaliacaoEventoId(idAvaliacaoEvento)
     response.status(AvaliacaoEvento.status_code)
     response.json(AvaliacaoEvento)
 
@@ -59,7 +69,7 @@ router.post('/', cors(), bodyParserJson, async function (request, response) {
     let dadosBody = request.body
     let contentType = request.headers['content-type']
 
-    let AvaliacaoEvento = await ccontrollerAvaliacaoEvento.inserirAvaliacaoEvento(dadosBody, contentType)
+    let AvaliacaoEvento = await controllerAvaliacaoEvento.inserirAvaliacaoEvento(dadosBody, contentType)
 
     response.status(AvaliacaoEvento.status_code)
     response.json(AvaliacaoEvento)
@@ -79,7 +89,7 @@ router.put('/:id', cors(), bodyParserJson, async function (request, response) {
 
     let contentType = request.headers['content-type']
 
-    let AvaliacaoEvento = await ccontrollerAvaliacaoEvento.atualizarAvaliacaoEvento(dadosBody, idAvaliacaoEvento, contentType)
+    let AvaliacaoEvento = await controllerAvaliacaoEvento.atualizarAvaliacaoEvento(dadosBody, idAvaliacaoEvento, contentType)
     response.status(AvaliacaoEvento.status_code)
     response.json(AvaliacaoEvento)
 })
@@ -92,7 +102,9 @@ router.delete('/:id', cors(), async function (request, response) {
 
     let idAvaliacaoEvento = request.params.id
 
-    let AvaliacaoEvento = await ccontrollerAvaliacaoEvento.excluirAvaliacaoEvento(idAvaliacaoEvento)
+    let AvaliacaoEvento = await controllerAvaliacaoEvento.excluirAvaliacaoEvento(idAvaliacaoEvento)
     response.status(AvaliacaoEvento.status_code)
     response.json(AvaliacaoEvento)
 })
+
+module.exports = router

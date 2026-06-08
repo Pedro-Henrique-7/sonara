@@ -121,6 +121,32 @@ const inserirAvaliacaoArtista = async function(AvaliacaoArtista, contentType){
     }
 }
 
+const buscarAvaliacaoUsuarioArtista = async function (usuario_id, artista_id) {
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES))
+    try {
+        if (!usuario_id || !artista_id) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += ' [usuario_id e artista_id obrigatórios]'
+            return MESSAGES.ERROR_REQUIRED_FIELDS
+        }
+ 
+        const result = await avaliacaoArtistaDAO.getSelectByUsuarioArtista(
+            Number(usuario_id),
+            Number(artista_id)
+        )
+ 
+        if (result) {
+            MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
+            MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
+            MESSAGES.HEADER.response.avaliacaoArtista = result
+            return MESSAGES.HEADER
+        } else {
+            return MESSAGES.ERROR_NOT_FOUND
+        }
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
 //Atualiza um AvaliacaoArtista buscando pelo ID
 const atualizarAvaliacaoArtista = async function(AvaliacaoArtista, id, contentType){
     //Criando um objeto novo para as mensagens
@@ -238,6 +264,7 @@ const validarDadosAvaliacaoArtista = function(AvaliacaoArtista) {
 module.exports = {
     listarAvaliacaoArtista,
     buscarAvaliacaoArtistaId,
+    buscarAvaliacaoUsuarioArtista,
     inserirAvaliacaoArtista,
     atualizarAvaliacaoArtista,
     excluirAvaliacaoArtista

@@ -7,6 +7,9 @@ import fotoShow from "../img/fotoShow.png";
 import Header from "./header";
 import FooterSonara from "./footer";
 import { buscarEventosPorId } from "../services/eventoService";
+import StarRating from "../components/starRating"
+import { avaliarEvento, buscarAvaliacaoEvento, atualizarAvaliacaoEvento } from "../services/avaliacaoService"
+
 
 const PLACEHOLDER_IMG = fotoShow;
 
@@ -107,13 +110,30 @@ export default function SobreEvento() {
 
   const imagens = obterImagens(evento.fotos);
 
-  // FIX 5: endereço vem aninhado em evento.endereco (objeto)
   const end = evento.endereco || {};
   const enderecoCompleto = end.logradouro
-    ? `${end.logradouro}, ${end.numero || "S/N"}${
-        end.complemento ? ` - ${end.complemento}` : ""
-      }, ${end.bairro || ""} - ${end.cidade || ""}/${end.estado || ""}`
+    ? `${end.logradouro}, ${end.numero || "S/N"}${end.complemento ? ` - ${end.complemento}` : ""
+    }, ${end.bairro || ""} - ${end.cidade || ""}/${end.estado || ""}`
     : null;
+
+  async function handleAvaliarEvento(nota, avaliacaoId) {
+    if (avaliacaoId) {
+      await atualizarAvaliacaoEvento({
+        id: avaliacaoId,
+        numero_estrelas: nota,
+        usuario_id: usuario.id_usuario,
+        evento_id: Number(id),
+      })
+    } else {
+      await avaliarEvento({
+        numero_estrelas: nota,
+        usuario_id: usuario.id_usuario,
+        evento_id: Number(id),
+      })
+    }
+  }
+
+
 
   return (
     <div className="main-wrapper">
@@ -133,28 +153,15 @@ export default function SobreEvento() {
 
           {/* AVALIAÇÃO */}
           <div className="sonaraSobreEventoAvaliacao">
-            {[...Array(totalEstrelas)].map((_, index) => {
-              const valorAtual = index + 1;
-              return (
-                <FaStar
-                  key={valorAtual}
-                  className={
-                    valorAtual <= (hoverNota || nota)
-                      ? "sonaraSobreEventoStarOn"
-                      : "sonaraSobreEventoStarOff"
-                  }
-                  onMouseEnter={() => setHoverNota(valorAtual)}
-                  onMouseLeave={() => setHoverNota(0)}
-                  onClick={() => setNota(valorAtual)}
-                />
-              );
-            })}
-            <span className="sonaraSobreEventoNotaTexto">{nota}.0</span>
-            <span className="sonaraSobreEventoNota">
-              Media de avaliações: {evento.nota_media || "Sem avaliações"}
-            </span>
+            <StarRating
+              onRate={handleAvaliarEvento}
+              mediaAtual={evento?.avaliacao?.media || 0}
+              totalAvaliacoes={evento?.avaliacao?.total || 0}
+              usuario_id={usuario.id_usuario}
+              entityId={Number(id)}
+              buscarAvaliacao={buscarAvaliacaoEvento}
+            />
           </div>
-
           {/* MINI IMAGENS */}
           {imagens.map((foto, i) => (
             <img

@@ -126,10 +126,24 @@ const setDeleteEventReview = async function (id_avaliacao_evento, trx = null) {
     }
 }
 
+const getSelectByUsuarioEvento = async function (usuario_id, evento_id) {
+    try {
+        const result = await knexDatabase('tb_avaliacao_evento')
+            .where({ usuario_id, evento_id })
+            .first()
+ 
+        return result || null
+    } catch (error) {
+        console.error('[DAO eventReview] getSelectByUsuarioEvento:', error.message)
+        return null
+    }
+}
+
 module.exports = {
     getSelectAllEventReview,
     getSelectByIdEventReview,
     getSelectLastID,
+    getSelectByUsuarioEvento,
     setInsertEventReview,
     setUpdateEventReview,
     setDeleteEventReview

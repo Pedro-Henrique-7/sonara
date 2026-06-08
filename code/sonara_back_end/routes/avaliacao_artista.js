@@ -17,6 +17,8 @@ router.use((request, response, next) => {
 // ENDPOINTS DA TABELA Artista
 
 
+
+
 // retornar todos os Artistas
 router.get('/', cors(), async function (request, response) {
     /*  #swagger.tags = ['Avaliacao Artista']
@@ -27,7 +29,18 @@ router.get('/', cors(), async function (request, response) {
     response.status(avaliacaoArtista.status_code)
     response.json(avaliacaoArtista)
 })
-module.exports = router
+
+
+
+
+router.get('/usuario/:usuario_id/artista/:artista_id', cors(), async function (request, response) {
+    const { usuario_id, artista_id } = request.params
+    const resultado = await controllerAvaliacaoArtista.buscarAvaliacaoUsuarioArtista(usuario_id, artista_id)
+    response.status(resultado.status_code)
+    response.json(resultado)
+})
+ 
+
 
 
 // pegar Artista por id
@@ -97,3 +110,4 @@ router.delete('/:id', cors(), async function (request, response) {
     response.status(avaliacaoArtista.status_code)
     response.json(avaliacaoArtista)
 })
+module.exports = router

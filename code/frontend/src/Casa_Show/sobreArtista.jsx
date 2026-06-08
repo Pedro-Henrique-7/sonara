@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import HeaderCasaShow from "./headerCasaShow";
 import FooterSonara from "../Artista/footer";
-
+import {avaliarArtista, buscarAvaliacaoArtista, atualizarAvaliacaoArtista} from "../services/avaliacaoService"
 import {
   FaInstagram,
   FaYoutube,
@@ -136,6 +136,25 @@ export default function SobreArtista() {
       setEnviando(false);
     }
   }
+
+
+    async function handleAvaliarArtista(nota, avaliacaoId) {
+      if (avaliacaoId) {
+        await atualizarAvaliacaoArtista({
+          id: avaliacaoId,
+          numero_estrelas: nota,
+          usuario_id: usuario.id_usuario,
+          artista_id: Number(id),
+        })
+      } else {
+        await avaliarArtista({
+          numero_estrelas: nota,
+          usuario_id: usuario.id_usuario,
+          artista_id: Number(id),
+        })
+      }
+    }
+  
 
   return (
     <>

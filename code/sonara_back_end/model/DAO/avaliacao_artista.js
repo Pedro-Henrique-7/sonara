@@ -126,7 +126,22 @@ const setDeleteArtistReview = async function (id_avaliacao_artista, trx = null) 
     }
 }
 
+const getSelectByUsuarioArtista = async function (usuario_id, artista_id) {
+    try {
+        const result = await knexDatabase('tb_avaliacao_artista')
+            .where({ usuario_id, artista_id })
+            .first()
+ 
+        return result || null
+    } catch (error) {
+        console.error('[DAO artistReview] getSelectByUsuarioArtista:', error.message)
+        return null
+    }
+}
+
+
 module.exports = {
+    getSelectByUsuarioArtista,
     getSelectAllArtistReview,
     getSelectByIdArtistReview,
     getSelectLastID,
