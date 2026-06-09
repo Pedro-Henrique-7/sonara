@@ -112,6 +112,7 @@ body {
   font-size: 15px;
   font-weight: 500;
   color: var(--text-color);
+  margin-bottom: 3rem;
 }
 
 /* NOME */
@@ -158,7 +159,7 @@ body {
 .evento-row {
   display: flex;
   gap: 2rem;
-  width: 50%;
+  width: 100%;
   margin-left: 0.5rem;
 }
 
@@ -186,6 +187,7 @@ body {
   flex: 1;
   max-height: 50px;
   margin-top: 50px;
+  max-width: 95%;
 }
 
 .evento-hora label {

@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
 
 import "./sobreEventoUsuario.css";
 
 import fotoShow from "../img/fotoShow.png";
 
 import Header from "./headerUsuario";
-
-// import FooterSonara from "./footer";
 
 import { buscarEventosPorId } from "../services/eventoService";
 
@@ -32,12 +29,13 @@ function formatarHora(hora) {
   return hora.slice(0, 5);
 }
 
-function obterImagem(fotos) {
-  if (fotos && Array.isArray(fotos) && fotos.length > 0 && fotos[0].caminho) {
-    return fotos[0].caminho;
+// AGORA ACEITA URL OU CAMINHO
+function obterImagens(fotos) {
+  if (Array.isArray(fotos) && fotos.length > 0) {
+    return fotos;
   }
 
-  return PLACEHOLDER_IMG;
+  return [{ url: PLACEHOLDER_IMG }];
 }
 
 export default function SobreEventoUsuario() {
@@ -51,12 +49,8 @@ export default function SobreEventoUsuario() {
 
   const [erro, setErro] = useState(null);
 
-  // AVALIAÇÃO
-  const totalEstrelas = 5;
-
-  const [nota, setNota] = useState(0);
-
-  const [hoverNota, setHoverNota] = useState(0);
+  // IMAGENS
+  const [imagemSelecionada, setImagemSelecionada] = useState(0);
 
   useEffect(() => {
     async function carregarEvento() {
@@ -65,18 +59,13 @@ export default function SobreEventoUsuario() {
           throw new Error("ID do evento não informado.");
         }
 
-        console.log("ID RECEBIDO:", id);
-
         const json = await buscarEventosPorId(id);
 
-        console.log("RESPOSTA API:", json);
-
-        // TENTA PEGAR O EVENTO EM DIFERENTES FORMATOS
         const ev =
-          json?.response?.Evento ||
           json?.response?.evento ||
-          json?.Evento ||
+          json?.response?.Evento ||
           json?.evento ||
+          json?.Evento ||
           json;
 
         if (!ev || Object.keys(ev).length === 0) {
@@ -96,6 +85,7 @@ export default function SobreEventoUsuario() {
     carregarEvento();
   }, [id]);
 
+  // LOADING
   if (loading) {
     return (
       <div className="main-wrapper">
@@ -108,6 +98,7 @@ export default function SobreEventoUsuario() {
     );
   }
 
+  // ERRO
   if (erro || !evento) {
     return (
       <div className="main-wrapper">
@@ -122,12 +113,16 @@ export default function SobreEventoUsuario() {
     );
   }
 
-  const imagemPrincipal = obterImagem(evento.fotos);
+  // IMAGENS
+  const imagens = obterImagens(evento.fotos);
 
-  const enderecoCompleto = evento.logradouro
-    ? `${evento.logradouro}, ${evento.numero || "S/N"}${
-        evento.complemento ? ` - ${evento.complemento}` : ""
-      }, ${evento.bairro || ""} - ${evento.cidade || ""}/${evento.estado || ""}`
+  // ENDEREÇO
+  const end = evento.endereco || {};
+
+  const enderecoCompleto = end.logradouro
+    ? `${end.logradouro}, ${end.numero || "S/N"}${
+        end.complemento ? ` - ${end.complemento}` : ""
+      }, ${end.bairro || ""} - ${end.cidade || ""}/${end.estado || ""}`
     : null;
 
   return (
@@ -137,45 +132,29 @@ export default function SobreEventoUsuario() {
       <main className="container-principal">
         {/* ESQUERDA */}
         <div className="left">
+          {/* IMAGEM PRINCIPAL */}
           <img
-            src={imagemPrincipal}
-            alt={evento.evento_nome || "Evento"}
+            src={
+              imagens[imagemSelecionada]?.url ||
+              imagens[imagemSelecionada]?.caminho ||
+              PLACEHOLDER_IMG
+            }
+            alt={evento.nome || "Evento"}
             className="main-img"
             onError={(e) => {
               e.target.src = PLACEHOLDER_IMG;
             }}
           />
 
-          {/* ESTRELAS */}
-          <div className="sonaraSobreArtistaAvaliacao">
-            {[...Array(totalEstrelas)].map((_, index) => {
-              const valorAtual = index + 1;
-
-              return (
-                <FaStar
-                  key={valorAtual}
-                  className={
-                    valorAtual <= (hoverNota || nota)
-                      ? "sonaraSobreArtistaStarOn"
-                      : "sonaraSobreArtistaStarOff"
-                  }
-                  onMouseEnter={() => setHoverNota(valorAtual)}
-                  onMouseLeave={() => setHoverNota(0)}
-                  onClick={() => setNota(valorAtual)}
-                />
-              );
-            })}
-
-            <span className="sonaraSobreArtistaNotaTexto">{nota}.0</span>
-          </div>
-
-          {/* MINIATURAS */}
+          {/* MINI IMAGENS */}
           <div className="thumbs">
-            {[1, 2, 3, 4, 5].map((i) => (
+            {imagens.map((foto, i) => (
               <img
                 key={i}
-                src={imagemPrincipal}
-                alt={`Thumb ${i}`}
+                src={foto.url || foto.caminho || PLACEHOLDER_IMG}
+                alt={`Thumb ${i + 1}`}
+                className={imagemSelecionada === i ? "thumb active" : "thumb"}
+                onClick={() => setImagemSelecionada(i)}
                 onError={(e) => {
                   e.target.src = PLACEHOLDER_IMG;
                 }}
@@ -187,18 +166,21 @@ export default function SobreEventoUsuario() {
         {/* DIREITA */}
         <div className="right">
           <div className="form-box">
+            {/* NOME */}
             <section className="evento-nome">
               <label>Nome do evento</label>
 
-              <p>{evento.evento_nome || evento.nome || "Nome não informado"}</p>
+              <p>{evento.nome || "Nome não informado"}</p>
             </section>
 
+            {/* DESCRIÇÃO */}
             <section className="evento-descricao">
               <label>Descrição</label>
 
               <p>{evento.descricao || "Sem descrição disponível."}</p>
             </section>
 
+            {/* DATA E HORA */}
             <div className="evento-row">
               <section className="evento-data">
                 <label>DATA</label>
@@ -217,6 +199,7 @@ export default function SobreEventoUsuario() {
               </section>
             </div>
 
+            {/* LOCAL */}
             {(evento.local || enderecoCompleto) && (
               <section className="evento-local">
                 <label>Local</label>
@@ -227,21 +210,21 @@ export default function SobreEventoUsuario() {
               </section>
             )}
 
-            {evento.organizador_nome && (
-              <section className="evento-organizador">
-                <label>Organizador</label>
+            {/* ORGANIZADOR */}
+            <section className="evento-organizador">
+              <label>Organizador</label>
 
-                <p>{evento.organizador_nome}</p>
-              </section>
-            )}
+              <p>{evento.organizador?.nome || "Organizador não informado"}</p>
+            </section>
 
-            {evento.artista && (
+            {/* ARTISTAS */}
+            {evento.artistas && evento.artistas.length > 0 && (
               <section className="evento-artista">
-                <label>Artista</label>
+                <label>Artistas confirmados</label>
 
-                <p>{evento.artista}</p>
-
-                {evento.sobre_artista && <p>{evento.sobre_artista}</p>}
+                {evento.artistas.map((a, i) => (
+                  <p key={i}>{a.nome_artistico || a.nome}</p>
+                ))}
               </section>
             )}
           </div>

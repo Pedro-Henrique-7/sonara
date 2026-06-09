@@ -1,18 +1,18 @@
-.main-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #090b16 0%, #111827 100%);
-  color: #f8fafc;
-  font-family: "Poppins", sans-serif;
-}
-
 .mapa-page {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 28px 20px 36px;
+}
+
+.main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-main);
+  color: #f8fafc;
+  font-family: "Poppins", sans-serif;
 }
 
 .mapa-card {

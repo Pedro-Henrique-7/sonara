@@ -32,7 +32,7 @@ html,
   width: 100%;
   min-height: 100vh;
 
-  background-color: var(--bg-main);
+  background-color: var(--bg-box);
   border: 0.2px solid var(--border-main);
 }
 
@@ -260,11 +260,11 @@ html,
 .card {
   position: relative;
 
-  width: 100%;
-  max-width: 340px;
+  width: 150%;
+  max-width: 300px;
 
   min-height: 420px;
-  height: 27rem;
+  height: 30rem;
 
   border-radius: 24px;
 
@@ -380,8 +380,6 @@ html,
   border-radius: 14px;
 
   background: var(--bg-main);
-
-  color: var(--text-main);
 
   font-size: 0.95rem;
   font-weight: 700;

@@ -26,7 +26,7 @@
   flex-direction: column;
 
   gap: 34px;
-  background: var(--bg-main);
+  background: var(--bg-box);
 }
 
 /* =========================================================

@@ -9,7 +9,6 @@ export default function TelaRecuperarSenha() {
     <div className="app">
       <header className="header-senha">
         <img src={logo} alt="Logo Sonara" />
-        <p>SONARA</p>
       </header>
 
       <main className="main-senha">

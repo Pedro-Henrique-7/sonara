@@ -53,45 +53,48 @@ export default function Header() {
   }
 
   return (
-    <header className="header">
-      <div className="content-limit">
-        <div className="header-top">
-          <nav className="nav">
+    <header className="header-usuario">
+      <div className="content-limit-usuario">
+        <div className="header-top-usuario">
+          <nav className="header-nav-usuario">
             <span
-              className="nav-item"
+              className="header-nav-item-usuario"
               onClick={() => navigate("/telaDeUsuario")}
             >
               Home
             </span>
 
             <span
-              className="nav-item"
+              className="header-nav-item-usuario"
               onClick={() => navigate("/telaDeUsuario")}
-            >
-              Buscar
-            </span>
+            ></span>
 
             <span
-              className="nav-item"
+              className="header-nav-item-usuario"
               onClick={() => navigate("/mapaDoEvento")}
             >
               Mapa
             </span>
           </nav>
 
-          <div className="user">
-            <div className="user-info">
+          <div className="header-user-usuario">
+            <div className="header-user-info-usuario">
               <span
-                className="user-name"
+                className="header-user-name-usuario"
                 onClick={() => navigate(rotaPerfil())}
               >
                 {nomeUsuario}
               </span>
 
-              <span className="user-role">{tipoUsuario}</span>
+              <span className="header-avatar-usuario-user-role">
+                {tipoUsuario}
+              </span>
             </div>
 
-            <div className="avatar" onClick={() => navigate(rotaPerfil())}>
+            <div
+              className="header-avatar-usuario"
+              onClick={() => navigate(rotaPerfil())}
+            >
               <img
                 src={fotoUrl}
                 alt="Perfil"

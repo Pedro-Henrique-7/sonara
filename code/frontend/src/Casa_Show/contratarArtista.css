@@ -246,19 +246,19 @@
 
 .sonaraContratarEstrelas {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  gap: 6px;
 
-  gap: 5px;
-
-  margin: 16px 0 14px;
-
-  color: #ffbf00;
-
-  font-size: 1rem;
+  margin-top: 8px;
 }
 
 .sonaraContratarEstrelaOff {
-  color: #d0d0d0;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.sonaraContratarTotalAvaliacoes {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
 }
 
 /* =========================================================
@@ -325,8 +325,6 @@
 }
 
 .sonaraContratarBtnVerMais:hover {
-  background: var(--btn-hover-color);
-
   transform: translateY(-2px);
 }
 

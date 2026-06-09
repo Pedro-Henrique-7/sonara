@@ -234,21 +234,6 @@
   opacity: 0.92;
 }
 
-/* =========================================================
-   AVALIAÇÃO
-========================================================= */
-
-.sonaraSobreArtistaAvaliacao {
-  display: flex;
-  align-items: center;
-
-  gap: 6px;
-
-  color: #ffe600;
-
-  font-size: 1.7rem;
-}
-
 .sonaraSobreArtistaStarOff {
   color: rgba(255, 255, 255, 0.25);
 }
@@ -460,7 +445,7 @@
 
   border-radius: 24px;
 
-  background: linear-gradient(180deg, #b70000, #ff3c00);
+  background: var(--bg-main);
 
   color: white;
 
@@ -586,7 +571,7 @@
 }
 
 .sonaraModalEnviar {
-  background: #ff9d00;
+  background: var(--btn-color);
   color: white;
 }
 
@@ -597,6 +582,37 @@
 .sonaraModalEnviar:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.sonaraAvaliarArtista {
+  margin-top: 20px;
+}
+
+.sonaraAvaliarArtista p {
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.sonaraAvaliarEstrelas {
+  display: flex;
+  gap: 8px;
+}
+
+.sonaraEstrelaAtiva {
+  color: #ffd700;
+  font-size: 1.4rem;
+  transition: 0.2s;
+}
+
+.sonaraEstrelaInativa {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 1.4rem;
+  transition: 0.2s;
+}
+
+.sonaraAvaliarEstrelas svg:hover {
+  transform: scale(1.15);
 }
 
 /* =========================================================

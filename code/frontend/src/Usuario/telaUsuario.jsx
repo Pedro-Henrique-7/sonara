@@ -5,7 +5,6 @@ import { Search, MapPin, Clock, Calendar } from "lucide-react";
 import FooterSonara from "../Artista/footer";
 import Header from "./headerUsuario";
 import { buscarUsuarioPorId } from "../services/usuarioService";
-
 import { buscarEventos } from "../services/eventoService";
 
 // Placeholder para eventos sem foto
@@ -14,7 +13,9 @@ const PLACEHOLDER_IMG =
 
 function formatarData(dataISO) {
   if (!dataISO) return "Data não informada";
+
   const data = new Date(dataISO);
+
   return data.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",
@@ -27,23 +28,25 @@ function formatarHora(hora) {
   return hora.slice(0, 5);
 }
 
-// Usa o campo "caminho" que é o correto na API do usuário
+// Agora aceita url OU caminho
 function obterImagem(fotos) {
-  if (fotos && fotos.length > 0 && fotos[0]?.caminho) {
-    return fotos[0].caminho;
+  if (!fotos || fotos.length === 0) {
+    return PLACEHOLDER_IMG;
   }
-  return PLACEHOLDER_IMG;
+
+  return fotos[0].url || fotos[0].caminho || PLACEHOLDER_IMG;
 }
 
 export default function TelaUsuario() {
   const navigate = useNavigate();
+
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
   const [sliderIndex, setSliderIndex] = useState(0);
   const [busca, setBusca] = useState("");
 
-  // Busca usuário atualizado e salva na sessionStorage
+  // Atualiza usuário da session
   useEffect(() => {
     const carregarUsuarioCompleto = async () => {
       try {
@@ -52,6 +55,7 @@ export default function TelaUsuario() {
         if (!usuarioStorage?.id_usuario) return;
 
         const json = await buscarUsuarioPorId(usuarioStorage.id_usuario);
+
         const usuarioCompleto = json?.response?.usuario;
 
         if (usuarioCompleto) {
@@ -65,7 +69,7 @@ export default function TelaUsuario() {
     carregarUsuarioCompleto();
   }, []);
 
-  // Busca os eventos da API
+  // Busca eventos
   useEffect(() => {
     buscarEventos()
       .then((json) => {
@@ -76,34 +80,39 @@ export default function TelaUsuario() {
         console.error(err);
         setErro("Não foi possível carregar os eventos.");
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
-  // Reseta o índice do slider quando a lista de eventos muda
+  // Reseta slider quando eventos mudam
   useEffect(() => {
     setSliderIndex(0);
   }, [eventos]);
 
-  // Avança o slider automaticamente
+  // Slider automático
   useEffect(() => {
     if (eventos.length === 0) return;
+
     const interval = setInterval(() => {
       setSliderIndex((prev) => (prev + 1) % Math.min(eventos.length, 5));
     }, 3500);
+
     return () => clearInterval(interval);
   }, [eventos]);
 
-  // Filtra pelo campo de busca (nome, cidade ou local)
+  // Busca
   const eventosFiltrados = eventos.filter((ev) => {
     const termo = busca.toLowerCase();
+
     return (
-      ev.evento_nome?.toLowerCase().includes(termo) ||
+      ev.nome?.toLowerCase().includes(termo) ||
       ev.cidade?.toLowerCase().includes(termo) ||
       ev.local?.toLowerCase().includes(termo)
     );
   });
 
-  // Primeiros eventos para o slider (máx 5)
+  // Slider eventos
   const sliderEventos = eventos.slice(0, 5);
 
   return (
@@ -121,49 +130,56 @@ export default function TelaUsuario() {
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
             />
+
             <Search size={18} color="#fff" className="search-icon" />
           </div>
         </div>
 
-        {/* Estado de loading */}
+        {/* Loading */}
         {loading && (
           <div className="loading-state">
             <p>Carregando eventos...</p>
           </div>
         )}
 
-        {/* Estado de erro */}
+        {/* Erro */}
         {erro && (
           <div className="error-state">
             <p>{erro}</p>
           </div>
         )}
 
-        {/* Slider — só aparece quando não há busca ativa */}
+        {/* Slider */}
         {!loading && !erro && busca === "" && sliderEventos.length > 0 && (
           <>
             <h3 className="titulo">Eventos Próximos</h3>
+
             <div className="slider">
               <div
                 className="slider-track"
-                style={{ transform: `translateX(-${sliderIndex * 100}%)` }}
+                style={{
+                  transform: `translateX(-${sliderIndex * 100}%)`,
+                }}
               >
                 {sliderEventos.map((ev, i) => (
                   <div className="slide" key={ev.id_evento ?? i}>
                     <img
                       src={obterImagem(ev.fotos)}
-                      alt={ev.evento_nome}
+                      alt={ev.nome}
                       onError={(e) => {
                         e.target.src = PLACEHOLDER_IMG;
                       }}
                     />
+
                     <div className="slide-info">
-                      <h4>{ev.evento_nome}</h4>
-                      {/* <p> em vez de <span> para evitar bloco dentro de inline */}
+                      <h4>{ev.nome}</h4>
+
                       <p className="card-detalhe">
-                        <Calendar size={13} /> {formatarData(ev.data)}
+                        <Calendar size={13} />
+                        {formatarData(ev.data)}
                       </p>
                     </div>
+
                     <div className="btn-slide">
                       <button
                         onClick={() =>
@@ -177,7 +193,7 @@ export default function TelaUsuario() {
                 ))}
               </div>
 
-              {/* Key estável usando id_evento nos dots */}
+              {/* Dots */}
               <div className="slider-dots">
                 {sliderEventos.map((ev, i) => (
                   <span
@@ -191,7 +207,7 @@ export default function TelaUsuario() {
           </>
         )}
 
-        {/* Grid de eventos */}
+        {/* Grid */}
         {!loading && !erro && (
           <>
             <h3 className="titulo">
@@ -206,18 +222,21 @@ export default function TelaUsuario() {
                   <div className="card" key={ev.id_evento ?? i}>
                     <img
                       src={obterImagem(ev.fotos)}
-                      alt={ev.evento_nome}
+                      alt={ev.nome}
                       onError={(e) => {
                         e.target.src = PLACEHOLDER_IMG;
                       }}
                     />
+
                     <div className="card-body">
-                      <h4 className="card-titulo">{ev.evento_nome}</h4>
+                      <h4 className="card-titulo">{ev.nome}</h4>
 
                       {ev.cidade && (
                         <p className="card-detalhe">
                           <MapPin size={13} />
+
                           {ev.cidade}
+
                           {ev.estado ? `, ${ev.estado}` : ""}
                         </p>
                       )}
@@ -232,7 +251,9 @@ export default function TelaUsuario() {
                       {ev.hora_inicio && (
                         <p className="card-detalhe">
                           <Clock size={13} />
+
                           {formatarHora(ev.hora_inicio)}
+
                           {ev.hora_fim ? ` – ${formatarHora(ev.hora_fim)}` : ""}
                         </p>
                       )}

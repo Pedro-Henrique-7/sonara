@@ -2,12 +2,14 @@ import "./contratarArtista.css";
 import { useEffect, useState } from "react";
 import { FaEye, FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import HeaderCasaShow from "./headerCasaShow.jsx";
 import FooterSonara from "../Artista/footer.jsx";
 import { listarArtistas } from "../services/artistaService.js";
 
 export default function TelaContratarArtistas() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [artistas, setArtistas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,10 +25,10 @@ export default function TelaContratarArtistas() {
         const lista = Array.isArray(dados)
           ? dados
           : Array.isArray(dados?.response?.Artista)
-          ? dados.response.Artista
-          : Array.isArray(dados?.response)
-          ? dados.response
-          : [];
+            ? dados.response.Artista
+            : Array.isArray(dados?.response)
+              ? dados.response
+              : [];
 
         // Deduplica por artista_id e agrupa redes sociais
         const mapa = new Map();
@@ -54,13 +56,13 @@ export default function TelaContratarArtistas() {
       }
     }
     carregar();
-  }, []);
+  }, [location.state]);
 
   const artistasFiltrados = artistas.filter(
     (a) =>
       a.nome_artistico?.toLowerCase().includes(busca.toLowerCase()) ||
       a.sobre_artista?.toLowerCase().includes(busca.toLowerCase()) ||
-      a.cidade?.toLowerCase().includes(busca.toLowerCase())
+      a.cidade?.toLowerCase().includes(busca.toLowerCase()),
   );
 
   // Renderiza estrelas com base na média (0–5)
@@ -121,12 +123,21 @@ export default function TelaContratarArtistas() {
                   <h2>{artista.nome_artistico}</h2>
 
                   <span>{artista.cidade || "Artista Musical"}</span>
-
                   <div className="sonaraContratarEstrelas">
-                    {renderEstrelas(0)}
+                    {renderEstrelas(artista.media_avaliacao_artista)}
+
+                    {artista.total_avaliacoes_artista > 0 && (
+                      <small className="sonaraContratarTotalAvaliacoes">
+                        ({artista.total_avaliacoes_artista})
+                      </small>
+                    )}
                   </div>
 
-                  {artista.cidade && <p>{artista.cidade}, {artista.estado}</p>}
+                  {artista.cidade && (
+                    <p>
+                      {artista.cidade}, {artista.estado}
+                    </p>
+                  )}
 
                   <small>
                     {artista.sobre_artista

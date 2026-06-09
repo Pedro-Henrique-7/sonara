@@ -42,8 +42,9 @@ body {
 }
 
 .header-cadastro-logo {
-  width: 48px;
-  height: 48px;
+  height: 350px;
+  position: absolute;
+  margin-top: 10vh;
 }
 
 .nome-cadastro {
