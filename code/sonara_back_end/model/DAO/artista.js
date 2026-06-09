@@ -15,8 +15,8 @@ const getSelectAllArtist = async function () {
 
 const getSelectByIdArtistUser = async function (usuario_id, trx = null) {
     try {
-        const result = await db(trx)('vw_usuario')
-            .where({ id_usuario: usuario_id, tipo_usuario: 'Artista' })
+        const result = await db(trx)('tb_artista')
+            .where({usuario_id})
             .first()
         return result || null
     } catch (error) {

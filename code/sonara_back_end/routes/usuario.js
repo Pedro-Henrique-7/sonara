@@ -98,6 +98,7 @@ router.post('/', cors(), upload.single('foto'), async function (request, respons
     }
     const arquivo = request.file || null
     let resultado = await controllerUsuario.inserirUsuario(dadosBody, arquivo)
+    console.log(resultado)
     response.status(resultado.status_code)
     response.json(resultado)
 })

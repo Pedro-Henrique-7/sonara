@@ -350,14 +350,14 @@ const inserirUsuario = async function (usuario, arquivo) {
 
             if (!resultArtista) {
                 await trx.rollback()
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                return console.log(resultArtista)
             }
 
             const artistaBanco = await artistaDAO.getSelectByIdArtistUser(idUsuario, trx)
 
             if (!artistaBanco || !artistaBanco.id_artista) {
                 await trx.rollback()
-                return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+                return console.log(artistaBanco)
             }
 
             for (const generoId of usuario.generos_musicais) {
@@ -405,7 +405,7 @@ const inserirUsuario = async function (usuario, arquivo) {
 
         if (!resultEndereco) {
             await trx.rollback()
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+            return console.log(resultEndereco)
         }
 
         await trx.commit()
@@ -413,7 +413,7 @@ const inserirUsuario = async function (usuario, arquivo) {
         const resultFinal = await usuarioDAO.getSelectByIdUsers(idUsuario)
 
         if (!resultFinal || resultFinal.length === 0) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+            console.log(resultFinal)
         }
 
         MESSAGES.HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status

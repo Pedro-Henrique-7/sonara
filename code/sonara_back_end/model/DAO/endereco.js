@@ -71,7 +71,7 @@ const setInsertAddress = async function (endereco, trx = null) {
             longitude: endereco.longitude || null,
             usuario_id: endereco.usuario_id
         })
-
+        console.log(result[0])
         return result[0]
     } catch (error) {
         console.error('[DAO endereco] setInsertAddress:', error.message)
