@@ -6,8 +6,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-
-  padding-top: 30px;
+  padding-top: clamp(14px, 2.5vw, 30px);
 }
 
 /* =========================================================
@@ -22,7 +21,7 @@
   justify-content: space-between;
   align-items: center;
 
-  padding: 25px 40px;
+  padding: clamp(14px, 2vw, 25px) clamp(16px, 3vw, 40px);
 }
 
 /* =========================================================
@@ -32,18 +31,18 @@
 .artist-nav {
   display: flex;
   align-items: center;
-  gap: 20rem;
+  gap: clamp(1rem, 10vw, 20rem);
+  margin-left: clamp(0rem, 25vw, 30rem);
 }
 
 .artist-nav-item {
   color: white;
-
-  font-size: 2rem;
+  width: fit-content;
+  font-size: clamp(0.85rem, 2.5vw, 2rem);
   font-weight: 500;
-
+  border-radius: 12px;
   cursor: pointer;
   transition: 0.3s;
-  margin-left: 19.5rem;
   white-space: nowrap;
 }
 
@@ -58,26 +57,30 @@
 .artist-user {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: clamp(8px, 1.5vw, 15px);
+  flex-shrink: 0;
 }
 
 .artist-user-info {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-
   color: white;
 }
 
 .artist-user-name {
-  font-size: 1.2rem;
+  font-size: clamp(0.85rem, 1.1vw, 1.2rem);
   font-weight: 600;
-
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.artist-user-name:hover {
+  transform: scale(1.05);
 }
 
 .artist-user-role {
-  font-size: 0.95rem;
+  font-size: clamp(0.7rem, 0.9vw, 0.95rem);
   color: #bdbdbd;
 }
 
@@ -86,22 +89,184 @@
 ========================================================= */
 
 .artist-avatar {
-  width: 65px;
-  height: 65px;
-
+  width: clamp(42px, 5vw, 65px);
+  height: clamp(42px, 5vw, 65px);
   border-radius: 50%;
   overflow: hidden;
-
   border: 2px solid white;
-
   cursor: pointer;
-
   flex-shrink: 0;
+  transition: 0.3s;
+}
+
+.artist-avatar:hover {
+  transform: scale(1.05);
 }
 
 .artist-avatar img {
   width: 100%;
   height: 100%;
-
   object-fit: cover;
+}
+
+/* =========================================================
+   RESPONSIVIDADE — 1200px
+========================================================= */
+
+@media (max-width: 1200px) {
+  .artist-nav {
+    gap: clamp(1rem, 3vw, 4rem);
+  }
+
+  .artist-nav-item {
+    margin-left: 0;
+  }
+}
+
+/* =========================================================
+   RESPONSIVIDADE — 1000px
+========================================================= */
+
+@media (max-width: 1000px) {
+  .artist-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .artist-nav {
+    justify-content: center;
+    gap: clamp(16px, 4vw, 40px);
+  }
+
+  .artist-nav-item {
+    margin-left: 0;
+  }
+
+  .artist-user-info {
+    align-items: center;
+  }
+}
+
+/* =========================================================
+   RESPONSIVIDADE — 768px
+========================================================= */
+
+@media (max-width: 768px) {
+  .artist-container {
+    width: 94%;
+    padding: 14px 16px;
+  }
+
+  .artist-nav {
+    gap: clamp(12px, 3.5vw, 28px);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .artist-nav-item {
+    font-size: clamp(0.8rem, 2.2vw, 1rem);
+  }
+}
+
+/* =========================================================
+   RESPONSIVIDADE — 600px
+========================================================= */
+
+@media (max-width: 600px) {
+  .artist-header {
+    padding-top: 14px;
+  }
+
+  .artist-container {
+    width: 95%;
+    gap: 14px;
+  }
+
+  .artist-nav {
+    gap: clamp(10px, 4vw, 20px);
+    row-gap: 8px;
+  }
+
+  .artist-nav-item {
+    font-size: clamp(0.78rem, 3.2vw, 1rem);
+  }
+
+  .artist-avatar {
+    width: clamp(40px, 10vw, 55px);
+    height: clamp(40px, 10vw, 55px);
+  }
+
+  .artist-user-name {
+    font-size: clamp(0.8rem, 3vw, 1rem);
+  }
+
+  .artist-user-role {
+    font-size: clamp(0.65rem, 2.5vw, 0.8rem);
+  }
+}
+
+/* =========================================================
+   RESPONSIVIDADE — 420px
+========================================================= */
+
+@media (max-width: 420px) {
+  .artist-nav {
+    gap: 10px;
+    row-gap: 8px;
+  }
+
+  .artist-nav-item {
+    font-size: 0.8rem;
+  }
+
+  .artist-user {
+    gap: 8px;
+  }
+
+  .artist-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .artist-user-name {
+    font-size: 0.8rem;
+  }
+
+  .artist-user-role {
+    font-size: 0.65rem;
+  }
+}
+
+/* =========================================================
+   RESPONSIVIDADE — 320px
+========================================================= */
+
+@media (max-width: 320px) {
+  .artist-nav-item {
+    font-size: 0.75rem;
+  }
+
+  .artist-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE — reduzir movimento
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .artist-nav-item,
+  .artist-user-name,
+  .artist-avatar {
+    transition: none;
+  }
+
+  .artist-nav-item:hover,
+  .artist-user-name:hover,
+  .artist-avatar:hover {
+    transform: none;
+  }
 }
