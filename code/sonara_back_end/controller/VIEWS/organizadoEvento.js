@@ -20,7 +20,7 @@ const buscarEventoOrganizador = async function(id){
                 if(resultOrganizador.length > 0){
                     MESSAGES.HEADER.status = MESSAGES.SUCCESS_REQUEST.status
                     MESSAGES.HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code
-                    MESSAGES.HEADER.response.Organizador = resultOrganizador[0]
+                    MESSAGES.HEADER.response.Organizador = resultOrganizador
 
                     return MESSAGES.HEADER //200
                 }else{
@@ -35,7 +35,7 @@ const buscarEventoOrganizador = async function(id){
         }
 
     } catch (error) {
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER //500
+      console.log(error)
     }
 }
 
